@@ -76,6 +76,14 @@
       if (elementTop < windowHeight - revealPoint) {
         element.style.opacity = '1';
         element.style.transform = 'translateY(0)';
+        
+        // Animate progress bars when card becomes visible
+        const progressBar = element.querySelector('.progress-bar');
+        if (progressBar && !progressBar.classList.contains('animated')) {
+          const progress = progressBar.getAttribute('data-progress');
+          progressBar.style.width = progress + '%';
+          progressBar.classList.add('animated');
+        }
       }
     });
   }
