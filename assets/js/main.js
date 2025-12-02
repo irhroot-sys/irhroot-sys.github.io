@@ -68,14 +68,22 @@
 
   // Simple scroll reveal animation
   function reveal() {
-    const reveals = document.querySelectorAll('.skill-card, .about-content');
+    var reveals = document.querySelectorAll('.skill-card, .about-content');
     reveals.forEach(function(element) {
-      const windowHeight = window.innerHeight;
-      const elementTop = element.getBoundingClientRect().top;
-      const revealPoint = 150;
+      var windowHeight = window.innerHeight;
+      var elementTop = element.getBoundingClientRect().top;
+      var revealPoint = 150;
       if (elementTop < windowHeight - revealPoint) {
         element.style.opacity = '1';
         element.style.transform = 'translateY(0)';
+        
+        // Animate progress bars when card becomes visible
+        var progressBar = element.querySelector('.progress-bar');
+        if (progressBar && !progressBar.classList.contains('animated')) {
+          var progress = progressBar.getAttribute('data-progress');
+          progressBar.style.width = progress + '%';
+          progressBar.classList.add('animated');
+        }
       }
     });
   }

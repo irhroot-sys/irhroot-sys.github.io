@@ -236,6 +236,24 @@ a:hover {
   font-size: 0.9rem;
 }
 
+/* Skill Progress Bar */
+.skill-progress {
+  margin-top: 1rem;
+  height: 6px;
+  background: rgba(0, 255, 157, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 3px;
+  transition: width 1.5s ease-out;
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.4);
+}
+
 /* About Page */
 .page-section {
   padding: 120px 0 80px;
