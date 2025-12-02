@@ -95,8 +95,15 @@
   if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('Thank you for your message! This is a demo form.');
+      var btn = this.querySelector('button[type="submit"]');
+      var originalText = btn.textContent;
+      btn.textContent = 'Message Sent!';
+      btn.style.background = 'rgba(0, 255, 157, 0.2)';
       this.reset();
+      setTimeout(function() {
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 3000);
     });
   }
 
