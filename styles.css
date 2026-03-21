@@ -1,6 +1,4 @@
 /* AALKC.com - Amanat Al-Kalima Company - Scrap Trading, Dammam, Saudi Arabia */
-/* Arabic font support */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
 
 :root {
   --primary: #b8922a;
@@ -929,20 +927,13 @@ html[lang="ar"] .lang-toggle {
 
 .process-steps {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   position: relative;
 }
 
 .process-steps::before {
-  content: '';
-  position: absolute;
-  top: 28px;
-  left: 12.5%;
-  right: 12.5%;
-  height: 2px;
-  background: var(--gray-200);
-  z-index: 0;
+  display: none;
 }
 
 .process-step {
@@ -1753,4 +1744,18 @@ html[dir="rtl"] .cta-section p {
     padding: 5px 10px;
     font-size: 0.8rem;
   }
+}
+
+/* ===== CTA ACTIONS ROW ===== */
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== ARABIC TYPOGRAPHY OVERRIDES ===== */
+html[lang="ar"] .company-info-item h4 {
+  text-transform: none;
+  letter-spacing: 0;
 }
