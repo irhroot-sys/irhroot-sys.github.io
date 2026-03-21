@@ -44,13 +44,11 @@
     }
 
     // Update select options if any have data attributes
-    document.querySelectorAll('select[data-en]').forEach(function(sel) {
-      var opts = JSON.parse(sel.getAttribute('data-' + lang) || '[]');
-      Array.from(sel.options).forEach(function(opt, i) {
-        if (opts[i] !== undefined) {
-          opt.textContent = opts[i];
-        }
-      });
+    document.querySelectorAll('select option[data-en]').forEach(function(opt) {
+      var text = opt.getAttribute('data-' + lang);
+      if (text !== null) {
+        opt.textContent = text;
+      }
     });
 
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
@@ -58,8 +56,13 @@
 
   // Initialise language on page load
   var savedLang = 'en';
-  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {}
-  if (savedLang !== 'en') {
+  try {
+    var storedLang = localStorage.getItem(LANG_KEY);
+    if (storedLang === 'ar') {
+      savedLang = 'ar';
+    }
+  } catch (e) {}
+  if (savedLang === 'ar') {
     setLanguage(savedLang);
   }
 
