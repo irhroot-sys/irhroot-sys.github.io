@@ -56,13 +56,8 @@
 
   // Initialise language on page load
   var savedLang = 'en';
-  try {
-    var storedLang = localStorage.getItem(LANG_KEY);
-    if (storedLang === 'ar') {
-      savedLang = 'ar';
-    }
-  } catch (e) {}
-  if (savedLang === 'ar') {
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {}
+  if (savedLang !== 'en') {
     setLanguage(savedLang);
   }
 
