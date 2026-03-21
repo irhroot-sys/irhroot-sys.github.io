@@ -1605,16 +1605,29 @@ html[dir="rtl"] @media (max-width: 768px) {
 
 .company-info-item p {
   font-size: 0.95rem;
-  color: rgba(255,255,255,0.85);
+  color: var(--gray-800);
   line-height: 1.5;
 }
 
 .company-info-item a {
-  color: #fbbf24;
+  color: var(--primary-dark);
   text-decoration: none;
 }
 
 .company-info-item a:hover {
+  color: var(--primary);
+}
+
+/* Override colors for company info section on dark background */
+.company-info-section .company-info-item p {
+  color: rgba(255,255,255,0.85);
+}
+
+.company-info-section .company-info-item a {
+  color: #fbbf24;
+}
+
+.company-info-section .company-info-item a:hover {
   color: var(--white);
 }
 
