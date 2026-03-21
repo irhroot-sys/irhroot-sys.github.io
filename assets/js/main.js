@@ -91,6 +91,20 @@
     });
   }
 
+  // ===== NAVBAR SCROLL CLASS =====
+  var navbar = document.querySelector('.navbar');
+  function updateNavbar() {
+    if (navbar) {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+  }
+  window.addEventListener('scroll', updateNavbar, { passive: true });
+  updateNavbar();
+
   // ===== SCROLL REVEAL =====
   function revealOnScroll() {
     var reveals = document.querySelectorAll('.reveal');
