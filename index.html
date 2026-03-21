@@ -1,72 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Amanat Al-Kalima Company (AALKC) — Premier metal scrap trading, collection, and recycling. We buy and sell ferrous and non-ferrous scrap metals worldwide.">
-  <title>Amanat Al-Kalima Company | Metal Scrap Trading & Recycling</title>
+  <meta name="description" content="AMANAT AL-KALIMA COMPANY — Professional scrap trading company in Dammam, Saudi Arabia. We buy, sell, collect, handle, sort, and trade scrap materials in the Eastern Province.">
+  <meta name="keywords" content="scrap company in Dammam, scrap trading company in Saudi Arabia, metal scrap buying and selling, scrap business in Eastern Province, industrial scrap trading, شركة خردة الدمام, تجارة الخردة السعودية">
+  <meta property="og:title" content="AMANAT AL-KALIMA COMPANY | Scrap Trading in Dammam, Saudi Arabia">
+  <meta property="og:description" content="Professional scrap trading company in Dammam, Eastern Province, Saudi Arabia. Buying, selling, collecting, handling and trading scrap materials.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.aalkc.com/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_SA">
+  <title>AMANAT AL-KALIMA COMPANY | Scrap Trading in Dammam, Saudi Arabia</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "AMANAT AL-KALIMA COMPANY",
+    "alternateName": "شركة أمانة الكلمة",
+    "url": "https://www.aalkc.com",
+    "telephone": "+966565790073",
+    "email": "contact@aalkc.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "3508 Al Qatif 1, Unit 7260",
+      "addressLocality": "Dammam",
+      "postalCode": "32517",
+      "addressRegion": "Eastern Province",
+      "addressCountry": "SA"
+    },
+    "description": "Professional scrap trading company in Dammam, Eastern Province, Saudi Arabia.",
+    "areaServed": "Saudi Arabia",
+    "knowsLanguage": ["en", "ar"]
+  }
+  </script>
 </head>
 <body>
 
   <!-- Navigation -->
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-content">
       <a href="index.html" class="logo">AAL<span>KC</span></a>
-      <button class="menu-toggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
       </button>
-      <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="services.html">Services</a></li>
-        <li><a href="contact.html" class="nav-cta">Contact Us</a></li>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html" class="active" data-en="Home" data-ar="الرئيسية">Home</a></li>
+        <li><a href="about.html" data-en="About" data-ar="عن الشركة">About</a></li>
+        <li><a href="services.html" data-en="Activities" data-ar="أنشطتنا">Activities</a></li>
+        <li><a href="contact.html" class="nav-cta" data-en="Contact Us" data-ar="اتصل بنا">Contact Us</a></li>
       </ul>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+        <span class="lang-toggle-text">العربية</span>
+      </button>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" role="banner">
     <div class="container">
       <div class="hero-inner">
         <div class="hero-content animate-fade-up">
-          <div class="hero-badge">Trusted Metal Scrap Partner</div>
-          <h1>Premium Metal Scrap<br><span>Trading & Recycling</span></h1>
-          <p>We buy, collect, process, and trade ferrous and non-ferrous scrap metals. Delivering fair prices, reliable logistics, and sustainable recycling solutions for businesses worldwide.</p>
+          <div class="hero-badge">
+            <span data-en="Scrap Trading Partner — Dammam, Saudi Arabia" data-ar="شريك تداول الخردة — الدمام، المملكة العربية السعودية">Scrap Trading Partner — Dammam, Saudi Arabia</span>
+          </div>
+          <h1>
+            <span class="company-name-en">AMANAT AL-KALIMA<br>COMPANY</span>
+            <span class="company-name-ar">شركة أمانة الكلمة</span>
+          </h1>
+          <p data-en="A professional scrap trading company based in Dammam, Eastern Province, Saudi Arabia. We buy, sell, collect, handle, sort, and trade scrap materials — building reliable business relationships with suppliers, buyers, and local market participants." data-ar="شركة متخصصة في تداول الخردة تتخذ من الدمام، المنطقة الشرقية، المملكة العربية السعودية مقراً لها. نشتري ونبيع ونجمع ونتعامل ونصنّف ونتداول مواد الخردة — مع بناء علاقات تجارية موثوقة مع الموردين والمشترين ومشاركي السوق المحلي.">A professional scrap trading company based in Dammam, Eastern Province, Saudi Arabia. We buy, sell, collect, handle, sort, and trade scrap materials — building reliable business relationships with suppliers, buyers, and local market participants.</p>
           <div class="hero-actions">
-            <a href="contact.html" class="btn btn-primary">Get a Quote</a>
-            <a href="services.html" class="btn btn-outline">Our Services</a>
+            <a href="contact.html" class="btn btn-primary" data-en="Contact Us" data-ar="اتصل بنا">Contact Us</a>
+            <a href="contact.html#quote" class="btn btn-secondary" data-en="Get a Quote" data-ar="احصل على عرض سعر">Get a Quote</a>
+            <a href="tel:+966565790073" class="btn btn-outline" data-en="Call Now" data-ar="اتصل الآن">Call Now</a>
           </div>
         </div>
         <div class="hero-visual animate-fade-up animate-fade-up-delay-2">
           <div class="hero-card">
             <div class="hero-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
             </div>
-            <h3>Your Reliable Scrap Partner</h3>
-            <p>Competitive prices, prompt payment, and end-to-end logistics for all your metal scrap needs.</p>
-            <div class="hero-stats">
-              <div class="stat-item">
-                <span class="stat-number">50K+</span>
-                <span class="stat-label">Tons Processed</span>
+            <h3 data-en="AMANAT AL-KALIMA COMPANY" data-ar="شركة أمانة الكلمة">AMANAT AL-KALIMA COMPANY</h3>
+            <p data-en="Professional scrap trading in the Eastern Province, KSA." data-ar="تداول الخردة الاحترافي في المنطقة الشرقية، المملكة العربية السعودية.">Professional scrap trading in the Eastern Province, KSA.</p>
+            <div class="hero-info">
+              <div class="hero-info-item">
+                <span class="hero-info-icon">&#128205;</span>
+                <span data-en="Dammam, Eastern Province, KSA" data-ar="الدمام، المنطقة الشرقية، المملكة العربية السعودية">Dammam, Eastern Province, KSA</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-number">20+</span>
-                <span class="stat-label">Years Experience</span>
+              <div class="hero-info-item">
+                <span class="hero-info-icon">&#127970;</span>
+                <span data-en="CR: 7050308233" data-ar="س.ت: ٧٠٥٠٣٠٨٢٣٣">CR: 7050308233</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-number">30+</span>
-                <span class="stat-label">Countries Served</span>
+              <div class="hero-info-item">
+                <span class="hero-info-icon">&#128222;</span>
+                <a href="tel:+966565790073">+966 565 790 073</a>
               </div>
-              <div class="stat-item">
-                <span class="stat-number">500+</span>
-                <span class="stat-label">Clients Worldwide</span>
+              <div class="hero-info-item">
+                <span class="hero-info-icon">&#9993;</span>
+                <a href="mailto:contact@aalkc.com">contact@aalkc.com</a>
               </div>
             </div>
           </div>
@@ -75,143 +112,184 @@
     </div>
   </section>
 
-  <!-- Features Section -->
+  <!-- About / Introduction -->
+  <section class="about-section section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual reveal">
+          <div class="about-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            <span data-en="AMANAT AL-KALIMA COMPANY" data-ar="شركة أمانة الكلمة">AMANAT AL-KALIMA COMPANY</span>
+          </div>
+        </div>
+        <div class="about-text reveal">
+          <span class="section-label" data-en="About Us" data-ar="عن الشركة">About Us</span>
+          <h2 class="section-title" data-en="Who We Are" data-ar="من نحن">Who We Are</h2>
+          <p style="margin-top: 1rem;" data-en="AMANAT AL-KALIMA COMPANY is a registered scrap trading company based in Dammam, Eastern Province, Saudi Arabia. We specialise in the buying, selling, collection, handling, sorting, and trading of scrap materials." data-ar="شركة أمانة الكلمة هي شركة مسجلة لتداول الخردة تتخذ من الدمام، المنطقة الشرقية، المملكة العربية السعودية مقراً لها. نتخصص في شراء وبيع وجمع ومعالجة وفرز وتداول مواد الخردة.">AMANAT AL-KALIMA COMPANY is a registered scrap trading company based in Dammam, Eastern Province, Saudi Arabia. We specialise in the buying, selling, collection, handling, sorting, and trading of scrap materials.</p>
+          <p data-en="We operate professionally, coordinating with clients, suppliers, buyers, and local market participants to ensure smooth, trustworthy transactions. Our approach is built on transparency, reliability, and commitment to professional dealing." data-ar="نعمل باحترافية، بالتنسيق مع العملاء والموردين والمشترين والمشاركين في السوق المحلي لضمان معاملات سلسة وموثوقة. نهجنا مبني على الشفافية والموثوقية والالتزام بالتعامل المهني.">We operate professionally, coordinating with clients, suppliers, buyers, and local market participants to ensure smooth, trustworthy transactions. Our approach is built on transparency, reliability, and commitment to professional dealing.</p>
+          <ul class="values-list">
+            <li data-en="Registered company in Dammam, Eastern Province, Saudi Arabia" data-ar="شركة مسجلة في الدمام، المنطقة الشرقية، المملكة العربية السعودية">Registered company in Dammam, Eastern Province, Saudi Arabia</li>
+            <li data-en="Professional scrap buying, selling, and trading" data-ar="شراء وبيع وتداول خردة احترافي">Professional scrap buying, selling, and trading</li>
+            <li data-en="Reliable coordination with suppliers and buyers" data-ar="تنسيق موثوق مع الموردين والمشترين">Reliable coordination with suppliers and buyers</li>
+            <li data-en="Transparent and trustworthy business dealings" data-ar="معاملات تجارية شفافة وموثوقة">Transparent and trustworthy business dealings</li>
+          </ul>
+          <a href="about.html" class="btn btn-primary" data-en="Learn More About Us" data-ar="اعرف المزيد عنا">Learn More About Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Activities Overview -->
   <section class="section section-alt">
     <div class="container">
       <div class="section-header">
-        <span class="section-label">Why Choose Us</span>
-        <h2 class="section-title">The AALKC Advantage</h2>
-        <p class="section-subtitle">Decades of industry expertise combined with modern facilities and a global network — giving you the best value for your scrap metal.</p>
+        <span class="section-label" data-en="What We Do" data-ar="ما نقوم به">What We Do</span>
+        <h2 class="section-title" data-en="Our Activities" data-ar="أنشطتنا">Our Activities</h2>
+        <p class="section-subtitle" data-en="We provide a full range of scrap trading services in Dammam and the Eastern Province, Saudi Arabia." data-ar="نقدم مجموعة كاملة من خدمات تداول الخردة في الدمام والمنطقة الشرقية، المملكة العربية السعودية.">We provide a full range of scrap trading services in Dammam and the Eastern Province, Saudi Arabia.</p>
       </div>
       <div class="features-grid">
         <div class="feature-card reveal">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <h3>Trusted & Reliable</h3>
-          <p>Over 20 years in the metal scrap industry with a proven track record of fair dealing, prompt payments, and transparent transactions.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-          </div>
-          <h3>Global Network</h3>
-          <p>Active trading relationships across 30+ countries, connecting local suppliers with international buyers for maximum value recovery.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="20" x2="18" y2="10"/>
-              <line x1="12" y1="20" x2="12" y2="4"/>
-              <line x1="6" y1="20" x2="6" y2="14"/>
-            </svg>
-          </div>
-          <h3>Best Market Prices</h3>
-          <p>Real-time pricing based on live commodity markets ensures you always receive the most competitive rates for your scrap materials.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2"/>
-              <path d="M8 21h8M12 17v4"/>
-            </svg>
-          </div>
-          <h3>Full Logistics Support</h3>
-          <p>From collection and transportation to weighing, sorting, and documentation — we handle the entire supply chain for you.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-          </div>
-          <h3>All Metal Types</h3>
-          <p>We deal in the full spectrum of ferrous and non-ferrous metals: steel, iron, copper, aluminium, brass, stainless steel, and more.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 2L2 7l10 5 10-5-10-5z"/>
               <path d="M2 17l10 5 10-5"/>
               <path d="M2 12l10 5 10-5"/>
             </svg>
           </div>
-          <h3>Eco-Friendly Recycling</h3>
-          <p>Our operations follow strict environmental standards, helping industries reduce waste and contribute to a circular economy.</p>
+          <h3 data-en="Scrap Buying" data-ar="شراء الخردة">Scrap Buying</h3>
+          <p data-en="We purchase scrap materials from suppliers, industrial sites, and local sellers across the Eastern Province." data-ar="نشتري مواد الخردة من الموردين والمواقع الصناعية والبائعين المحليين في جميع أنحاء المنطقة الشرقية.">We purchase scrap materials from suppliers, industrial sites, and local sellers across the Eastern Province.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Services Overview -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Our Services</span>
-        <h2 class="section-title">What We Offer</h2>
-        <p class="section-subtitle">End-to-end metal scrap solutions from collection and processing to trading and export.</p>
-      </div>
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
+          <h3 data-en="Scrap Selling" data-ar="بيع الخردة">Scrap Selling</h3>
+          <p data-en="We supply scrap materials to buyers and businesses needing specific scrap types for their operations." data-ar="نوفر مواد الخردة للمشترين والشركات التي تحتاج إلى أنواع محددة من الخردة لعملياتها.">We supply scrap materials to buyers and businesses needing specific scrap types for their operations.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12H3l9-9 9 9h-2"/>
               <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>
               <path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/>
             </svg>
           </div>
-          <div class="service-info">
-            <h3>Scrap Collection & Pickup</h3>
-            <p>On-site collection services for industrial, commercial, and demolition scrap — we come to you.</p>
-          </div>
+          <h3 data-en="Scrap Collection" data-ar="جمع الخردة">Scrap Collection</h3>
+          <p data-en="We collect scrap materials from various sites and locations in Dammam and the surrounding Eastern Province." data-ar="نجمع مواد الخردة من مواقع ومناطق متعددة في الدمام والمنطقة الشرقية المحيطة بها.">We collect scrap materials from various sites and locations in Dammam and the surrounding Eastern Province.</p>
         </div>
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2"/>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-            </svg>
-          </div>
-          <div class="service-info">
-            <h3>Ferrous Metal Trading</h3>
-            <p>Buying and selling steel, iron, cast iron, and other ferrous metals at competitive market rates.</p>
-          </div>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-              <line x1="9" y1="9" x2="9.01" y2="9"/>
-              <line x1="15" y1="9" x2="15.01" y2="9"/>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
             </svg>
           </div>
-          <div class="service-info">
-            <h3>Non-Ferrous Metal Trading</h3>
-            <p>Specialists in copper, aluminium, brass, bronze, stainless steel, and other high-value non-ferrous metals.</p>
-          </div>
+          <h3 data-en="Scrap Handling" data-ar="معالجة الخردة">Scrap Handling</h3>
+          <p data-en="Professional handling of scrap materials — from initial receipt and assessment to preparation for trade or transfer." data-ar="معالجة احترافية لمواد الخردة — من الاستلام الأولي والتقييم إلى التحضير للتداول أو النقل.">Professional handling of scrap materials — from initial receipt and assessment to preparation for trade or transfer.</p>
         </div>
-        <div class="service-card reveal">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
             </svg>
           </div>
-          <div class="service-info">
-            <h3>Metal Processing & Sorting</h3>
-            <p>Advanced shredding, baling, shearing, and sorting to prepare scrap for smelters and mills worldwide.</p>
+          <h3 data-en="Sorting &amp; Classification" data-ar="الفرز والتصنيف">Sorting &amp; Classification</h3>
+          <p data-en="We sort and classify scrap materials by type and grade to ensure accurate valuation and proper market placement." data-ar="نفرز ونصنّف مواد الخردة حسب النوع والدرجة لضمان التقييم الدقيق والتوجيه السليم في السوق.">We sort and classify scrap materials by type and grade to ensure accurate valuation and proper market placement.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
           </div>
+          <h3 data-en="Metal Scrap Trading" data-ar="تجارة الخردة المعدنية">Metal Scrap Trading</h3>
+          <p data-en="Active trading of metal scrap with local market participants, suppliers, and buyers in the Eastern Province and beyond." data-ar="تداول نشط للخردة المعدنية مع المشاركين في السوق المحلي والموردين والمشترين في المنطقة الشرقية وما حولها.">Active trading of metal scrap with local market participants, suppliers, and buyers in the Eastern Province and beyond.</p>
         </div>
       </div>
       <div style="text-align:center; margin-top: 2.5rem;">
-        <a href="services.html" class="btn btn-outline-primary">View All Services</a>
+        <a href="services.html" class="btn btn-outline-primary" data-en="View All Activities" data-ar="عرض جميع الأنشطة">View All Activities</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label" data-en="Why Choose Us" data-ar="لماذا نحن">Why Choose Us</span>
+        <h2 class="section-title" data-en="Why Choose AMANAT AL-KALIMA?" data-ar="لماذا تختار شركة أمانة الكلمة؟">Why Choose AMANAT AL-KALIMA?</h2>
+        <p class="section-subtitle" data-en="We are a trusted, professionally operated scrap trading company in Dammam, committed to smooth and reliable business dealings." data-ar="نحن شركة تداول خردة موثوقة وتعمل باحترافية في الدمام، ملتزمون بمعاملات تجارية سلسة وموثوقة.">We are a trusted, professionally operated scrap trading company in Dammam, committed to smooth and reliable business dealings.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3 data-en="Based in Dammam, Saudi Arabia" data-ar="مقرنا في الدمام، المملكة العربية السعودية">Based in Dammam, Saudi Arabia</h3>
+          <p data-en="Locally present in Dammam, Eastern Province — close to clients, suppliers, and the local scrap market." data-ar="حضور محلي في الدمام، المنطقة الشرقية — قريبون من العملاء والموردين وسوق الخردة المحلي.">Locally present in Dammam, Eastern Province — close to clients, suppliers, and the local scrap market.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.36 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <h3 data-en="Clear Communication" data-ar="تواصل واضح">Clear Communication</h3>
+          <p data-en="We communicate clearly and professionally with all clients and suppliers from first contact to transaction completion." data-ar="نتواصل بوضوح واحترافية مع جميع العملاء والموردين من أول اتصال حتى إتمام المعاملة.">We communicate clearly and professionally with all clients and suppliers from first contact to transaction completion.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 data-en="Trustworthy Identity" data-ar="هوية جديرة بالثقة">Trustworthy Identity</h3>
+          <p data-en="A registered business with a clear commercial identity — CR No. 7050308233 — operating with full accountability." data-ar="شركة مسجلة بهوية تجارية واضحة — س.ت: ٧٠٥٠٣٠٨٢٣٣ — تعمل بمساءلة كاملة.">A registered business with a clear commercial identity — CR No. 7050308233 — operating with full accountability.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <h3 data-en="Market Understanding" data-ar="فهم السوق">Market Understanding</h3>
+          <p data-en="We understand the local scrap market in the Eastern Province and work with awareness of current supply and demand." data-ar="نفهم سوق الخردة المحلي في المنطقة الشرقية ونعمل بوعي بالعرض والطلب الحالي.">We understand the local scrap market in the Eastern Province and work with awareness of current supply and demand.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+          <h3 data-en="Professional Handling" data-ar="تعامل احترافي">Professional Handling</h3>
+          <p data-en="All scrap transactions are handled professionally — from inquiry and evaluation to agreement and completion." data-ar="يتم التعامل مع جميع معاملات الخردة باحترافية — من الاستفسار والتقييم إلى الاتفاق والإتمام.">All scrap transactions are handled professionally — from inquiry and evaluation to agreement and completion.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 data-en="Reliable Business Dealings" data-ar="معاملات تجارية موثوقة">Reliable Business Dealings</h3>
+          <p data-en="We commit to honest, transparent, and reliable dealings with every supplier, buyer, and business partner." data-ar="نلتزم بمعاملات صادقة وشفافة وموثوقة مع كل مورد ومشترٍ وشريك تجاري.">We commit to honest, transparent, and reliable dealings with every supplier, buyer, and business partner.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -219,9 +297,35 @@
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="container">
-      <h2>Ready to Sell Your Scrap Metal?</h2>
-      <p>Get a competitive quote from our team today. Fast response, fair prices, and hassle-free transactions.</p>
-      <a href="contact.html" class="btn btn-outline">Request a Quote</a>
+      <h2 data-en="Ready to Do Business?" data-ar="هل أنت مستعد للتعاون معنا؟">Ready to Do Business?</h2>
+      <p data-en="Contact our team in Dammam today to discuss your scrap trading needs. We respond promptly and professionally." data-ar="تواصل مع فريقنا في الدمام اليوم لمناقشة احتياجاتك في تداول الخردة. نرد بسرعة واحترافية.">Contact our team in Dammam today to discuss your scrap trading needs. We respond promptly and professionally.</p>
+      <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn-outline" data-en="Contact Us" data-ar="اتصل بنا">Contact Us</a>
+        <a href="tel:+966565790073" class="btn btn-outline" data-en="Call: +966 565 790 073" data-ar="اتصل: ٠٥٦٥ ٧٩٠ ٠٧٣">Call: +966 565 790 073</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Info Strip -->
+  <section class="company-info-section">
+    <div class="container">
+      <div class="company-info-grid">
+        <div class="company-info-item">
+          <h4 data-en="Company" data-ar="الشركة">Company</h4>
+          <p data-en="AMANAT AL-KALIMA COMPANY" data-ar="شركة أمانة الكلمة">AMANAT AL-KALIMA COMPANY</p>
+          <p data-en="CR: 7050308233" data-ar="س.ت: ٧٠٥٠٣٠٨٢٣٣">CR: 7050308233</p>
+        </div>
+        <div class="company-info-item">
+          <h4 data-en="Address" data-ar="العنوان">Address</h4>
+          <p data-en="3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, KSA" data-ar="القطيف ٣٥٠٨ ١، وحدة ٧٢٦٠ ، الدمام ٣٢٥١٧ ، المنطقة الشرقية، المملكة العربية السعودية">3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, KSA</p>
+        </div>
+        <div class="company-info-item">
+          <h4 data-en="Contact" data-ar="التواصل">Contact</h4>
+          <p><a href="tel:+966565790073">+966 565 790 073</a></p>
+          <p><a href="mailto:contact@aalkc.com">contact@aalkc.com</a></p>
+          <p><a href="https://www.aalkc.com">www.aalkc.com</a></p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -231,36 +335,38 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="index.html" class="logo">AAL<span>KC</span></a>
-          <p>Amanat Al-Kalima Company — trusted metal scrap traders and recyclers connecting suppliers with global markets since 2004.</p>
+          <p data-en="AMANAT AL-KALIMA COMPANY — A professional scrap trading company in Dammam, Eastern Province, Saudi Arabia." data-ar="شركة أمانة الكلمة — شركة متخصصة في تداول الخردة في الدمام، المنطقة الشرقية، المملكة العربية السعودية.">AMANAT AL-KALIMA COMPANY — A professional scrap trading company in Dammam, Eastern Province, Saudi Arabia.</p>
         </div>
         <div class="footer-col">
-          <h4>Company</h4>
+          <h4 data-en="Company" data-ar="الشركة">Company</h4>
           <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="services.html">Services</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="about.html" data-en="About Us" data-ar="عن الشركة">About Us</a></li>
+            <li><a href="services.html" data-en="Activities" data-ar="أنشطتنا">Activities</a></li>
+            <li><a href="contact.html" data-en="Contact" data-ar="اتصل بنا">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Services</h4>
+          <h4 data-en="Activities" data-ar="الأنشطة">Activities</h4>
           <ul>
-            <li><a href="services.html">Scrap Collection</a></li>
-            <li><a href="services.html">Ferrous Metals</a></li>
-            <li><a href="services.html">Non-Ferrous Metals</a></li>
-            <li><a href="services.html">Metal Processing</a></li>
+            <li><a href="services.html" data-en="Scrap Buying &amp; Selling" data-ar="شراء وبيع الخردة">Scrap Buying &amp; Selling</a></li>
+            <li><a href="services.html" data-en="Scrap Collection" data-ar="جمع الخردة">Scrap Collection</a></li>
+            <li><a href="services.html" data-en="Sorting &amp; Handling" data-ar="الفرز والمعالجة">Sorting &amp; Handling</a></li>
+            <li><a href="services.html" data-en="Metal Scrap Trading" data-ar="تجارة الخردة المعدنية">Metal Scrap Trading</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Contact</h4>
+          <h4 data-en="Contact" data-ar="التواصل">Contact</h4>
           <ul>
-            <li><a href="contact.html">Get a Quote</a></li>
-            <li><a href="mailto:info@aalkc.com">info@aalkc.com</a></li>
+            <li><a href="tel:+966565790073">+966 565 790 073</a></li>
+            <li><a href="mailto:contact@aalkc.com">contact@aalkc.com</a></li>
+            <li><a href="https://www.aalkc.com">www.aalkc.com</a></li>
+            <li><a href="https://wa.me/966565790073" data-en="WhatsApp Us" data-ar="واتساب">WhatsApp Us</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 Amanat Al-Kalima Company (AALKC). All rights reserved.</p>
-        <p><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></p>
+        <p data-en="&copy; 2025 AMANAT AL-KALIMA COMPANY. All rights reserved." data-ar="&copy; ٢٠٢٥ شركة أمانة الكلمة. جميع الحقوق محفوظة.">&copy; 2025 AMANAT AL-KALIMA COMPANY. All rights reserved.</p>
+        <p data-en="CR: 7050308233 | Dammam, Eastern Province, KSA" data-ar="س.ت: ٧٠٥٠٣٠٨٢٣٣ | الدمام، المنطقة الشرقية، المملكة العربية السعودية">CR: 7050308233 | Dammam, Eastern Province, KSA</p>
       </div>
     </div>
   </footer>
