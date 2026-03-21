@@ -1599,6 +1599,19 @@ html[dir="rtl"] .cta-section p {
 }
 
 .company-info-item a:hover {
+  color: var(--primary);
+}
+
+/* Override colors for company info section on dark background */
+.company-info-section .company-info-item p {
+  color: rgba(255,255,255,0.85);
+}
+
+.company-info-section .company-info-item a {
+  color: #fbbf24;
+}
+
+.company-info-section .company-info-item a:hover {
   color: var(--white);
 }
 

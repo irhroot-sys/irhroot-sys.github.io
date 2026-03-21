@@ -43,6 +43,14 @@
       }
     }
 
+    // Update select options if any have data attributes
+    document.querySelectorAll('select option[data-en]').forEach(function(opt) {
+      var text = opt.getAttribute('data-' + lang);
+      if (text !== null) {
+        opt.textContent = text;
+      }
+    });
+
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   }
 
