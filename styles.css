@@ -1,10 +1,10 @@
-/* AALKC.com - Amanat Al-Kalima Company - Metal Scrap Trading */
+/* AALKC.com - Amanat Al-Kalima Company - Scrap Trading */
 :root {
-  --primary: #d97706;
-  --primary-dark: #b45309;
-  --primary-light: #fef3c7;
-  --secondary: #1c2b3a;
-  --accent: #f59e0b;
+  --primary: #1e4976;
+  --primary-dark: #163a5c;
+  --primary-light: #e8f2fa;
+  --secondary: #0d1e2e;
+  --accent: #c9a527;
   --white: #ffffff;
   --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Segoe UI', 'Cairo', system-ui, -apple-system, sans-serif;
   background: var(--white);
   color: var(--gray-700);
   line-height: 1.6;
@@ -161,6 +161,26 @@ img {
   transform: translateY(-7px) rotate(-45deg);
 }
 
+.lang-toggle {
+  background: transparent;
+  border: 1.5px solid var(--gray-200);
+  color: var(--gray-700);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-left: 0.5rem;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.lang-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
 /* ===== HERO SECTION ===== */
 .hero {
   min-height: 100vh;
@@ -179,7 +199,7 @@ img {
   right: -20%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(217,119,6,0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(30,73,118,0.3) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -190,7 +210,7 @@ img {
   left: -10%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(201,165,39,0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -207,9 +227,9 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(245,158,11,0.15);
-  border: 1px solid rgba(245,158,11,0.3);
-  color: #fcd34d;
+  background: rgba(201,165,39,0.15);
+  border: 1px solid rgba(201,165,39,0.3);
+  color: #e8c84a;
   font-size: 0.85rem;
   font-weight: 500;
   padding: 6px 14px;
@@ -221,7 +241,7 @@ img {
   content: '';
   width: 6px;
   height: 6px;
-  background: #fcd34d;
+  background: #e8c84a;
   border-radius: 50%;
 }
 
@@ -235,7 +255,7 @@ img {
 }
 
 .hero-content h1 span {
-  color: #fbbf24;
+  color: #c9a527;
 }
 
 .hero-content p {
@@ -350,7 +370,7 @@ img {
   border-color: var(--primary-dark);
   color: var(--white);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(217,119,6,0.4);
+  box-shadow: 0 4px 12px rgba(30,73,118,0.4);
 }
 
 .btn-outline {
@@ -557,7 +577,7 @@ img {
 
 .cta-section p {
   font-size: 1.1rem;
-  color: #fde68a;
+  color: #f5e6a0;
   margin-bottom: 2.5rem;
   max-width: 500px;
   margin-left: auto;
@@ -580,7 +600,7 @@ img {
 
 .page-header p {
   font-size: 1.1rem;
-  color: #fde68a;
+  color: #f5e6a0;
   max-width: 500px;
   margin: 0 auto;
 }
@@ -696,7 +716,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d97706' stroke-width='3'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231e4976' stroke-width='3'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -861,7 +881,7 @@ img {
   height: 18px;
   flex-shrink: 0;
   margin-top: 1px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d97706' stroke-width='2.5'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231e4976' stroke-width='2.5'%3E%3Cpolyline points='20,6 9,17 4,12'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -1048,7 +1068,7 @@ img {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(217,119,6,0.12);
+  box-shadow: 0 0 0 3px rgba(30,73,118,0.12);
   background: var(--white);
 }
 
@@ -1104,7 +1124,7 @@ img {
 }
 
 .footer-brand .logo span {
-  color: #fbbf24;
+  color: #c9a527;
 }
 
 .footer-brand p {
@@ -1337,5 +1357,152 @@ img {
   .btn {
     padding: 11px 20px;
     font-size: 0.9rem;
+  }
+}
+
+/* ===== WHATSAPP BUTTON ===== */
+.btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+}
+.btn-whatsapp:hover {
+  background: #1ebe5b;
+  border-color: #1ebe5b;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ===== COMPANY PROFILE GRID (about page) ===== */
+.company-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.company-profile-item {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.company-profile-item .cp-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--primary-light);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.company-profile-item .cp-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--primary);
+}
+.company-profile-item strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+.company-profile-item span {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+  .company-profile-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== COMPANY IDENTITY CARD (hero) ===== */
+.company-identity-items {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.ci-item {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+.ci-label {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  min-width: 70px;
+}
+.ci-val {
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+/* ===== RTL / ARABIC SUPPORT ===== */
+[dir="rtl"] body {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+[dir="rtl"] .about-text .section-label,
+[dir="rtl"] .about-text .section-title {
+  text-align: right;
+}
+[dir="rtl"] .lang-toggle {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+[dir="rtl"] .nav-links .nav-cta {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+[dir="rtl"] .hero-badge::before {
+  margin-right: 0;
+  margin-left: 4px;
+}
+[dir="rtl"] .values-list li::before,
+[dir="rtl"] .service-features li::before {
+  margin-right: 0;
+  margin-left: 8px;
+}
+[dir="rtl"] .service-features {
+  text-align: right;
+}
+[dir="rtl"] .service-card {
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .contact-item {
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .contact-item-text {
+  text-align: right;
+}
+[dir="rtl"] .footer-bottom {
+  flex-direction: row-reverse;
+}
+[dir="rtl"] .ci-item {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+[dir="rtl"] .ci-label {
+  min-width: auto;
+}
+[dir="rtl"] .company-profile-item {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+@media (max-width: 768px) {
+  [dir="rtl"] .nav-links {
+    transform: translateX(100%);
+  }
+  [dir="rtl"] .nav-links.active {
+    transform: translateX(0);
+  }
+  [dir="rtl"] .footer-bottom {
+    flex-direction: column;
   }
 }
