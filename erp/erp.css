@@ -1731,6 +1731,28 @@ html[dir="rtl"] .timeline-dot {
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   thead { display: table-header-group; }
+
+  /* Print invoice/sale/purchase detail from inside a modal */
+  .modal-overlay {
+    position: static;
+    background: none;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .modal {
+    box-shadow: none;
+    border: none;
+    max-height: none;
+    overflow: visible;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .modal-header,
+  .modal-footer {
+    display: none !important;
+  }
 }
 
 /* ============================================================
