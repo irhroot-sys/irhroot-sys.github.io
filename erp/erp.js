@@ -2384,8 +2384,870 @@
     }
   };
 
+
   /* Extend App.init to run Phase 2 after Phase 1 bootstrap */
   var _p1Init = App.init.bind(App);
   App.init = function () { _p1Init(); Phase2.init(); };
+
+  /* ============================================================
+     erp.js — Phase 3
+     Modules: VatEngine · Invoices · Documents (Quotations /
+              Transport Permits · Contracts · Vouchers)
+     Appended inside Phase 1/2 IIFE — reuses all existing helpers
+     ============================================================ */
+
+  /* ============================================================
+     § 18  VatEngine — ZATCA TLV QR + VAT helpers
+     ============================================================ */
+  var VatEngine = {
+
+    rate: function () {
+      return parseFloat(Store.getSetting('vatRate') || 15) / 100;
+    },
+
+    compute: function (items) {
+      var rate     = this.rate();
+      var subtotal = items.reduce(function (s, i) { return s + (i.total || 0); }, 0);
+      var vatAmt   = subtotal * rate;
+      return { subtotal: subtotal, vatAmount: vatAmt, total: subtotal + vatAmt, vatRate: rate * 100 };
+    },
+
+    /* ZATCA TLV: Tag-Length-Value with proper UTF-8 byte encoding */
+    _tlv: function (tag, value) {
+      var bytes = [];
+      var str   = String(value || '');
+      for (var i = 0; i < str.length; i++) {
+        var code = str.charCodeAt(i);
+        if (code < 0x80) {
+          bytes.push(code);
+        } else if (code < 0x800) {
+          bytes.push(0xC0 | (code >> 6));
+          bytes.push(0x80 | (code & 0x3F));
+        } else {
+          bytes.push(0xE0 | (code >> 12));
+          bytes.push(0x80 | ((code >> 6) & 0x3F));
+          bytes.push(0x80 | (code & 0x3F));
+        }
+      }
+      return [tag, bytes.length].concat(bytes);
+    },
+
+    /* Returns base64-encoded ZATCA TLV QR string */
+    zatcaQrString: function (record, settings) {
+      try {
+        var s          = settings || {};
+        var sellerName = s.companyNameAr || s.companyNameEn || '';
+        var vatNumber  = s.vatNumber || '';
+        /* ZATCA uses invoice date with midnight UTC — sufficient precision for simplified invoices */
+        var timestamp  = (record.date || Utils.today()) + 'T00:00:00Z';
+        var total      = (record.total     || 0).toFixed(2);
+        var vatAmt     = (record.vatAmount || 0).toFixed(2);
+        var self       = this;
+        var bytes      = []
+          .concat(self._tlv(1, sellerName))
+          .concat(self._tlv(2, vatNumber))
+          .concat(self._tlv(3, timestamp))
+          .concat(self._tlv(4, total))
+          .concat(self._tlv(5, vatAmt));
+        var str = '';
+        for (var i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+        return btoa(str);
+      } catch (e) {
+        return '';
+      }
+    },
+
+    /* Render the QR into a <canvas> element */
+    renderQr: function (canvasId, qrString) {
+      if (!window.QRCode || !qrString) return;
+      var canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      QRCode.toCanvas(canvas, qrString, { width: 120, margin: 1 }, function (err) {
+        if (err && canvas.parentNode) {
+          canvas.parentNode.innerHTML = '<p class="qr-error">QR unavailable</p>';
+        }
+      });
+    },
+
+    /* Saudi Arabian ZATCA VAT registration number: 15 digits beginning with 3 */
+    validateVatNumber: function (vat) {
+      return /^3\d{14}$/.test(String(vat || '').trim());
+    }
+  };
+
+  /* ============================================================
+     § 19  InvoicesModule — ZATCA-ready B2B invoice CRUD
+     ============================================================ */
+  var InvoicesModule = {
+    _filter: 'all', _search: '', _dateFilter: '',
+
+    render: function (container) {
+      Router._tpl('tpl-invoices', container);
+      this._bindEvents();
+      this._renderList();
+    },
+
+    _bindEvents: function () {
+      var self = this;
+      var tabs = document.getElementById('invoiceTabs');
+      if (tabs) {
+        tabs.addEventListener('click', function (e) {
+          var tab = e.target.closest('.tab');
+          if (!tab) return;
+          tabs.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          self._filter = tab.getAttribute('data-filter') || 'all';
+          self._renderList();
+        });
+      }
+      var search = document.getElementById('invoiceSearch');
+      if (search) search.addEventListener('input', function () { self._search = search.value.toLowerCase(); self._renderList(); });
+      var df = document.getElementById('invoiceDateFilter');
+      if (df) df.addEventListener('change', function () { self._dateFilter = df.value; self._renderList(); });
+      var nb = document.getElementById('newInvoiceBtn');
+      if (nb) nb.addEventListener('click', function () { self.openForm(null, null); });
+      var ex = document.getElementById('invoiceExportExcel');
+      if (ex) ex.addEventListener('click', function () { self._exportExcel(); });
+    },
+
+    _dateMatches: function (dateStr, filter) {
+      if (!filter) return true;
+      var d   = new Date((dateStr || '') + 'T00:00:00');
+      var now = new Date();
+      if (filter === 'this_month')  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      if (filter === 'last_month') {
+        var lm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        return d.getFullYear() === lm.getFullYear() && d.getMonth() === lm.getMonth();
+      }
+      if (filter === 'this_year')   return d.getFullYear() === now.getFullYear();
+      return true;
+    },
+
+    _renderList: function () {
+      var el = document.getElementById('invoicesList');
+      if (!el) return;
+      var self  = this;
+      var today = Utils.today();
+      var rows  = Store.getAll('invoices').filter(function (r) {
+        var eff         = (r.status !== 'paid' && r.status !== 'void' && r.dueDate && r.dueDate < today) ? 'overdue' : r.status;
+        var statusMatch = self._filter === 'all' || self._filter === eff || self._filter === r.status;
+        var searchMatch = !self._search || ((r.number || '') + ' ' + (r.contactName || '')).toLowerCase().indexOf(self._search) >= 0;
+        return statusMatch && searchMatch && self._dateMatches(r.date, self._dateFilter);
+      }).sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
+
+      if (!rows.length) {
+        el.innerHTML = '<div class="empty-state"><p>' + Lang.t('No invoices found', 'لا توجد فواتير') + '</p></div>';
+        return;
+      }
+
+      el.innerHTML = '<div class="table-responsive"><table><thead><tr>' +
+        '<th>' + Lang.t('Invoice #',  'رقم الفاتورة')       + '</th>' +
+        '<th>' + Lang.t('Date',       'التاريخ')             + '</th>' +
+        '<th>' + Lang.t('Due Date',   'تاريخ الاستحقاق')    + '</th>' +
+        '<th>' + Lang.t('Customer',   'العميل')              + '</th>' +
+        '<th>' + Lang.t('Total',      'الإجمالي')            + '</th>' +
+        '<th>' + Lang.t('VAT',        'الضريبة')             + '</th>' +
+        '<th>' + Lang.t('Status',     'الحالة')              + '</th>' +
+        '<th>' + Lang.t('Actions',    'الإجراءات')           + '</th>' +
+        '</tr></thead><tbody>' +
+        rows.map(function (r) {
+          var eff = (r.status !== 'paid' && r.status !== 'void' && r.dueDate && r.dueDate < today) ? 'overdue' : r.status;
+          return '<tr>' +
+            '<td><strong>' + Utils.escape(r.number || '') + '</strong></td>' +
+            '<td>' + Utils.formatDate(r.date) + '</td>' +
+            '<td>' + Utils.formatDate(r.dueDate) + '</td>' +
+            '<td>' + Utils.escape(r.contactName || '') + '</td>' +
+            '<td><strong>' + Utils.formatCurrency(r.total) + '</strong></td>' +
+            '<td>' + Utils.formatCurrency(r.vatAmount) + '</td>' +
+            '<td><span class="' + Utils.badgeClass(eff) + '">' + Utils.escape(eff) + '</span></td>' +
+            '<td class="action-cell">' +
+              '<button class="btn btn-secondary btn-xs" data-act="view"   data-id="' + r.id + '">' + Lang.t('View',   'عرض')   + '</button> ' +
+              '<button class="btn btn-secondary btn-xs" data-act="edit"   data-id="' + r.id + '">' + Lang.t('Edit',   'تعديل') + '</button> ' +
+              (r.status === 'draft'                             ? '<button class="btn btn-secondary btn-xs" data-act="send"   data-id="' + r.id + '">' + Lang.t('Send',   'إرسال')   + '</button> ' : '') +
+              (r.status === 'sent' || eff === 'overdue'         ? '<button class="btn btn-success    btn-xs" data-act="pay"    data-id="' + r.id + '">' + Lang.t('Pay',    'دفع')      + '</button> ' : '') +
+              '<button class="btn btn-danger btn-xs"    data-act="delete" data-id="' + r.id + '">' + Lang.t('Delete', 'حذف')   + '</button>' +
+            '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+
+      el.querySelectorAll('[data-act]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id  = btn.getAttribute('data-id');
+          var act = btn.getAttribute('data-act');
+          var inv;
+          if (act === 'view')   { self._viewDetail(id); }
+          else if (act === 'edit')   { self.openForm(id, null); }
+          else if (act === 'send') {
+            inv = Store.getById('invoices', id);
+            if (inv) { inv.status = 'sent'; Store.save('invoices', inv); UI.toast(Lang.t('Invoice marked as sent', 'تم تحديد الفاتورة كمرسلة'), 'success'); self._renderList(); }
+          }
+          else if (act === 'pay') {
+            inv = Store.getById('invoices', id);
+            if (inv) { inv.status = 'paid'; inv.paidAt = Utils.today(); Store.save('invoices', inv); UI.toast(Lang.t('Invoice marked as paid', 'تم تحديد الفاتورة كمدفوعة'), 'success'); self._renderList(); }
+          }
+          else {
+            UI.confirm(Lang.t('Delete this invoice?', 'حذف هذه الفاتورة؟'), function () {
+              Store.remove('invoices', id);
+              UI.toast(Lang.t('Invoice deleted', 'تم حذف الفاتورة'), 'success');
+              self._renderList();
+            });
+          }
+        });
+      });
+    },
+
+    _nextNumber: function () {
+      var prefix = Store.getSetting('invPrefix') || 'INV-';
+      var next   = parseInt(Store.getSetting('invNext') || 1001, 10);
+      var ns     = Store.getAll('invoices').map(function (r) {
+        var m = (r.number || '').match(/(\d+)$/); return m ? +m[1] : 0;
+      });
+      var maxN = ns.length ? ns.reduce(function (a, b) { return Math.max(a, b); }, 0) : 0;
+      return prefix + Math.max(next, maxN + 1);
+    },
+
+    _defaultDueDate: function (terms) {
+      var d = new Date();
+      d.setDate(d.getDate() + (terms || 30));
+      return d.toISOString().slice(0, 10);
+    },
+
+    openForm: function (id, prefill) {
+      var self    = this;
+      var r       = (id ? Store.getById('invoices', id) : null) || prefill || { date: Utils.today(), status: 'draft', items: [] };
+      var e       = Utils.escape;
+      var vatRate = VatEngine.rate();
+      var terms   = parseInt(Store.getSetting('invoiceTerms') || 30, 10);
+      var defaultDue = r.dueDate || self._defaultDueDate(terms);
+      var displayNum = id ? (r.number || '') : self._nextNumber();
+
+      var custOpts = Store.getAll('contacts').filter(function (c) { return c.type === 'customer'; })
+        .map(function (c) {
+          return '<option value="' + e(c.id) + '"' + (r.contactId === c.id ? ' selected' : '') + '>' + e(c.name) + '</option>';
+        }).join('');
+
+      var statusOpts = [
+        ['draft', Lang.t('Draft', 'مسودة')],
+        ['sent',  Lang.t('Sent',  'مرسلة')],
+        ['paid',  Lang.t('Paid',  'مدفوعة')]
+      ].map(function (opt) {
+        return '<option value="' + opt[0] + '"' + (r.status === opt[0] ? ' selected' : '') + '>' + opt[1] + '</option>';
+      }).join('');
+
+      var body =
+        '<div class="form-grid mb-2">' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Invoice #', 'رقم الفاتورة') + '</label>' +
+            '<input id="invNum" class="form-control" value="' + e(displayNum) + '"></div>' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Status', 'الحالة') + '</label>' +
+            '<select id="invStatus" class="form-control">' + statusOpts + '</select></div>' +
+        '</div>' +
+        '<div class="form-grid mb-2">' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Invoice Date', 'تاريخ الفاتورة') + ' *</label>' +
+            '<input id="invDate" type="date" class="form-control" value="' + e(r.date || Utils.today()) + '"></div>' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Due Date', 'تاريخ الاستحقاق') + ' *</label>' +
+            '<input id="invDue" type="date" class="form-control" value="' + e(defaultDue) + '"></div>' +
+        '</div>' +
+        '<div class="form-group"><label class="form-label">' + Lang.t('Customer', 'العميل') + ' *</label>' +
+          '<select id="invCust" class="form-control"><option value="">' + Lang.t('Select customer…', 'اختر عميلاً…') + '</option>' + custOpts + '</select></div>' +
+        '<div class="form-section-title">' + Lang.t('Line Items', 'بنود الفاتورة') + '</div>' +
+        '<div id="invItemsCont">' + (r.items || []).map(function (it) { return _buildItemRow(it, 'unitPrice'); }).join('') + '</div>' +
+        '<button type="button" id="invAddRow" class="btn btn-secondary btn-sm" style="margin-bottom:12px">' + Lang.t('+ Add Item', '+ إضافة صنف') + '</button>' +
+        '<div class="detail-panel" style="font-size:0.875rem;margin-bottom:12px">' +
+          '<div class="detail-row"><span class="detail-label">' + Lang.t('Subtotal', 'المجموع الفرعي') + '</span><span id="invSub"></span></div>' +
+          '<div class="detail-row"><span class="detail-label">VAT (' + (Store.getSetting('vatRate') || 15) + '%)</span><span id="invVat"></span></div>' +
+          '<div class="detail-row"><span class="detail-label" style="font-weight:700">' + Lang.t('Total', 'الإجمالي') + '</span><strong id="invTot"></strong></div>' +
+        '</div>' +
+        '<div class="form-group"><label class="form-label">' + Lang.t('Notes', 'ملاحظات') + '</label>' +
+          '<textarea id="invNotes" class="form-control" rows="2">' + e(r.notes || Store.getSetting('invoiceNotes') || '') + '</textarea></div>';
+
+      UI.modal({
+        title: id ? Lang.t('Edit Invoice', 'تعديل الفاتورة') : Lang.t('New Invoice', 'فاتورة جديدة'),
+        body:  body,
+        footer: '<button class="btn btn-primary" id="invSave">' + Lang.t('Save', 'حفظ') + '</button>' +
+                '<button class="btn btn-secondary" id="invCancel">' + Lang.t('Cancel', 'إلغاء') + '</button>',
+        onReady: function (ov) {
+          var getItems = _wireItemRows(ov, vatRate, 'invAddRow', 'invItemsCont', 'invSub', 'invVat', 'invTot', 'unitPrice');
+          ov.querySelector('#invCancel').addEventListener('click', UI.closeModal);
+          ov.querySelector('#invSave').addEventListener('click', function () {
+            var date = ov.querySelector('#invDate').value;
+            var due  = ov.querySelector('#invDue').value;
+            var cid  = ov.querySelector('#invCust').value;
+            if (!date) { UI.toast(Lang.t('Invoice date is required',  'تاريخ الفاتورة مطلوب'),      'error'); return; }
+            if (!due)  { UI.toast(Lang.t('Due date is required',      'تاريخ الاستحقاق مطلوب'),     'error'); return; }
+            if (!cid)  { UI.toast(Lang.t('Select a customer',         'اختر عميلاً'),                'error'); return; }
+            var items = getItems();
+            if (!items.length) { UI.toast(Lang.t('Add at least one item', 'أضف صنفاً واحداً على الأقل'), 'error'); return; }
+            var sub = items.reduce(function (a, i) { return a + i.total; }, 0);
+            var vat = sub * vatRate;
+            var co  = Store.getById('contacts', cid);
+            var num = ov.querySelector('#invNum').value.trim() || displayNum;
+            var saved = Store.save('invoices', {
+              id:            r.id || null,
+              number:        num,
+              date:          date,
+              dueDate:       due,
+              contactId:     cid,
+              contactName:   co ? co.name   : '',
+              contactNameAr: co ? (co.nameAr    || '') : '',
+              contactVat:    co ? (co.vatNumber  || '') : '',
+              status:        ov.querySelector('#invStatus').value,
+              items:         items,
+              subtotal:      sub,
+              vatAmount:     vat,
+              total:         sub + vat,
+              notes:         ov.querySelector('#invNotes').value.trim(),
+              createdAt:     r.createdAt
+            });
+            /* Advance the invNext counter */
+            var nm = (saved.number || '').match(/(\d+)$/);
+            if (nm) Store.saveSettings({ invNext: +nm[1] + 1 });
+            UI.closeModal();
+            UI.toast(Lang.t('Invoice saved', 'تم حفظ الفاتورة'), 'success');
+            self._renderList();
+          });
+        }
+      });
+    },
+
+    _viewDetail: function (id) {
+      var r = Store.getById('invoices', id);
+      if (!r) return;
+      var settings = DB.get('settings') || {};
+      var e        = Utils.escape;
+      var qrData   = VatEngine.zatcaQrString(r, settings);
+      var qrId     = 'invQrCanvas';
+      var vatPct   = Store.getSetting('vatRate') || 15;
+
+      var body =
+        '<div class="invoice-doc">' +
+          /* Bilingual header */
+          '<div class="inv-header">' +
+            '<div>' +
+              '<div class="inv-company-name">' + e(settings.companyNameEn || '') + '</div>' +
+              '<div class="inv-company-name" style="font-size:1.1rem">' + e(settings.companyNameAr || '') + '</div>' +
+              '<div class="inv-company-info">' +
+                e(settings.address || '') +
+                (settings.phone     ? '<br>' + e(settings.phone)     : '') +
+                (settings.vatNumber ? '<br>VAT: ' + e(settings.vatNumber) : '') +
+                (settings.crNumber  ? ' | CR: ' + e(settings.crNumber)  : '') +
+              '</div>' +
+            '</div>' +
+            '<div style="text-align:right">' +
+              '<div class="inv-title">INVOICE / فاتورة</div>' +
+              '<div class="inv-number">' + e(r.number || '') + '</div>' +
+              (qrData ? '<canvas id="' + qrId + '" style="display:block;margin-top:8px;margin-left:auto"></canvas>' : '') +
+            '</div>' +
+          '</div>' +
+          /* Meta row */
+          '<div class="inv-meta">' +
+            '<div><div class="inv-meta-label">Invoice Date / تاريخ الفاتورة</div><div class="inv-meta-value">' + Utils.formatDate(r.date) + '</div></div>' +
+            '<div><div class="inv-meta-label">Due Date / تاريخ الاستحقاق</div><div class="inv-meta-value">' + Utils.formatDate(r.dueDate) + '</div></div>' +
+            '<div><div class="inv-meta-label">Status / الحالة</div><div class="inv-meta-value"><span class="' + Utils.badgeClass(r.status) + '">' + e(r.status) + '</span></div></div>' +
+          '</div>' +
+          /* Bill to */
+          '<div style="margin-bottom:24px;padding:16px;background:#f8fafc;border-radius:var(--radius-md)">' +
+            '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-secondary);margin-bottom:6px">Bill To / الفاتورة لـ</div>' +
+            '<div style="font-weight:700">' + e(r.contactName || '') + '</div>' +
+            (r.contactNameAr ? '<div>' + e(r.contactNameAr) + '</div>' : '') +
+            (r.contactVat    ? '<div style="font-size:0.8rem;color:var(--color-text-secondary)">VAT Reg: ' + e(r.contactVat) + '</div>' : '') +
+          '</div>' +
+          /* Line items table */
+          '<div class="inv-items"><table><thead><tr>' +
+            '<th>#</th>' +
+            '<th>Description / الوصف</th>' +
+            '<th>Qty / الكمية</th>' +
+            '<th>Unit / الوحدة</th>' +
+            '<th>Unit Price / سعر الوحدة</th>' +
+            '<th>VAT%</th>' +
+            '<th>Amount / المبلغ</th>' +
+          '</tr></thead><tbody>' +
+          (r.items || []).map(function (it, idx) {
+            return '<tr><td>' + (idx + 1) + '</td>' +
+              '<td>' + e(it.name || '') + '</td>' +
+              '<td>' + (it.qty || 0) + '</td>' +
+              '<td>' + e(it.unit || '') + '</td>' +
+              '<td>' + Utils.formatCurrency(it.unitPrice) + '</td>' +
+              '<td>' + vatPct + '%</td>' +
+              '<td>' + Utils.formatCurrency(it.total) + '</td></tr>';
+          }).join('') +
+          '</tbody></table></div>' +
+          /* Totals */
+          '<div class="inv-totals">' +
+            '<div class="inv-total-row"><span class="label">Subtotal / المجموع الفرعي</span><span class="value">' + Utils.formatCurrency(r.subtotal) + '</span></div>' +
+            '<div class="inv-total-row"><span class="label">VAT ' + vatPct + '% / ضريبة القيمة المضافة</span><span class="value">' + Utils.formatCurrency(r.vatAmount) + '</span></div>' +
+            '<div class="inv-total-row inv-grand-total"><span class="label">Total / الإجمالي</span><span class="value">' + Utils.formatCurrency(r.total) + '</span></div>' +
+          '</div>' +
+          (r.notes ? '<div class="inv-notes">' + e(r.notes) + '</div>' : '') +
+          /* ZATCA compliance footer */
+          '<div class="zatca-compliance-footer">' +
+            'This invoice was generated in compliance with ZATCA e-invoicing regulations (Phase 2) — ' +
+            'هذه الفاتورة متوافقة مع اشتراطات الفوترة الإلكترونية لهيئة الزكاة والضريبة والجمارك (المرحلة الثانية)' +
+          '</div>' +
+        '</div>';
+
+      UI.modal({
+        title: Lang.t('Invoice', 'فاتورة') + ' – ' + e(r.number || ''),
+        body:  body,
+        footer: '<button class="btn btn-primary no-print" id="invPrintBtn">' + Lang.t('Print', 'طباعة') + '</button>' +
+                '<button class="btn btn-secondary no-print" id="invCloseBtn">' + Lang.t('Close', 'إغلاق') + '</button>',
+        onReady: function () {
+          document.getElementById('invPrintBtn').addEventListener('click', function () { window.print(); });
+          document.getElementById('invCloseBtn').addEventListener('click', UI.closeModal);
+          if (qrData) VatEngine.renderQr(qrId, qrData);
+        }
+      });
+    },
+
+    _exportExcel: function () {
+      if (!window.XLSX) { UI.toast(Lang.t('Export library not loaded', 'لم يتم تحميل مكتبة التصدير'), 'error'); return; }
+      var rows = Store.getAll('invoices');
+      var data = [['Invoice #', 'Date', 'Due Date', 'Customer', 'Subtotal (SAR)', 'VAT (SAR)', 'Total (SAR)', 'Status']];
+      rows.forEach(function (r) {
+        data.push([r.number, r.date, r.dueDate, r.contactName, r.subtotal, r.vatAmount, r.total, r.status]);
+      });
+      var ws = XLSX.utils.aoa_to_sheet(data);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
+      XLSX.writeFile(wb, 'invoices-' + Utils.today() + '.xlsx');
+    }
+  };
+
+  /* ============================================================
+     § 20  DocumentsModule — Quotations · Transport Permits ·
+            Contracts · Receipt Vouchers · Payment Vouchers
+     ============================================================ */
+  var DocumentsModule = {
+    _filter: 'all', _search: '',
+
+    render: function (container) {
+      Router._tpl('tpl-documents', container);
+      this._addVoucherTabs();
+      this._bindEvents();
+      this._renderList();
+    },
+
+    /* Dynamically append Receipt Voucher and Payment Voucher tabs after template clone */
+    _addVoucherTabs: function () {
+      var tabs = document.getElementById('docTypeTabs');
+      if (!tabs || tabs.querySelector('[data-filter="receipt_voucher"]')) return;
+      var self = this;
+      [
+        ['receipt_voucher', Lang.t('Receipt Vouchers', 'سندات القبض')],
+        ['payment_voucher', Lang.t('Payment Vouchers', 'سندات الصرف')]
+      ].forEach(function (pair) {
+        var tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.setAttribute('data-filter', pair[0]);
+        tab.textContent = pair[1];
+        tabs.appendChild(tab);
+      });
+    },
+
+    _bindEvents: function () {
+      var self = this;
+      var tabs = document.getElementById('docTypeTabs');
+      if (tabs) {
+        tabs.addEventListener('click', function (e) {
+          var tab = e.target.closest('.tab');
+          if (!tab) return;
+          tabs.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          self._filter = tab.getAttribute('data-filter') || 'all';
+          self._renderList();
+        });
+      }
+      var search = document.getElementById('docSearch');
+      if (search) search.addEventListener('input', function () { self._search = search.value.toLowerCase(); self._renderList(); });
+      var nb = document.getElementById('newDocBtn');
+      if (nb) nb.addEventListener('click', function () { self._openTypeMenu(); });
+    },
+
+    _TYPE_LABELS: {
+      quotation:        null, /* set in constructor via Lang */
+      transport_permit: null,
+      contract:         null,
+      receipt_voucher:  null,
+      payment_voucher:  null
+    },
+
+    _typeLabel: function (type) {
+      var map = {
+        quotation:        Lang.t('Quotation',        'عرض سعر'),
+        transport_permit: Lang.t('Transport Permit', 'تصريح نقل'),
+        contract:         Lang.t('Contract',         'عقد'),
+        receipt_voucher:  Lang.t('Receipt Voucher',  'سند قبض'),
+        payment_voucher:  Lang.t('Payment Voucher',  'سند صرف')
+      };
+      return map[type] || Utils.escape(type || '');
+    },
+
+    _openTypeMenu: function () {
+      var self  = this;
+      var types = ['quotation', 'transport_permit', 'contract', 'receipt_voucher', 'payment_voucher'];
+      var btns  = types.map(function (t) {
+        return '<button class="btn btn-secondary" style="width:100%;margin-bottom:8px" data-dtype="' + t + '">' + self._typeLabel(t) + '</button>';
+      }).join('');
+      UI.modal({
+        title: Lang.t('Select Document Type', 'اختر نوع المستند'),
+        body:  '<div style="padding:8px 0">' + btns + '</div>',
+        footer: '<button class="btn btn-secondary" id="dtCancel">' + Lang.t('Cancel', 'إلغاء') + '</button>',
+        onReady: function (ov) {
+          ov.querySelector('#dtCancel').addEventListener('click', UI.closeModal);
+          ov.querySelectorAll('[data-dtype]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var dtype = btn.getAttribute('data-dtype');
+              UI.closeModal();
+              self.openForm(null, dtype);
+            });
+          });
+        }
+      });
+    },
+
+    _renderList: function () {
+      var el = document.getElementById('documentsList');
+      if (!el) return;
+      var self = this;
+      var rows = Store.getAll('documents').filter(function (r) {
+        var typeMatch   = self._filter === 'all' || r.type === self._filter;
+        var searchMatch = !self._search || ((r.number || '') + ' ' + (r.title || '') + ' ' + (r.party || '')).toLowerCase().indexOf(self._search) >= 0;
+        return typeMatch && searchMatch;
+      }).sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
+
+      if (!rows.length) {
+        el.innerHTML = '<div class="empty-state"><p>' + Lang.t('No documents found', 'لا توجد مستندات') + '</p></div>';
+        return;
+      }
+
+      el.innerHTML = '<div class="table-responsive"><table><thead><tr>' +
+        '<th>' + Lang.t('Ref #',     'رقم المرجع') + '</th>' +
+        '<th>' + Lang.t('Type',      'النوع')       + '</th>' +
+        '<th>' + Lang.t('Date',      'التاريخ')     + '</th>' +
+        '<th>' + Lang.t('Party',     'الجهة')       + '</th>' +
+        '<th>' + Lang.t('Title',     'العنوان')     + '</th>' +
+        '<th>' + Lang.t('Amount',    'المبلغ')      + '</th>' +
+        '<th>' + Lang.t('Status',    'الحالة')      + '</th>' +
+        '<th>' + Lang.t('Actions',   'الإجراءات')   + '</th>' +
+        '</tr></thead><tbody>' +
+        rows.map(function (r) {
+          return '<tr>' +
+            '<td><strong>' + Utils.escape(r.number || '') + '</strong></td>' +
+            '<td><span class="badge badge-secondary">' + self._typeLabel(r.type) + '</span></td>' +
+            '<td>' + Utils.formatDate(r.date) + '</td>' +
+            '<td>' + Utils.escape(r.party || '') + '</td>' +
+            '<td>' + Utils.escape(r.title || '') + '</td>' +
+            '<td>' + (r.amount ? Utils.formatCurrency(r.amount) : '—') + '</td>' +
+            '<td><span class="' + Utils.badgeClass(r.status || 'draft') + '">' + Utils.escape(r.status || 'draft') + '</span></td>' +
+            '<td class="action-cell">' +
+              '<button class="btn btn-secondary btn-xs" data-act="view"    data-id="' + r.id + '">' + Lang.t('View',     'عرض')        + '</button> ' +
+              '<button class="btn btn-secondary btn-xs" data-act="edit"    data-id="' + r.id + '">' + Lang.t('Edit',     'تعديل')      + '</button> ' +
+              (r.type === 'quotation' ? '<button class="btn btn-secondary btn-xs" data-act="convert" data-id="' + r.id + '">' + Lang.t('→ Invoice', '→ فاتورة') + '</button> ' : '') +
+              '<button class="btn btn-danger    btn-xs" data-act="delete"  data-id="' + r.id + '">' + Lang.t('Delete',   'حذف')        + '</button>' +
+            '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+
+      el.querySelectorAll('[data-act]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id  = btn.getAttribute('data-id');
+          var act = btn.getAttribute('data-act');
+          var doc;
+          if (act === 'view')    { self._viewDetail(id); }
+          else if (act === 'edit') {
+            doc = Store.getById('documents', id);
+            if (doc) self.openForm(id, doc.type);
+          }
+          else if (act === 'convert') { self._convertToInvoice(id); }
+          else {
+            UI.confirm(Lang.t('Delete this document?', 'حذف هذا المستند؟'), function () {
+              Store.remove('documents', id);
+              UI.toast(Lang.t('Document deleted', 'تم حذف المستند'), 'success');
+              self._renderList();
+            });
+          }
+        });
+      });
+    },
+
+    _nextNum: function (type) {
+      var pfx = { quotation: 'QT-', transport_permit: 'TP-', contract: 'CT-', receipt_voucher: 'RV-', payment_voucher: 'PV-' };
+      var prefix = pfx[type] || 'DOC-';
+      var ns = Store.getAll('documents').filter(function (d) { return d.type === type; }).map(function (d) {
+        var m = (d.number || '').match(/(\d+)$/); return m ? +m[1] : 0;
+      });
+      return prefix + String((ns.length ? ns.reduce(function (a, b) { return Math.max(a, b); }, 0) : 0) + 1).padStart(3, '0');
+    },
+
+    _buildDocForm: function (r, docType) {
+      var e           = Utils.escape;
+      var contactOpts = Store.getAll('contacts').map(function (c) {
+        return '<option value="' + e(c.name) + '"' + (r.party === c.name ? ' selected' : '') + '>' + e(c.name) + '</option>';
+      }).join('');
+      var statusVals   = ['draft', 'sent', 'approved', 'expired', 'paid', 'void'];
+      var statusLabels = { draft: 'مسودة', sent: 'مرسل', approved: 'معتمد', expired: 'منتهي', paid: 'مدفوع', void: 'ملغى' };
+      var statusOpts   = statusVals.map(function (s) {
+        var enLabel = s.charAt(0).toUpperCase() + s.slice(1);
+        return '<option value="' + s + '"' + (r.status === s ? ' selected' : '') + '>' + Lang.t(enLabel, statusLabels[s]) + '</option>';
+      }).join('');
+
+      var html =
+        '<div class="form-grid mb-2">' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Ref #', 'رقم المرجع') + '</label>' +
+            '<input id="dNum" class="form-control" value="' + e(r.number || '') + '"></div>' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Date', 'التاريخ') + ' *</label>' +
+            '<input id="dDt" type="date" class="form-control" value="' + e(r.date || Utils.today()) + '"></div>' +
+        '</div>' +
+        '<div class="form-group"><label class="form-label">' + Lang.t('Party / Customer', 'الجهة / العميل') + ' *</label>' +
+          '<input id="dParty" class="form-control" list="dPartyList" value="' + e(r.party || '') + '">' +
+          '<datalist id="dPartyList">' + contactOpts + '</datalist></div>' +
+        '<div class="form-group"><label class="form-label">' + Lang.t('Title / Description', 'العنوان / الوصف') + ' *</label>' +
+          '<input id="dTitle" class="form-control" value="' + e(r.title || '') + '"></div>';
+
+      /* Type-specific fields */
+      if (docType === 'receipt_voucher' || docType === 'payment_voucher') {
+        html +=
+          '<div class="form-grid">' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Amount (SAR)', 'المبلغ (ريال)') + ' *</label>' +
+              '<input id="dAmt" type="number" min="0.01" step="0.01" class="form-control" value="' + (r.amount || '') + '"></div>' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Payment Method', 'طريقة الدفع') + '</label>' +
+              '<select id="dPay" class="form-control">' +
+                '<option value="cash"'          + (r.paymentMethod === 'cash'          ? ' selected' : '') + '>' + Lang.t('Cash',          'نقداً')       + '</option>' +
+                '<option value="bank_transfer"' + (r.paymentMethod === 'bank_transfer' ? ' selected' : '') + '>' + Lang.t('Bank Transfer', 'تحويل بنكي')  + '</option>' +
+                '<option value="cheque"'        + (r.paymentMethod === 'cheque'        ? ' selected' : '') + '>' + Lang.t('Cheque',        'شيك')         + '</option>' +
+              '</select></div>' +
+          '</div>' +
+          '<div class="form-group"><label class="form-label">' + Lang.t('Reference / Invoice #', 'المرجع / رقم الفاتورة') + '</label>' +
+            '<input id="dRef" class="form-control" value="' + e(r.reference || '') + '"></div>';
+      } else if (docType === 'quotation') {
+        html +=
+          '<div class="form-grid">' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Amount (SAR)', 'المبلغ (ريال)') + '</label>' +
+              '<input id="dAmt" type="number" min="0" step="0.01" class="form-control" value="' + (r.amount || '') + '"></div>' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Valid Until', 'صالح حتى') + '</label>' +
+              '<input id="dExpiry" type="date" class="form-control" value="' + e(r.expiryDate || '') + '"></div>' +
+          '</div>';
+      } else if (docType === 'transport_permit') {
+        html +=
+          '<div class="form-grid">' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Vehicle / Plate #', 'المركبة / اللوحة') + '</label>' +
+              '<input id="dVehicle" class="form-control" value="' + e(r.vehicle || '') + '"></div>' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Driver Name', 'اسم السائق') + '</label>' +
+              '<input id="dDriver" class="form-control" value="' + e(r.driver || '') + '"></div>' +
+          '</div>';
+      } else if (docType === 'contract') {
+        html +=
+          '<div class="form-grid">' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('Contract Value (SAR)', 'قيمة العقد (ريال)') + '</label>' +
+              '<input id="dAmt" type="number" min="0" step="0.01" class="form-control" value="' + (r.amount || '') + '"></div>' +
+            '<div class="form-group"><label class="form-label">' + Lang.t('End Date', 'تاريخ الانتهاء') + '</label>' +
+              '<input id="dExpiry" type="date" class="form-control" value="' + e(r.expiryDate || '') + '"></div>' +
+          '</div>';
+      }
+
+      html +=
+        '<div class="form-group mb-2"><label class="form-label">' + Lang.t('Status', 'الحالة') + '</label>' +
+          '<select id="dStatus" class="form-control">' + statusOpts + '</select></div>' +
+        '<div class="form-group"><label class="form-label">' + Lang.t('Notes', 'ملاحظات') + '</label>' +
+          '<textarea id="dNotes" class="form-control" rows="2">' + e(r.notes || '') + '</textarea></div>';
+      return html;
+    },
+
+    openForm: function (id, type) {
+      var self    = this;
+      var docType = type || (id ? (Store.getById('documents', id) || {}).type : '') || 'quotation';
+      var r       = (id ? Store.getById('documents', id) : null) || {
+        number: self._nextNum(docType), type: docType, date: Utils.today(), status: 'draft'
+      };
+      var e        = Utils.escape;
+      var typeLbl  = self._typeLabel(docType);
+
+      UI.modal({
+        title: (id ? Lang.t('Edit', 'تعديل') : Lang.t('New', 'جديد')) + ' – ' + typeLbl,
+        body:  self._buildDocForm(r, docType),
+        footer: '<button class="btn btn-primary" id="dSave">' + Lang.t('Save', 'حفظ') + '</button>' +
+                '<button class="btn btn-secondary" id="dCancel">' + Lang.t('Cancel', 'إلغاء') + '</button>',
+        onReady: function (ov) {
+          ov.querySelector('#dCancel').addEventListener('click', UI.closeModal);
+          ov.querySelector('#dSave').addEventListener('click', function () {
+            var date  = ov.querySelector('#dDt').value;
+            var party = ov.querySelector('#dParty').value.trim();
+            var title = ov.querySelector('#dTitle').value.trim();
+            if (!date)  { UI.toast(Lang.t('Date is required',  'التاريخ مطلوب'), 'error'); return; }
+            if (!party) { UI.toast(Lang.t('Party is required', 'الجهة مطلوبة'), 'error'); return; }
+            if (!title) { UI.toast(Lang.t('Title is required', 'العنوان مطلوب'), 'error'); return; }
+            /* Safely read optional type-specific fields */
+            var getFieldValue = function (sel) { var el = ov.querySelector(sel); return el ? el.value : ''; };
+            var isVoucher = docType === 'receipt_voucher' || docType === 'payment_voucher';
+            var amt = parseFloat(getFieldValue('#dAmt')) || 0;
+            if (isVoucher && !amt) { UI.toast(Lang.t('Amount must be > 0', 'يجب أن يكون المبلغ أكبر من 0'), 'error'); return; }
+            Store.save('documents', {
+              id:            r.id || null,
+              number:        ov.querySelector('#dNum').value.trim() || self._nextNum(docType),
+              type:          docType,
+              date:          date,
+              party:         party,
+              title:         title,
+              amount:        amt,
+              paymentMethod: getFieldValue('#dPay'),
+              reference:     getFieldValue('#dRef'),
+              expiryDate:    getFieldValue('#dExpiry'),
+              vehicle:       getFieldValue('#dVehicle'),
+              driver:        getFieldValue('#dDriver'),
+              status:        ov.querySelector('#dStatus').value,
+              notes:         ov.querySelector('#dNotes').value.trim(),
+              createdAt:     r.createdAt
+            });
+            UI.closeModal();
+            UI.toast(Lang.t('Document saved', 'تم حفظ المستند'), 'success');
+            self._renderList();
+          });
+        }
+      });
+    },
+
+    /* Convert an approved quotation into a draft invoice */
+    _convertToInvoice: function (id) {
+      var doc = Store.getById('documents', id);
+      if (!doc || doc.type !== 'quotation') return;
+      var co  = Store.getAll('contacts').find(function (c) { return c.name === doc.party; });
+      var prefill = {
+        contactId:   co ? co.id : '',
+        contactName: doc.party,
+        date:        Utils.today(),
+        status:      'draft',
+        notes:       doc.notes || '',
+        items:       doc.items || []
+      };
+      doc.status = 'approved';
+      Store.save('documents', doc);
+      UI.toast(Lang.t('Quotation converted — complete the invoice form', 'تم تحويل عرض السعر — أكمل نموذج الفاتورة'), 'info');
+      Router.navigate('invoices');
+      setTimeout(function () { InvoicesModule.openForm(null, prefill); }, 150);
+    },
+
+    _viewDetail: function (id) {
+      var r        = Store.getById('documents', id);
+      if (!r) return;
+      var settings = DB.get('settings') || {};
+      var e        = Utils.escape;
+      var self     = this;
+      var typeLbl  = self._typeLabel(r.type);
+
+      var body =
+        '<div class="invoice-doc">' +
+          '<div class="inv-header">' +
+            '<div>' +
+              '<div class="inv-company-name">' + e(settings.companyNameEn || '') + '</div>' +
+              '<div class="inv-company-name" style="font-size:1.1rem">' + e(settings.companyNameAr || '') + '</div>' +
+              '<div class="inv-company-info">' + e(settings.address || '') + (settings.phone ? '<br>' + e(settings.phone) : '') + '</div>' +
+            '</div>' +
+            '<div style="text-align:right">' +
+              '<div class="inv-title" style="font-size:1.4rem">' + typeLbl + '</div>' +
+              '<div class="inv-number">' + e(r.number || '') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="inv-meta">' +
+            '<div><div class="inv-meta-label">Date / التاريخ</div><div class="inv-meta-value">' + Utils.formatDate(r.date) + '</div></div>' +
+            '<div><div class="inv-meta-label">Party / الجهة</div><div class="inv-meta-value">' + e(r.party || '') + '</div></div>' +
+            (r.expiryDate ? '<div><div class="inv-meta-label">Expiry / الانتهاء</div><div class="inv-meta-value">' + Utils.formatDate(r.expiryDate) + '</div></div>' : '') +
+            '<div><div class="inv-meta-label">Status / الحالة</div><div class="inv-meta-value"><span class="' + Utils.badgeClass(r.status || 'draft') + '">' + e(r.status || 'draft') + '</span></div></div>' +
+          '</div>' +
+          '<div style="margin-bottom:20px;padding:16px;background:#f8fafc;border-radius:var(--radius-md)">' +
+            '<div style="font-weight:700;font-size:1rem;margin-bottom:8px">' + e(r.title || '') + '</div>' +
+            (r.vehicle ? '<div>Vehicle / المركبة: <strong>' + e(r.vehicle) + '</strong></div>' : '') +
+            (r.driver  ? '<div>Driver / السائق: <strong>' + e(r.driver)  + '</strong></div>' : '') +
+            (r.amount  ?
+              '<div style="margin-top:12px;font-size:1.1rem">Amount / المبلغ: <strong>' + Utils.formatCurrency(r.amount) + '</strong>' +
+              (r.paymentMethod ? ' <span style="color:var(--color-text-secondary)">(' + e(r.paymentMethod) + ')</span>' : '') +
+              (r.reference     ? ' — Ref: ' + e(r.reference) : '') +
+              '</div>' : '') +
+          '</div>' +
+          (r.notes ? '<div class="inv-notes">' + e(r.notes) + '</div>' : '') +
+          '<div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;font-size:0.85rem">' +
+            '<div style="border-top:2px solid #e2e8f0;padding-top:8px">Authorized Signature / توقيع المفوض</div>' +
+            '<div style="border-top:2px solid #e2e8f0;padding-top:8px">Received / Approved — استلم / اعتمد</div>' +
+          '</div>' +
+        '</div>';
+
+      UI.modal({
+        title: typeLbl + ' – ' + e(r.number || ''),
+        body:  body,
+        footer: '<button class="btn btn-primary no-print" id="docPrintBtn">' + Lang.t('Print', 'طباعة') + '</button>' +
+                '<button class="btn btn-secondary no-print" id="docCloseBtn">' + Lang.t('Close', 'إغلاق') + '</button>',
+        onReady: function () {
+          document.getElementById('docPrintBtn').addEventListener('click', function () { window.print(); });
+          document.getElementById('docCloseBtn').addEventListener('click', UI.closeModal);
+        }
+      });
+    }
+  };
+
+  /* ============================================================
+     § 21  PHASE 3 INIT — demo seed + Router patch
+     ============================================================ */
+  var Phase3 = {
+
+    seed: function () {
+      if (DB.get('seeded3')) return;
+      DB.set('documents', [
+        { id: 'doc1', number: 'QT-001', type: 'quotation',
+          date: '2026-01-10', party: 'Al-Jubail Steel Company',
+          title: 'Quotation for HMS 1 supply – Q1 2026',
+          amount: 60375, expiryDate: '2026-02-10',
+          status: 'approved', notes: 'Prices valid for 30 days.', createdAt: '2026-01-10' },
+        { id: 'doc2', number: 'QT-002', type: 'quotation',
+          date: '2026-03-05', party: 'Arabian Steel Works',
+          title: 'Quotation for Cast Iron Scrap – March 2026',
+          amount: 18860, expiryDate: '2026-04-05',
+          status: 'draft', notes: 'Awaiting customer approval.', createdAt: '2026-03-05' },
+        { id: 'doc3', number: 'TP-001', type: 'transport_permit',
+          date: '2026-02-10', party: 'Al-Jubail Steel Company',
+          title: 'Transport of HMS 1 – 50 tons to Al-Jubail',
+          vehicle: 'ABC 1234', driver: 'Mohammed Al-Qahtani',
+          status: 'approved', notes: 'Route: Riyadh → Al-Jubail Industrial Area', createdAt: '2026-02-10' },
+        { id: 'doc4', number: 'CT-001', type: 'contract',
+          date: '2025-01-01', party: 'Riyadh Metal Recyclers',
+          title: 'Annual scrap metal supply agreement 2025',
+          amount: 600000, expiryDate: '2025-12-31',
+          status: 'expired', notes: 'Renewable annually.', createdAt: '2025-01-01' },
+        { id: 'doc5', number: 'RV-001', type: 'receipt_voucher',
+          date: '2026-01-16', party: 'Al-Jubail Steel Company',
+          title: 'Payment received for INV-1004',
+          amount: 112500, paymentMethod: 'bank_transfer', reference: 'INV-1004',
+          status: 'paid', notes: 'Bank transfer ref: TRF-20260116', createdAt: '2026-01-16' },
+        { id: 'doc6', number: 'PV-001', type: 'payment_voucher',
+          date: '2026-01-12', party: 'Jeddah Scrap Traders',
+          title: 'Payment for PO-004 – Copper Wire Scrap',
+          amount: 170200, paymentMethod: 'bank_transfer', reference: 'PO-004',
+          status: 'paid', notes: 'Bank transfer ref: TRF-20260112', createdAt: '2026-01-12' },
+        { id: 'doc7', number: 'RV-002', type: 'receipt_voucher',
+          date: '2026-02-20', party: 'Riyadh Metal Recyclers',
+          title: 'Payment received for INV-1005',
+          amount: 78300, paymentMethod: 'bank_transfer', reference: 'INV-1005',
+          status: 'paid', notes: '', createdAt: '2026-02-20' },
+        { id: 'doc8', number: 'PV-002', type: 'payment_voucher',
+          date: '2026-03-12', party: 'Gulf Metals LLC',
+          title: 'Payment for PO-006 – Aluminum Sheet Scrap',
+          amount: 94875, paymentMethod: 'cheque', reference: 'PO-006',
+          status: 'paid', notes: 'Cheque #45891', createdAt: '2026-03-12' }
+      ]);
+      DB.set('seeded3', true);
+    },
+
+    init: function () {
+      this.seed();
+
+      /* Extend the shared data-collections list for export / clear */
+      ['documents', 'seeded3'].forEach(function (c) {
+        if (_DATA_COLLECTIONS.indexOf(c) < 0) _DATA_COLLECTIONS.push(c);
+      });
+
+      /* Patch Router.modules */
+      Router.modules.invoices.render   = function (el) { InvoicesModule.render(el); };
+      Router.modules.documents.render  = function (el) { DocumentsModule.render(el); };
+    }
+  };
+
+  /* Extend App.init to run Phase 3 after Phase 2 bootstrap */
+  var _p2Init = App.init.bind(App);
+  App.init = function () { _p2Init(); Phase3.init(); };
 
 })();

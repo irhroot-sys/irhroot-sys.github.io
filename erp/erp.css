@@ -1279,6 +1279,22 @@ select.form-control {
   color: var(--color-text-secondary);
 }
 
+.qr-error {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.zatca-compliance-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.6;
+}
+
 .qr-code-box {
   text-align: center;
   margin-top: 24px;
