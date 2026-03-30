@@ -607,6 +607,16 @@ tr:hover td {
   color: var(--color-text-secondary);
 }
 
+/* Action column in data tables: no-wrap, right-align */
+td.action-cell {
+  white-space: nowrap;
+  text-align: right;
+}
+
+html[dir="rtl"] td.action-cell {
+  text-align: left;
+}
+
 /* Pagination */
 .pagination {
   display: flex;
@@ -706,6 +716,11 @@ tr:hover td {
 .btn-sm {
   padding: 5px 10px;
   font-size: 0.8rem;
+}
+
+.btn-xs {
+  padding: 3px 8px;
+  font-size: 0.75rem;
 }
 
 .btn-lg {
@@ -1264,6 +1279,22 @@ select.form-control {
   color: var(--color-text-secondary);
 }
 
+.qr-error {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.zatca-compliance-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.6;
+}
+
 .qr-code-box {
   text-align: center;
   margin-top: 24px;
@@ -1716,6 +1747,28 @@ html[dir="rtl"] .timeline-dot {
   table { page-break-inside: auto; }
   tr    { page-break-inside: avoid; page-break-after: auto; }
   thead { display: table-header-group; }
+
+  /* Print invoice/sale/purchase detail from inside a modal */
+  .modal-overlay {
+    position: static;
+    background: none;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .modal {
+    box-shadow: none;
+    border: none;
+    max-height: none;
+    overflow: visible;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .modal-header,
+  .modal-footer {
+    display: none !important;
+  }
 }
 
 /* ============================================================
