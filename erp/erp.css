@@ -607,6 +607,16 @@ tr:hover td {
   color: var(--color-text-secondary);
 }
 
+/* Action column in data tables: no-wrap, right-align */
+td.action-cell {
+  white-space: nowrap;
+  text-align: right;
+}
+
+html[dir="rtl"] td.action-cell {
+  text-align: left;
+}
+
 /* Pagination */
 .pagination {
   display: flex;
@@ -706,6 +716,11 @@ tr:hover td {
 .btn-sm {
   padding: 5px 10px;
   font-size: 0.8rem;
+}
+
+.btn-xs {
+  padding: 3px 8px;
+  font-size: 0.75rem;
 }
 
 .btn-lg {
