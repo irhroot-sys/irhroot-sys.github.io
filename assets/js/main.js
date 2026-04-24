@@ -121,26 +121,130 @@
   revealOnScroll();
 
   // ===== CONTACT FORM =====
+  // Web3Forms access key — replace with your own from https://web3forms.com
+  var WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+
+  // --- URL param pre-selection (e.g. contact.html?inquiry=sell) ---
+  (function preSelectInquiry() {
+    var inquirySelect = document.getElementById('inquiry');
+    if (!inquirySelect) return;
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var val = params.get('inquiry');
+      if (val) {
+        var opt = inquirySelect.querySelector('option[value="' + val + '"]');
+        if (opt) inquirySelect.value = val;
+      }
+    } catch (e) {}
+  })();
+
+  // --- Inline field validation helpers ---
+  function showError(inputId, msg) {
+    var el = document.getElementById(inputId);
+    var errSpan = document.getElementById(inputId + 'Error');
+    if (el) el.classList.add('input-error');
+    if (errSpan) errSpan.textContent = msg;
+  }
+  function clearError(inputId) {
+    var el = document.getElementById(inputId);
+    var errSpan = document.getElementById(inputId + 'Error');
+    if (el) el.classList.remove('input-error');
+    if (errSpan) errSpan.textContent = '';
+  }
+
+  // Validate on blur for live feedback
+  ['firstName', 'lastName', 'email', 'message'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('blur', function() {
+      if (el.value.trim() === '') {
+        showError(id, el.getAttribute('aria-required') ? 'This field is required.' : '');
+      } else if (id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())) {
+        showError('email', 'Please enter a valid email address.');
+      } else {
+        clearError(id);
+      }
+    });
+    el.addEventListener('input', function() { clearError(id); });
+  });
+
+  // --- Form submit ---
   var contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      var btn = this.querySelector('button[type="submit"]');
-      var success = document.getElementById('formSuccess');
       var lang = document.documentElement.getAttribute('lang') || 'en';
+      var btn = document.getElementById('submitBtn');
+      var success = document.getElementById('formSuccess');
+      var valid = true;
+
+      // Honeypot check
+      var hp = document.getElementById('hp_website');
+      if (hp && hp.value.trim() !== '') return; // silently drop bot submissions
+
+      // Required field validation
+      var firstName = document.getElementById('firstName');
+      var lastName  = document.getElementById('lastName');
+      var email     = document.getElementById('email');
+      var message   = document.getElementById('message');
+      var consent   = document.getElementById('privacyConsent');
+      var consentErr = document.getElementById('consentError');
+
+      if (!firstName || firstName.value.trim() === '') { showError('firstName', 'First name is required.'); valid = false; }
+      else clearError('firstName');
+      if (!lastName || lastName.value.trim() === '')   { showError('lastName', 'Last name is required.'); valid = false; }
+      else clearError('lastName');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { showError('email', 'A valid email address is required.'); valid = false; }
+      else clearError('email');
+      if (!message || message.value.trim() === '')     { showError('message', 'Please enter your message.'); valid = false; }
+      else clearError('message');
+      if (!consent || !consent.checked) {
+        if (consentErr) consentErr.textContent = 'You must agree to the Privacy Policy to submit.';
+        valid = false;
+      } else {
+        if (consentErr) consentErr.textContent = '';
+      }
+
+      if (!valid) return;
+
+      // Send via Web3Forms
       btn.disabled = true;
       btn.textContent = lang === 'ar' ? 'جارٍ الإرسال...' : 'Sending...';
-      setTimeout(function() {
-        contactForm.reset();
+
+      var formData = new FormData(contactForm);
+      formData.append('access_key', WEB3FORMS_KEY);
+      formData.append('subject', 'New Inquiry — AALKC.com');
+      formData.delete('hp_website'); // don't send honeypot field
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
         btn.disabled = false;
         btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
-        if (success) {
-          success.style.display = 'block';
-          setTimeout(function() { success.style.display = ''; }, 6000);
+        if (data.success) {
+          contactForm.reset();
+          if (success) {
+            success.style.display = 'block';
+            setTimeout(function() { success.style.display = ''; }, 7000);
+          }
+        } else {
+          alert(lang === 'ar' ? 'حدث خطأ. يُرجى المحاولة مرة أخرى.' : 'Submission failed. Please try again.');
         }
-      }, 800);
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
+        alert(lang === 'ar' ? 'حدث خطأ في الشبكة. يُرجى المحاولة مرة أخرى.' : 'Network error. Please try again.');
+      });
     });
   }
+
+  // ===== FOOTER YEAR =====
+  var yearEl = document.getElementById('footerYear');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   // ===== SMOOTH SCROLL =====
   document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {

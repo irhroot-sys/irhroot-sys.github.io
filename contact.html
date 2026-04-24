@@ -1,26 +1,46 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="color-scheme" content="light">
   <meta name="description" content="Contact AMANAT AL-KALIMA COMPANY in Dammam, Saudi Arabia. Phone: +966565790073. Email: contact@aalkc.com. We respond to all scrap trading inquiries promptly.">
   <meta name="keywords" content="contact scrap company Dammam, scrap trading company Saudi Arabia, AMANAT AL-KALIMA contact, شركة أمانة الكلمة تواصل">
+  <meta name="author" content="AMANAT AL-KALIMA COMPANY">
+  <meta name="robots" content="index, follow">
   <meta property="og:title" content="Contact Us | AMANAT AL-KALIMA COMPANY | Dammam, Saudi Arabia">
   <meta property="og:description" content="Contact AMANAT AL-KALIMA COMPANY in Dammam. Phone: +966565790073. Email: contact@aalkc.com.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.aalkc.com/contact.html">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ar_SA">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://www.aalkc.com/contact.html">
   <title>Contact Us | AMANAT AL-KALIMA COMPANY | Dammam, Saudi Arabia</title>
+  <link rel="preload" as="style" href="styles.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="skip-link" data-en="Skip to main content" data-ar="تخطى إلى المحتوى الرئيسي">Skip to main content</a>
 
   <!-- Navigation -->
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-content">
-      <a href="index.html" class="logo">AAL<span>KC</span></a>
+      <a href="index.html" class="logo">
+        <img src="assets/img/logo.png" alt="AALKC Logo" class="logo-img" style="height: 40px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span class="logo-text" style="display:none;">AAL<span>KC</span></span>
+      </a>
       <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -45,6 +65,7 @@
   </section>
 
   <!-- Contact Section -->
+  <main id="main-content">
   <section class="contact-section" id="quote">
     <div class="container">
       <div class="contact-grid">
@@ -127,29 +148,38 @@
         <!-- Contact Form -->
         <div class="contact-form-card reveal">
           <h3 data-en="Send Us a Message" data-ar="أرسل لنا رسالة">Send Us a Message</h3>
-          <form class="contact-form" id="contactForm" novalidate>
+          <form class="contact-form" id="contactForm" novalidate aria-label="Contact inquiry form">
             <div class="form-row">
               <div class="form-group">
-                <label for="firstName" data-en="First Name" data-ar="الاسم الأول">First Name</label>
+                <label for="firstName" data-en="First Name *" data-ar="الاسم الأول *">First Name <span class="required-star" aria-hidden="true">*</span></label>
                 <input type="text" id="firstName" name="firstName"
                   data-placeholder-en="Your first name"
                   data-placeholder-ar="اسمك الأول"
-                  placeholder="Your first name" required>
+                  placeholder="Your first name"
+                  autocomplete="given-name" required
+                  aria-required="true" aria-describedby="firstNameError">
+                <span class="field-error" id="firstNameError" role="alert"></span>
               </div>
               <div class="form-group">
-                <label for="lastName" data-en="Last Name" data-ar="اسم العائلة">Last Name</label>
+                <label for="lastName" data-en="Last Name *" data-ar="اسم العائلة *">Last Name <span class="required-star" aria-hidden="true">*</span></label>
                 <input type="text" id="lastName" name="lastName"
                   data-placeholder-en="Your last name"
                   data-placeholder-ar="اسم عائلتك"
-                  placeholder="Your last name" required>
+                  placeholder="Your last name"
+                  autocomplete="family-name" required
+                  aria-required="true" aria-describedby="lastNameError">
+                <span class="field-error" id="lastNameError" role="alert"></span>
               </div>
             </div>
             <div class="form-group">
-              <label for="email" data-en="Email Address" data-ar="البريد الإلكتروني">Email Address</label>
+              <label for="email" data-en="Email Address *" data-ar="البريد الإلكتروني *">Email Address <span class="required-star" aria-hidden="true">*</span></label>
               <input type="email" id="email" name="email"
                 data-placeholder-en="your@email.com"
                 data-placeholder-ar="بريدك@example.com"
-                placeholder="your@email.com" required>
+                placeholder="your@email.com"
+                autocomplete="email" required
+                aria-required="true" aria-describedby="emailError">
+              <span class="field-error" id="emailError" role="alert"></span>
             </div>
             <div class="form-group">
               <label for="phone" data-en="Phone / WhatsApp" data-ar="الهاتف / واتساب">Phone / WhatsApp</label>
@@ -169,15 +199,37 @@
                 <option value="general" data-en="General inquiry" data-ar="استفسار عام">General inquiry</option>
               </select>
             </div>
+            <!-- Honeypot anti-spam field (hidden from real users) -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp_website">Website</label>
+              <input type="text" id="hp_website" name="hp_website" tabindex="-1" autocomplete="off">
+            </div>
             <div class="form-group">
-              <label for="message" data-en="Message" data-ar="الرسالة">Message</label>
+              <label for="message" data-en="Message *" data-ar="الرسالة *">Message <span class="required-star" aria-hidden="true">*</span></label>
               <textarea id="message" name="message"
                 data-placeholder-en="Describe your scrap material, quantity, and any specific requirements..."
                 data-placeholder-ar="صف مادة الخردة لديك وكميتها وأي متطلبات محددة..."
-                placeholder="Describe your scrap material, quantity, and any specific requirements..." required></textarea>
+                placeholder="Describe your scrap material, quantity, and any specific requirements..."
+                required aria-required="true" aria-describedby="messageError"></textarea>
+              <span class="field-error" id="messageError" role="alert"></span>
             </div>
+            <!-- Privacy Consent -->
+            <div class="form-group consent-group">
+              <label class="consent-label">
+                <input type="checkbox" id="privacyConsent" name="privacyConsent" required aria-required="true" aria-describedby="consentError">
+                <span data-en="I agree to the <a href='privacy.html'>Privacy Policy</a> and consent to AMANAT AL-KALIMA COMPANY processing my data to respond to this inquiry." data-ar="أوافق على <a href='privacy.html'>سياسة الخصوصية</a> وأوافق على معالجة شركة أمانة الكلمة لبياناتي للرد على هذا الاستفسار.">I agree to the <a href="privacy.html">Privacy Policy</a> and consent to AMANAT AL-KALIMA COMPANY processing my data to respond to this inquiry.</span>
+              </label>
+              <span class="field-error" id="consentError" role="alert"></span>
+            </div>
+            
+            <p class="recaptcha-text" 
+               data-en="This site is protected by reCAPTCHA and the Google <a href='https://policies.google.com/privacy' target='_blank' rel='noopener'>Privacy Policy</a> and <a href='https://policies.google.com/terms' target='_blank' rel='noopener'>Terms of Service</a> apply."
+               data-ar="هذا الموقع محمي بواسطة reCAPTCHA وتطبق <a href='https://policies.google.com/privacy' target='_blank' rel='noopener'>سياسة الخصوصية</a> و <a href='https://policies.google.com/terms' target='_blank' rel='noopener'>شروط الخدمة</a> الخاصة بجوجل.">
+               This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Terms of Service</a> apply.
+            </p>
+
             <div class="form-submit">
-              <button type="submit" class="btn btn-primary" data-en="Send Message" data-ar="إرسال الرسالة">Send Message</button>
+              <button type="submit" class="btn btn-primary" id="submitBtn" data-en="Send Message" data-ar="إرسال الرسالة">Send Message</button>
             </div>
             <div class="form-success" id="formSuccess">
               <span data-en="&#10003; Thank you for your message. Our team in Dammam will respond to you promptly." data-ar="&#10003; شكراً لرسالتك. سيرد عليك فريقنا في الدمام في أقرب وقت ممكن.">&#10003; Thank you for your message. Our team in Dammam will respond to you promptly.</span>
@@ -188,6 +240,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <!-- Company Info Strip -->
   <section class="company-info-section">
@@ -216,7 +269,10 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="logo">AAL<span>KC</span></a>
+          <a href="index.html" class="logo">
+            <img src="assets/img/logo.png" alt="AALKC Logo" class="logo-img" style="height: 40px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+            <span class="logo-text" style="display:none;">AAL<span>KC</span></span>
+          </a>
           <p data-en="AMANAT AL-KALIMA COMPANY — A professional scrap trading company in Dammam, Eastern Province, Saudi Arabia." data-ar="شركة أمانة الكلمة — شركة متخصصة في تداول الخردة في الدمام، المنطقة الشرقية، المملكة العربية السعودية.">AMANAT AL-KALIMA COMPANY — A professional scrap trading company in Dammam, Eastern Province, Saudi Arabia.</p>
         </div>
         <div class="footer-col">
@@ -247,8 +303,13 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p data-en="&copy; 2025 AMANAT AL-KALIMA COMPANY. All rights reserved." data-ar="&copy; ٢٠٢٥ شركة أمانة الكلمة. جميع الحقوق محفوظة.">&copy; 2025 AMANAT AL-KALIMA COMPANY. All rights reserved.</p>
+        <p data-en="&copy; 2025 AMANAT AL-KALIMA COMPANY. All rights reserved." data-ar="&copy; ٢٠٢٥ شركة أمانة الكلمة. جميع الحقوق محفوظة.">&copy; <span id="footerYear">2025</span> AMANAT AL-KALIMA COMPANY. All rights reserved.</p>
         <p data-en="Dammam, Eastern Province, KSA" data-ar="الدمام، المنطقة الشرقية، المملكة العربية السعودية">Dammam, Eastern Province, KSA</p>
+        <p class="footer-legal-links">
+          <a href="privacy.html" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
+          <span aria-hidden="true"> · </span>
+          <a href="terms.html" data-en="Terms of Service" data-ar="شروط الخدمة">Terms of Service</a>
+        </p>
       </div>
     </div>
   </footer>
