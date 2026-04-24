@@ -34,7 +34,7 @@ html {
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--white);
   color: var(--gray-700);
   line-height: 1.6;
@@ -42,7 +42,7 @@ body {
 }
 
 html[lang="ar"] body {
-  font-family: 'Cairo', 'Tahoma', 'Arial', sans-serif;
+  font-family: 'Cairo', 'Inter', sans-serif;
 }
 
 a {
