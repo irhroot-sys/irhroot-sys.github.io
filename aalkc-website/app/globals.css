@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────────── */
+:root {
+  /* Brand colors */
+  --color-brand-primary: #0f4c6b;      /* deep teal */
+  --color-brand-secondary: #1a6a96;   /* mid teal */
+  --color-brand-accent: #e8a317;      /* amber accent */
+  --color-brand-dark: #0a1f2e;        /* steel dark */
+  --color-brand-light: #e8f4fb;       /* light teal tint */
+
+  /* Neutral */
+  --color-surface: #ffffff;
+  --color-surface-alt: #f5f7fa;
+  --color-text-primary: #0d1b2a;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-border: #e2e8f0;
+
+  /* Fonts */
+  --font-display: var(--font-display-loaded, "Georgia", serif);
+  --font-body: var(--font-body-loaded, "Arial", sans-serif);
+  --font-arabic: var(--font-arabic-loaded, "Arial", sans-serif);
+}
+
+/* Dark mode (class-based) */
+.dark {
+  --color-surface: #0a1f2e;
+  --color-surface-alt: #0f2d40;
+  --color-text-primary: #f0f4f8;
+  --color-text-secondary: #a0aec0;
+  --color-text-muted: #718096;
+  --color-border: #1e3a4f;
+}
+
+/* ─── Theme tokens for Tailwind v4 ─────────────────────────────── */
+@theme inline {
+  --color-brand-primary: var(--color-brand-primary);
+  --color-brand-secondary: var(--color-brand-secondary);
+  --color-brand-accent: var(--color-brand-accent);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand-light: var(--color-brand-light);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-border: var(--color-border);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-arabic: var(--font-arabic);
+}
+
+/* ─── Base styles ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Arabic body override */
+[lang="ar"] body,
+[dir="rtl"] body {
+  font-family: var(--font-arabic);
+}
+
+/* ─── Accessibility ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--color-brand-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Utility classes ───────────────────────────────────────────── */
+.section-container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.section-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-brand-dark);
+  line-height: 1.2;
+}
+
+.section-heading-ar {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-brand-dark);
+  direction: rtl;
+  text-align: right;
+}
