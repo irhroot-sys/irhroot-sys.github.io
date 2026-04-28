@@ -10,11 +10,12 @@
     html.setAttribute('lang', lang);
     html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 
-    // Update all elements with data-en / data-ar text content
+    // Update all elements with data-en / data-ar content.
+    // Static site strings may intentionally contain safe inline links, so render them as HTML.
     document.querySelectorAll('[data-en]').forEach(function(el) {
       var text = el.getAttribute('data-' + lang);
       if (text !== null) {
-        el.textContent = text;
+        el.innerHTML = text;
       }
     });
 
@@ -52,6 +53,23 @@
     });
 
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  }
+
+  // Prefer the SVG favicon when available. This avoids broken PNG icon references on browsers that support SVG favicons.
+  (function addSvgFavicon() {
+    var existing = document.querySelector('link[rel="icon"][href="/favicon.svg"]');
+    if (existing) return;
+    var link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = '/favicon.svg';
+    document.head.appendChild(link);
+  })();
+
+  // Remove the reCAPTCHA notice unless a real reCAPTCHA integration is added.
+  var recaptchaText = document.querySelector('.recaptcha-text');
+  if (recaptchaText) {
+    recaptchaText.remove();
   }
 
   // Initialise language on page load
@@ -121,8 +139,42 @@
   revealOnScroll();
 
   // ===== CONTACT FORM =====
-  // Web3Forms access key — replace with your own from https://web3forms.com
+  // Replace this with a real key from https://web3forms.com to enable direct form delivery.
   var WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+  var CONTACT_EMAIL = 'contact@aalkc.com';
+
+  function hasValidWeb3FormsKey() {
+    return WEB3FORMS_KEY && WEB3FORMS_KEY !== 'YOUR_WEB3FORMS_ACCESS_KEY' && WEB3FORMS_KEY.length > 20;
+  }
+
+  function getFieldValue(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function openMailFallback(formData, lang) {
+    var subject = 'New Inquiry — AALKC.com';
+    var bodyLines = [
+      'New inquiry from AALKC.com',
+      '',
+      'First name: ' + (formData.get('firstName') || ''),
+      'Last name: ' + (formData.get('lastName') || ''),
+      'Email: ' + (formData.get('email') || ''),
+      'Phone / WhatsApp: ' + (formData.get('phone') || ''),
+      'Inquiry type: ' + (formData.get('inquiry') || ''),
+      '',
+      'Message:',
+      formData.get('message') || ''
+    ];
+    var mailto = 'mailto:' + encodeURIComponent(CONTACT_EMAIL) +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(bodyLines.join('\n'));
+
+    alert(lang === 'ar'
+      ? 'لم يتم إعداد مفتاح نموذج الاتصال بعد. سيتم فتح رسالة بريد إلكتروني جاهزة بدلاً من ذلك.'
+      : 'The contact form delivery key is not configured yet. An email draft will open instead.');
+    window.location.href = mailto;
+  }
 
   // --- URL param pre-selection (e.g. contact.html?inquiry=sell) ---
   (function preSelectInquiry() {
@@ -207,14 +259,22 @@
 
       if (!valid) return;
 
-      // Send via Web3Forms
-      btn.disabled = true;
-      btn.textContent = lang === 'ar' ? 'جارٍ الإرسال...' : 'Sending...';
-
       var formData = new FormData(contactForm);
+      formData.delete('hp_website'); // don't send honeypot field
+
+      if (!hasValidWeb3FormsKey()) {
+        openMailFallback(formData, lang);
+        return;
+      }
+
+      // Send via Web3Forms
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = lang === 'ar' ? 'جارٍ الإرسال...' : 'Sending...';
+      }
+
       formData.append('access_key', WEB3FORMS_KEY);
       formData.append('subject', 'New Inquiry — AALKC.com');
-      formData.delete('hp_website'); // don't send honeypot field
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -222,8 +282,10 @@
       })
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        btn.disabled = false;
-        btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
+        }
         if (data.success) {
           contactForm.reset();
           if (success) {
@@ -235,8 +297,10 @@
         }
       })
       .catch(function() {
-        btn.disabled = false;
-        btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
+        }
         alert(lang === 'ar' ? 'حدث خطأ في الشبكة. يُرجى المحاولة مرة أخرى.' : 'Network error. Please try again.');
       });
     });
