@@ -139,17 +139,11 @@
   revealOnScroll();
 
   // ===== CONTACT FORM =====
-  // Replace this with a real key from https://web3forms.com to enable direct form delivery.
-  var WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+  var WEB3FORMS_KEY = 'e01ee50f-1ade-4189-841a-d7e698dd9d94';
   var CONTACT_EMAIL = 'contact@aalkc.com';
 
   function hasValidWeb3FormsKey() {
     return WEB3FORMS_KEY && WEB3FORMS_KEY !== 'YOUR_WEB3FORMS_ACCESS_KEY' && WEB3FORMS_KEY.length > 20;
-  }
-
-  function getFieldValue(id) {
-    var el = document.getElementById(id);
-    return el ? el.value.trim() : '';
   }
 
   function openMailFallback(formData, lang) {
@@ -171,8 +165,8 @@
       '&body=' + encodeURIComponent(bodyLines.join('\n'));
 
     alert(lang === 'ar'
-      ? 'لم يتم إعداد مفتاح نموذج الاتصال بعد. سيتم فتح رسالة بريد إلكتروني جاهزة بدلاً من ذلك.'
-      : 'The contact form delivery key is not configured yet. An email draft will open instead.');
+      ? 'تعذر إرسال النموذج مباشرة. سيتم فتح رسالة بريد إلكتروني جاهزة بدلاً من ذلك.'
+      : 'Direct form delivery failed. An email draft will open instead.');
     window.location.href = mailto;
   }
 
@@ -273,8 +267,9 @@
         btn.textContent = lang === 'ar' ? 'جارٍ الإرسال...' : 'Sending...';
       }
 
-      formData.append('access_key', WEB3FORMS_KEY);
-      formData.append('subject', 'New Inquiry — AALKC.com');
+      formData.set('access_key', WEB3FORMS_KEY);
+      if (!formData.get('subject')) formData.set('subject', 'New Inquiry — AALKC.com');
+      if (!formData.get('from_name')) formData.set('from_name', 'AALKC Website');
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -293,7 +288,7 @@
             setTimeout(function() { success.style.display = ''; }, 7000);
           }
         } else {
-          alert(lang === 'ar' ? 'حدث خطأ. يُرجى المحاولة مرة أخرى.' : 'Submission failed. Please try again.');
+          openMailFallback(formData, lang);
         }
       })
       .catch(function() {
@@ -301,7 +296,7 @@
           btn.disabled = false;
           btn.textContent = lang === 'ar' ? 'إرسال الرسالة' : 'Send Message';
         }
-        alert(lang === 'ar' ? 'حدث خطأ في الشبكة. يُرجى المحاولة مرة أخرى.' : 'Network error. Please try again.');
+        openMailFallback(formData, lang);
       });
     });
   }
