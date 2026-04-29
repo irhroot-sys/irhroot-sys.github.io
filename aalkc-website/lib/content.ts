@@ -373,12 +373,13 @@ export const processSteps: ProcessStep[] = [
 ];
 
 // ─── Contact ─────────────────────────────────────────────────────────────────
+// TODO: Replace placeholder phone/email/address values with actual business contact info before launch.
 
 export const contact: ContactInfo = {
-  phone: "+966500000000",
-  phoneDisplay: "+966 50 000 0000",
-  whatsApp: "+966500000000",
-  email: "info@aalkc.com",
+  phone: "+966500000000", // PLACEHOLDER — replace with actual phone number
+  phoneDisplay: "+966 50 000 0000", // PLACEHOLDER — replace with actual phone display
+  whatsApp: "+966500000000", // PLACEHOLDER — replace with actual WhatsApp number
+  email: "info@aalkc.com", // PLACEHOLDER — replace with actual email
   addressEn: "Industrial Area, Dammam, Eastern Province, Saudi Arabia",
   addressAr: "المنطقة الصناعية، الدمام، المنطقة الشرقية، المملكة العربية السعودية",
   city: "Dammam",

@@ -60,7 +60,10 @@ export default function ContactForm({ lang = "en" }: ContactFormProps) {
     setFormState("loading");
 
     try {
-      // Phase B: replace with real Formspree or API endpoint
+      // TODO (Phase B): Replace the mock delay below with a real form submission.
+      // Option A — Formspree: await fetch("https://formspree.io/f/YOUR_FORM_ID", { method: "POST", body: data })
+      // Option B — API Route: await fetch("/api/contact", { method: "POST", body: JSON.stringify(Object.fromEntries(data)) })
+      // Remove this placeholder before deploying to production.
       await new Promise((r) => setTimeout(r, 1000));
       setFormState("success");
     } catch {

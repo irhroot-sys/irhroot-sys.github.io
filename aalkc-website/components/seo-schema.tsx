@@ -40,7 +40,7 @@ export default function SeoSchema() {
         telephone: PHONE,
         email: EMAIL,
         priceRange: "$$",
-        image: `${SITE_URL}/images/og-image.jpg`,
+        image: `${SITE_URL}/images/og-image.svg`, // Replace with og-image.jpg (1200×630) before launch
         aggregateRating: {
           "@type": "AggregateRating",
           ratingValue: String(company.googleRating),

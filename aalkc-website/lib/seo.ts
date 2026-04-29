@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { seoMeta, SeoMeta } from "./content";
 import { SITE_URL } from "./constants";
 
-const OG_IMAGE_DEFAULT = `${SITE_URL}/images/og-image.jpg`;
+const OG_IMAGE_DEFAULT = `${SITE_URL}/images/og-image.svg`; // Replace with og-image.jpg (1200×630) before launch
 
 export function generateSeoMeta(page: keyof typeof seoMeta, lang: "en" | "ar"): Metadata {
   const meta: SeoMeta = seoMeta[page];
