@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.aalkc.com; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.aalkc.com https://github.com https://github-production-user-asset-6210df.s3.amazonaws.com; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -114,6 +114,7 @@
     .logo-img:hover::after { opacity: 1; }
     .logo-img img { height: 56px; width: auto; object-fit: contain; transition: transform var(--dur-base) var(--ease-spring), filter var(--dur-base) ease; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
     .logo-img:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.7)); }
+    @media (max-width: 768px) { .logo-img img { height: 40px; } }
 
     .nav-actions { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
     [dir="rtl"] .nav-actions { margin-left: 0; margin-right: auto; }
@@ -336,7 +337,7 @@
   <nav class="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-content">
       <a href="#home" class="logo-img" aria-label="AMANAT AL-KALIMA COMPANY — Home">
-        <img src="AALKC_logo_512_transparent_padded.png" alt="AMANAT AL-KALIMA COMPANY">
+        <img src="assets/images/aalkc-logo.png" onerror="this.onerror=null;this.src='https://github.com/user-attachments/assets/8ec088b1-6be5-4105-9cf4-29c1b0e4fdbd'" alt="Amanat Al-Kalima Company">
       </a>
       <div class="nav-actions">
         <button class="lang-toggle" id="langToggle" aria-label="Switch language">
@@ -658,7 +659,7 @@
         <div class="footer-brand">
           <div class="footer-logo">
             <a href="#home" aria-label="AMANAT AL-KALIMA COMPANY — Home">
-              <img src="AALKC_logo_512_transparent_padded.png" alt="AMANAT AL-KALIMA COMPANY">
+              <img src="assets/images/aalkc-logo.png" onerror="this.onerror=null;this.src='https://github.com/user-attachments/assets/8ec088b1-6be5-4105-9cf4-29c1b0e4fdbd'" alt="Amanat Al-Kalima Company">
             </a>
           </div>
           <p data-en="A professional, licensed scrap metal trading company established in 2017 in Dammam, Eastern Province, Saudi Arabia." data-ar="شركة تجارة خردة معادن متخصصة ومرخصة تأسست في عام 2017 في الدمام، المنطقة الشرقية، المملكة العربية السعودية.">A professional, licensed scrap metal trading company established in 2017 in Dammam, Eastern Province, Saudi Arabia.</p>
