@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- White background -->
+  <rect width="500" height="500" fill="white"/>
+
+  <!-- ── LEFT  "A" LEG (dark navy diagonal bar) ── -->
+  <polygon points="60,390 130,130 175,130 265,390 220,390 155,185 105,390" fill="#0a1228"/>
+  <!-- Highlight edge on left A leg -->
+  <polygon points="60,390 130,130 148,130 92,390" fill="#1e2d6e" opacity="0.7"/>
+
+  <!-- ── CROSSBAR of A (horizontal cut) ── -->
+  <polygon points="118,275 240,275 230,295 108,295" fill="white"/>
+
+  <!-- ── BUILDINGS (centre) ── -->
+  <!-- Antenna / spire -->
+  <rect x="238" y="100" width="5" height="55" fill="#003d2e"/>
+  <!-- Tallest building -->
+  <rect x="228" y="155" width="24" height="170" fill="#1a3a32"/>
+  <!-- Left tall building -->
+  <rect x="208" y="185" width="18" height="140" fill="#1c3a32"/>
+  <!-- Right medium building -->
+  <rect x="254" y="200" width="20" height="125" fill="#1c3a32"/>
+  <!-- Left short building -->
+  <rect x="190" y="225" width="16" height="100" fill="#1c3a32"/>
+  <!-- Right wider building -->
+  <rect x="276" y="230" width="30" height="95" fill="#153028"/>
+  <!-- Base platform -->
+  <rect x="185" y="323" width="125" height="10" fill="#0a1e1a"/>
+  <!-- Far left building -->
+  <rect x="175" y="255" width="13" height="70" fill="#122820"/>
+  <!-- Wider right base -->
+  <rect x="308" y="265" width="25" height="60" fill="#122820"/>
+
+  <!-- ── RIGHT DIAGONAL SLASH (teal) ── -->
+  <polygon points="310,130 385,130 445,390 370,390" fill="#1a4a40"/>
+  <!-- Highlight on right slash -->
+  <polygon points="385,130 400,130 460,390 445,390" fill="#22605a" opacity="0.6"/>
+
+  <!-- ── HORIZONTAL RULE BELOW BUILDINGS ── -->
+  <rect x="100" y="340" width="305" height="2" fill="#0a1228"/>
+
+  <!-- ── COMPANY TEXT ROW (bilingual) ── -->
+  <text x="252" y="358" font-family="Arial, sans-serif" font-size="9.5" font-weight="600"
+        fill="#0a1228" text-anchor="middle" letter-spacing="1">
+    AMANAT AL-KALIMA COMPANY
+  </text>
+  <text x="252" y="371" font-family="Arial, sans-serif" font-size="8.5"
+        fill="#1a4a40" text-anchor="middle">
+    — شركة أمانة الكلمة —
+  </text>
+
+  <!-- ── AALKC WORDMARK ── -->
+  <text x="252" y="422" font-family="Arial Black, Arial, sans-serif" font-size="62"
+        font-weight="900" fill="#0a1228" text-anchor="middle" letter-spacing="4">
+    AALKC
+  </text>
+</svg>
