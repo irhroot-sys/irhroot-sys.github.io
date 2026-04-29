@@ -18,9 +18,9 @@
   --color-border: #e2e8f0;
 
   /* Fonts */
-  --font-display: var(--font-display-loaded, "Georgia", serif);
-  --font-body: var(--font-body-loaded, "Arial", sans-serif);
-  --font-arabic: var(--font-arabic-loaded, "Arial", sans-serif);
+  --font-display: "Work Sans", "Georgia", sans-serif;
+  --font-body: "Work Sans", "Arial", sans-serif;
+  --font-arabic: "Noto Sans Arabic", "Arial", sans-serif;
 }
 
 /* Dark mode (class-based) */

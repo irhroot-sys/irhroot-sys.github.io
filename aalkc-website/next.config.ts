@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",
-  trailingSlash: true,
+  // Deployed to Vercel — no static export needed
   images: {
-    unoptimized: true,
+    remotePatterns: [],
   },
 };
 

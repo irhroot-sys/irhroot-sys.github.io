@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
-import { Work_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+import "@fontsource/work-sans/400.css";
+import "@fontsource/work-sans/500.css";
+import "@fontsource/work-sans/600.css";
+import "@fontsource/work-sans/700.css";
+import "@fontsource/work-sans/800.css";
+import "@fontsource/noto-sans-arabic/400.css";
+import "@fontsource/noto-sans-arabic/500.css";
+import "@fontsource/noto-sans-arabic/600.css";
+import "@fontsource/noto-sans-arabic/700.css";
 import "./globals.css";
-
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  variable: "--font-body-loaded",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const ibmPlexArabic = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic"],
-  variable: "--font-arabic-loaded",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -32,8 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr" className={`${workSans.variable} ${ibmPlexArabic.variable} h-full`}>
-      <body className="min-h-full antialiased" style={{ fontFamily: "var(--font-body-loaded, Work Sans, Arial, sans-serif)" }}>
+    <html lang="en" dir="ltr" className="h-full">
+      <body
+        className="min-h-full antialiased"
+        style={{ fontFamily: "'Work Sans', Arial, sans-serif" }}
+      >
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
