@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { PHONE, WHATSAPP_LINK, NAV_LINKS } from "@/lib/constants";
 import { company } from "@/lib/content";
@@ -22,10 +23,18 @@ export default function Header({ lang = "en" }: HeaderProps) {
     <header className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-100" dir={isAr ? "rtl" : "ltr"}>
       <div className="section-container flex items-center justify-between py-3">
         {/* Logo */}
-        <Link href={isAr ? "/ar" : "/en"} className="flex flex-col leading-tight">
-          <span className="text-lg font-bold text-[#0f4c6b]">{company.nameEn}</span>
-          <span className="text-sm text-[#1a6a96]" dir="rtl">
-            {company.nameAr}
+        <Link href={isAr ? "/ar" : "/en"} className="flex items-center gap-2 shrink-0" aria-label={company.nameEn}>
+          <Image
+            src="/images/logo.svg"
+            alt={`${company.nameEn} logo`}
+            width={48}
+            height={48}
+            priority
+            className="h-12 w-12 object-contain"
+          />
+          <span className="flex flex-col leading-tight">
+            <span className="text-base font-bold text-[#0f4c6b] hidden sm:block">{company.nameEn}</span>
+            <span className="text-xs text-[#1a6a96] hidden sm:block" dir="rtl">{company.nameAr}</span>
           </span>
         </Link>
 

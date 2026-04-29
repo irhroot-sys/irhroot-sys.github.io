@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { company, footer, contact, services, serviceAreas } from "@/lib/content";
 import { PHONE, PHONE_DISPLAY, WHATSAPP_LINK, EMAIL, GOOGLE_MAPS_URL } from "@/lib/constants";
 
@@ -16,11 +17,20 @@ export default function Footer({ lang = "en" }: FooterProps) {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company info */}
           <div>
-            <p className="text-lg font-bold text-white">{company.nameEn}</p>
-            <p className="mt-1 text-sm text-[#1a6a96]" dir="rtl">
-              {company.nameAr}
-            </p>
-            <p className="mt-3 text-sm leading-relaxed">
+            <Link href={isAr ? "/ar" : "/en"} className="flex items-center gap-3 mb-3">
+              <Image
+                src="/images/logo.svg"
+                alt={`${company.nameEn} logo`}
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain brightness-0 invert"
+              />
+              <span className="flex flex-col leading-tight">
+                <span className="text-base font-bold text-white">{company.nameEn}</span>
+                <span className="text-xs text-[#5fa8c8]" dir="rtl">{company.nameAr}</span>
+              </span>
+            </Link>
+            <p className="text-sm leading-relaxed">
               {isAr ? footer.taglineAr : footer.taglineEn}
             </p>
             <div className="mt-4 flex flex-col gap-1 text-sm">

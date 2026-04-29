@@ -11,7 +11,7 @@ export default function SeoSchema() {
         name: company.nameEn,
         alternateName: company.nameAr,
         url: SITE_URL,
-        logo: `${SITE_URL}/images/logo.png`,
+        logo: `${SITE_URL}/images/logo.svg`,
         foundingDate: String(company.foundingYear),
         contactPoint: {
           "@type": "ContactPoint",
@@ -40,7 +40,7 @@ export default function SeoSchema() {
         telephone: PHONE,
         email: EMAIL,
         priceRange: "$$",
-        image: `${SITE_URL}/images/og-image.svg`, // Replace with og-image.jpg (1200×630) before launch
+        image: `${SITE_URL}/images/og-image.svg`,
         aggregateRating: {
           "@type": "AggregateRating",
           ratingValue: String(company.googleRating),

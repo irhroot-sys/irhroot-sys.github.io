@@ -60,11 +60,26 @@ export default function ContactForm({ lang = "en" }: ContactFormProps) {
     setFormState("loading");
 
     try {
-      // TODO (Phase B): Replace the mock delay below with a real form submission.
-      // Option A — Formspree: await fetch("https://formspree.io/f/YOUR_FORM_ID", { method: "POST", body: data })
-      // Option B — API Route: await fetch("/api/contact", { method: "POST", body: JSON.stringify(Object.fromEntries(data)) })
-      // Remove this placeholder before deploying to production.
-      await new Promise((r) => setTimeout(r, 1000));
+      const payload = {
+        access_key: "e01ee50f-1ade-4189-841a-d7e698dd9d94",
+        subject: "New Scrap Metal Inquiry — AALKC Website",
+        from_name: "AALKC Website",
+        name: data.get("name"),
+        phone: data.get("phone"),
+        company: data.get("company") || "—",
+        metal_type: data.get("metalType"),
+        quantity: data.get("quantity") || "—",
+        city: data.get("city") || "—",
+        message: data.get("message") || "—",
+        botcheck: "",
+      };
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result: { success: boolean; message?: string } = await res.json();
+      if (!result.success) throw new Error(result.message ?? "Submission failed");
       setFormState("success");
     } catch {
       setFormState("error");
@@ -107,6 +122,9 @@ export default function ContactForm({ lang = "en" }: ContactFormProps) {
       <h2 className="text-xl font-bold text-[#0a1f2e] mb-5">
         {isAr ? "أرسل لنا استفسارك" : "Send Us an Inquiry"}
       </h2>
+
+      {/* Web3Forms honeypot anti-spam field — must remain hidden */}
+      <input type="checkbox" name="botcheck" className="hidden" aria-hidden="true" tabIndex={-1} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Full Name */}
