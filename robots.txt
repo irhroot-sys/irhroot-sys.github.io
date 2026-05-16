@@ -1,0 +1,21 @@
+﻿# robots.txt for AMANAT AL-KALIMA COMPANY (www.aalkc.com)
+
+User-agent: *
+Allow: /
+Disallow: /.git/
+Disallow: /.vs/
+Disallow: /.vscode/
+
+# Allow search engines to index all pages
+Allow: /*.html
+Allow: /assets/
+Allow: /erp/
+
+# Sitemap location
+Sitemap: https://www.aalkc.com/sitemap.xml
+
+# Crawl delay (optional, in seconds)
+Crawl-delay: 1
+
+# Respect cache timeout
+Request-rate: 30/60
