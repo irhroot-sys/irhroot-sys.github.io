@@ -33,15 +33,14 @@ jobs:
       - name: Build Vite site
         run: npm run build
 
-      - name: Preserve legacy Pages files
+      - name: Preserve configuration files
         run: |
           mkdir -p dist
-          cp -a CNAME dist/CNAME
-          cp -a 404.html about.html contact.html services.html privacy.html terms.html updated.html dist/
-          cp -a google3514d51f5ef155de.html robots.txt sitemap.xml site.webmanifest styles.css dist/
-          mkdir -p dist/assets
-          cp -a assets/. dist/assets/
-          cp -a erp dist/erp
+          [ -f CNAME ] && cp CNAME dist/CNAME
+          [ -f google3514d51f5ef155de.html ] && cp google3514d51f5ef155de.html dist/
+          [ -f robots.txt ] && cp robots.txt dist/
+          [ -f sitemap.xml ] && cp sitemap.xml dist/
+          [ -f site.webmanifest ] && cp site.webmanifest dist/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
