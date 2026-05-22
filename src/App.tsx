@@ -686,6 +686,16 @@ export default function App() {
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const [marketTab, setMarketTab] = useState<'live' | 'history'>('history');
+  const [chartRendered, setChartRendered] = useState(false);
+
+  useEffect(() => {
+    // Defer chart rendering to ensure the parent container is fully mounted and has positive dimensions
+    const timer = setTimeout(() => {
+      setChartRendered(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [currentHash, setCurrentHash] = useState(() => window.location.hash || '#home');
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle');
   const [formMessage, setFormMessage] = useState('');
@@ -1011,52 +1021,56 @@ export default function App() {
                      exit={{ opacity: 0 }} 
                      className="h-[280px] w-full"
                    >
-                     <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                       <AreaChart data={mockChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-                         <defs>
-                           <linearGradient id="colorCopper" x1="0" y1="0" x2="0" y2="1">
-                             <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-                             <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                           </linearGradient>
-                           <linearGradient id="colorSteel" x1="0" y1="0" x2="0" y2="1">
-                             <stop offset="5%" stopColor="#a1a1aa" stopOpacity={0.3}/>
-                             <stop offset="95%" stopColor="#a1a1aa" stopOpacity={0}/>
-                           </linearGradient>
-                         </defs>
-                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
-                         <XAxis dataKey="month" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
-                         <YAxis stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                         <Tooltip content={<CustomTooltip />} />
-                         <Legend 
-                           payload={[
-                             { value: 'Copper', type: 'rect', color: '#f97316', dataKey: 'copper' },
-                             { value: 'Steel', type: 'rect', color: '#a1a1aa', dataKey: 'steel' }
-                           ]}
-                           content={(props: any) => {
-                             const { payload } = props;
-                             return (
-                               <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800/50">
-                                 {payload?.map((entry: any, index: number) => {
-                                   const isHidden = hiddenSeries[entry.dataKey];
-                                   return (
-                                     <button 
-                                       key={`item-${index}`} 
-                                       onClick={() => toggleSeries(entry.dataKey)}
-                                       className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider transition-all duration-300 ${isHidden ? 'opacity-40 grayscale' : 'opacity-100 hover:opacity-80'}`}
-                                     >
-                                       <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }}></div>
-                                       <span className="text-zinc-700 dark:text-zinc-300">{entry.value}</span>
-                                     </button>
-                                   )
-                                 })}
-                               </div>
-                             );
-                           }}
-                         />
-                         {!hiddenSeries.copper && <Area type="monotone" dataKey="copper" name="Copper" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#colorCopper)" />}
-                         {!hiddenSeries.steel && <Area type="monotone" dataKey="steel" name="Steel" stroke="#a1a1aa" strokeWidth={2} fillOpacity={1} fill="url(#colorSteel)" />}
-                       </AreaChart>
-                     </ResponsiveContainer>
+                     {chartRendered ? (
+                        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                          <AreaChart data={mockChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                            <defs>
+                              <linearGradient id="colorCopper" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                              </linearGradient>
+                              <linearGradient id="colorSteel" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#a1a1aa" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="#a1a1aa" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+                            <XAxis dataKey="month" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
+                            <YAxis stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                            <Tooltip content={<CustomTooltip />} />
+                            <Legend 
+                              payload={[
+                                { value: 'Copper', type: 'rect', color: '#f97316', dataKey: 'copper' },
+                                { value: 'Steel', type: 'rect', color: '#a1a1aa', dataKey: 'steel' }
+                              ]}
+                              content={(props: any) => {
+                                const { payload } = props;
+                                return (
+                                  <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800/50">
+                                    {payload?.map((entry: any, index: number) => {
+                                      const isHidden = hiddenSeries[entry.dataKey];
+                                      return (
+                                        <button 
+                                          key={`item-${index}`} 
+                                          onClick={() => toggleSeries(entry.dataKey)}
+                                          className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider transition-all duration-300 ${isHidden ? 'opacity-40 grayscale' : 'opacity-100 hover:opacity-80'}`}
+                                        >
+                                          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }}></div>
+                                          <span className="text-zinc-700 dark:text-zinc-300">{entry.value}</span>
+                                        </button>
+                                      )
+                                    })}
+                                  </div>
+                                );
+                              }}
+                            />
+                            {!hiddenSeries.copper && <Area type="monotone" dataKey="copper" name="Copper" stroke="#f97316" strokeWidth={2} fillOpacity={1} fill="url(#colorCopper)" />}
+                            {!hiddenSeries.steel && <Area type="monotone" dataKey="steel" name="Steel" stroke="#a1a1aa" strokeWidth={2} fillOpacity={1} fill="url(#colorSteel)" />}
+                          </AreaChart>
+                        </ResponsiveContainer>
+                     ) : (
+                       <div className="w-full h-full bg-transparent" />
+                     )}
                      <div className="mt-4 text-xs text-zinc-600 dark:text-zinc-400 font-mono tracking-widest text-center">
                        12-MONTH HISTORICAL PRICE TRENDS ($/LB)
                      </div>
