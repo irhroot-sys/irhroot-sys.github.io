@@ -8,7 +8,7 @@ const MaterialPage = lazy(() => import('./components/MaterialPage'));
 import logoImg from './assets/images/aalkkoo.png';
 import footerLogoImg from './assets/images/regenerated_image_1778927709543.jpg';
 
-const mockChartData = [
+const sampleChartData = [
   { month: 'Jan', copper: 3.80, steel: 1.20, aluminum: 1.05 },
   { month: 'Feb', copper: 3.85, steel: 1.25, aluminum: 1.10 },
   { month: 'Mar', copper: 4.02, steel: 1.30, aluminum: 1.15 },
@@ -269,7 +269,7 @@ function PrecisionCursor() {
   );
 }
 
-function CardCrosshairs({ refLabel = "REF: SEC-A / KSA", lotLabel = "LOT-ID: 2026/AAL" }: { refLabel?: string; lotLabel?: string }) {
+function CardCrosshairs() {
   return (
     <>
       {/* Tech Blueprint Corners */}
@@ -283,10 +283,6 @@ function CardCrosshairs({ refLabel = "REF: SEC-A / KSA", lotLabel = "LOT-ID: 202
       <div className="tech-crosshair absolute top-2 right-2 text-primary/35 pointer-events-none w-3 h-3"></div>
       <div className="tech-crosshair absolute bottom-2 left-2 text-primary/35 pointer-events-none w-3 h-3"></div>
       <div className="tech-crosshair absolute bottom-2 right-2 text-primary/35 pointer-events-none w-3 h-3"></div>
-
-      {/* Coordinate reference texts */}
-      <div className="absolute top-2.5 left-4 font-mono text-[8px] tracking-widest text-zinc-500/40 select-none pointer-events-none">{refLabel}</div>
-      <div className="absolute bottom-2.5 right-4 font-mono text-[8px] tracking-widest text-zinc-550/40 select-none pointer-events-none">{lotLabel}</div>
     </>
   );
 }
@@ -843,21 +839,6 @@ function HeroSlider() {
          <div className="w-px h-12 bg-gradient-to-b from-zinc-500 to-transparent"></div>
       </div>
       
-      {/* Decorative pulse element */}
-      <div className="absolute bottom-12 right-12 z-10 hidden lg:block group">
-        <div className="flex items-center gap-4 bg-zinc-950/60 backdrop-blur-md border border-white/10 px-6 py-4 rounded-sm transition-all group-hover:bg-zinc-900/80 group-hover:border-primary/30">
-          <div className="text-right">
-            <div className="text-white/50 text-[10px] font-bold uppercase tracking-[0.2em]">Operational Status</div>
-            <div className="text-primary text-xs font-mono tracking-widest mt-1 uppercase font-semibold flex items-center gap-2 justify-end">
-              <CheckCircle2 className="w-3 h-3" /> System Active
-            </div>
-          </div>
-          <div className="relative flex items-center justify-center w-8 h-8 rounded-full border border-primary/20">
-            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-ping absolute opacity-80"></div>
-            <div className="w-2.5 h-2.5 bg-primary rounded-full relative shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
@@ -958,51 +939,8 @@ function CredentialsSection() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-stretch">
-          {/* KSA Chamber/CR Card */}
-          <div className="lg:col-span-1 border border-zinc-800 bg-zinc-950/60 backdrop-blur-sm p-8 flex flex-col justify-between relative overflow-hidden rounded-sm glow-border-gold-hover">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 blur-xl rounded-full"></div>
-            <div>
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-[10px] font-mono tracking-widest text-amber-500 uppercase font-bold">KSA Business Credentials</span>
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping-slow"></span>
-              </div>
-              <h3 className="text-xl font-bold uppercase tracking-wider mb-2">Commercial Registration</h3>
-              <p className="text-zinc-500 text-xs mb-8 uppercase tracking-wide">Official License Details for Amanat Al-Kalima Company</p>
-              
-              <div className="space-y-4 font-mono text-xs border-y border-zinc-800 py-6 mb-6">
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">CR NUMBER:</span>
-                  <span className="font-bold text-white tracking-wider">2050116034</span>
-                </div>
-                <div className="flex justify-between" dir="rtl">
-                  <span className="text-zinc-500 font-sans">السجل التجاري:</span>
-                  <span className="font-bold text-white tracking-wider">٢٠٥٠١١٦٠٣٤</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">REGISTERED:</span>
-                  <span className="text-white">DAMMAM, KSA</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">STATUS:</span>
-                  <span className="text-green-400 font-bold">ACTIVE / VERIFIED</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              {/* Saudi Flag SVG element */}
-              <div className="w-8 h-5 bg-green-700 flex items-center justify-center border border-green-600 rounded-sm">
-                <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
-                  <path d="M12 2a1 1 0 0 0-1 1v4.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L9.586 9H5a1 1 0 0 0 0 2h4.586l-2.293 2.293a1 1 0 1 0 1.414 1.414L11 13.414V18a1 1 0 0 0 2 0v-4.586l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 11H19a1 1 0 0 0 0-2h-4.586l2.293-2.293a1 1 0 0 0-1.414-1.414L13 7.586V3a1 1 0 0 0-1-1z"/>
-                </svg>
-              </div>
-              <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase">NATIONAL ENTITY / DAMMAM</span>
-            </div>
-          </div>
-
+        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Compliance & Quality Certification badges */}
-          <div className="lg:col-span-2 grid sm:grid-cols-2 gap-6">
             {[
               {
                 title: "ISO 9001:2015",
@@ -1071,8 +1009,7 @@ function CredentialsSection() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }
 
@@ -1105,10 +1042,7 @@ export default function App() {
   const [calcWeight, setCalcWeight] = useState(5);
   const [calcCurrency, setCalcCurrency] = useState<'SAR' | 'USD'>('SAR');
 
-  const [terminalLogs, setTerminalLogs] = useState<string[]>([
-    'AALKC ESTIMATOR OS v4.8 - SECURE CONNECT ESTABLISHED',
-    'SYSTEM READY. READY TO COMMENCE ESTIMATES...',
-  ]);
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
 
   useEffect(() => {
     const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
@@ -1436,7 +1370,7 @@ export default function App() {
                   className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col h-full shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 rounded-sm text-zinc-300/30 dark:text-zinc-750/30 hover:text-primary"
                   data-cursor-label={`SERVICE: ${service.title}`}
                 >
-                  <CardCrosshairs refLabel={`REF: SRV-${service.category.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${service.title.toUpperCase().slice(0,3)}`} />
+                  <CardCrosshairs />
 
                   <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl rounded-full translate-x-12 -translate-y-12 group-hover:bg-primary/10 transition-colors"></div>
                   
@@ -1502,7 +1436,7 @@ export default function App() {
                         }`}
                         data-cursor-label={mat.isLink ? `SPEC SHEET: ${mat.name}` : `MATERIAL: ${mat.name}`}
                       >
-                        <CardCrosshairs refLabel={`REF: MAT-${mat.name.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${mat.spec.toUpperCase().split(' ')[0]}`} />
+                        <CardCrosshairs />
                         <div className="flex items-center gap-3 mb-3">
                           <div className={`p-2 rounded-sm ${mat.bg} ${mat.border} border flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
                             <Icon className={`w-4 h-4 ${mat.color}`} />
@@ -1547,9 +1481,8 @@ export default function App() {
                    <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white m-0">
                      Market Trends
                    </h3>
-                   <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-green-500/10 dark:bg-green-500/20 border border-green-500/20 text-[9px] text-green-600 dark:text-green-400 font-mono tracking-widest uppercase font-semibold">
-                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                     Live KSA
+                   <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-500/10 dark:bg-zinc-500/20 border border-zinc-500/20 text-[9px] text-zinc-600 dark:text-zinc-400 font-mono tracking-widest uppercase font-semibold">
+                      Sample Rates
                    </div>
                  </div>
                  
@@ -1558,7 +1491,7 @@ export default function App() {
                      onClick={() => setMarketTab('live')}
                      className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-650 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
-                     Live
+                     Rates
                    </button>
                    <button 
                      onClick={() => setMarketTab('history')}
@@ -1610,7 +1543,7 @@ export default function App() {
                           );
                         })}
                         <div className="mt-8 text-[10px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest text-center">
-                          UPDATED: LIVE KSA TIME. CONTACT FOR DIRECT SPOT QUOTES.
+                          SAMPLE RATES FOR ILLUSTRATION ONLY. CONTACT FOR DIRECT SPOT QUOTES.
                         </div>
                       </motion.div>
                     )}
@@ -1708,19 +1641,7 @@ export default function App() {
                                 </div>
                               </div>
 
-                              {/* Real-time Monospace System Terminal Console Log */}
-                              <div className="bg-black/95 dark:bg-zinc-950/95 border border-zinc-800/80 p-3 rounded font-mono text-[9px] text-green-500 shadow-inner space-y-1 select-none overflow-hidden h-28 relative">
-                                <div className="absolute top-2 right-3 flex items-center gap-1.5">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                  <span className="text-[8px] text-green-500/60 uppercase tracking-widest">AALKC-CALIB</span>
-                                </div>
-                                <div className="text-green-500/40 border-b border-zinc-800/40 pb-1 mb-1.5 uppercase tracking-widest text-[8px]">--- ESTIMATOR OSCILLOSCOPE LOGS ---</div>
-                                {terminalLogs.map((log, idx) => (
-                                  <div key={idx} className="whitespace-pre-wrap leading-relaxed animate-in fade-in slide-in-from-bottom-1 duration-150">
-                                    <span className="text-green-600 font-bold mr-1">&gt;</span> {log}
-                                  </div>
-                                ))}
-                              </div>
+
 
                               {(() => {
                                 const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
@@ -1763,8 +1684,8 @@ export default function App() {
                                         </span>
                                       </div>
                                       <div className="flex justify-between text-[9px] text-zinc-500 dark:text-zinc-400">
-                                        <span>SYS REF:</span>
-                                        <span>REF-LME-{calcMetal.toUpperCase()}-EST</span>
+                                        <span>Note:</span>
+                                        <span>Illustrative estimate only</span>
                                       </div>
                                     </div>
 
@@ -1807,7 +1728,7 @@ export default function App() {
                       >
                         {chartRendered ? (
                           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                            <AreaChart data={mockChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                            <AreaChart data={sampleChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                               <defs>
                                 <linearGradient id="colorCopper" x1="0" y1="0" x2="0" y2="1">
                                   <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
@@ -1862,7 +1783,7 @@ export default function App() {
                           <div className="w-full h-full bg-transparent" />
                         )}
                         <div className="mt-4 text-[10px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest text-center uppercase">
-                          12-Month Historical Trading Trend ($/LB)
+                          Sample 12-Month Trend ($/LB) — For Illustration Only
                         </div>
                       </motion.div>
                     )}
@@ -1887,7 +1808,7 @@ export default function App() {
               Built on <br/>Integrity
             </h2>
             <p className="mb-8 leading-relaxed max-w-lg text-zinc-400 text-sm md:text-base">
-              For over three decades, we have partnered with leading manufacturers, fabricators, and demolition contractors. Our reputation is our most valuable asset.
+              Since our founding in 2017, we have built strong partnerships with leading manufacturers, fabricators, and demolition contractors across Saudi Arabia. Our reputation is our most valuable asset.
             </p>
             <ul className="space-y-6">
               {[
@@ -1907,44 +1828,38 @@ export default function App() {
           <div className="grid grid-cols-2 gap-4">
             <TiltCard 
               className="h-48 sm:h-56"
-              data-cursor-label="STAT: 30+ YEARS"
+              data-cursor-label="STAT: EST. 2017"
             >
               <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
-                 <CardCrosshairs refLabel="REF: STAT-YRS" lotLabel="LOT-ID: 1996/AAL" />
-                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={30} suffix="+" /></div>
-                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Years in Business</div>
+                 <div className="font-display text-4xl sm:text-5xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300">2017</div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Year Established</div>
               </div>
             </TiltCard>
             <TiltCard 
               className="h-48 sm:h-56 mt-[-20px]"
-              data-cursor-label="STAT: 500+ CLIENTS"
+              data-cursor-label="STAT: DAMMAM"
             >
               <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
-                 <CardCrosshairs refLabel="REF: STAT-CLT" lotLabel="LOT-ID: 2026/CLT" />
-                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={500} suffix="+" /></div>
-                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Active Clients</div>
+                 <div className="font-display text-3xl sm:text-4xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><MapPin className="w-10 h-10 mx-auto" /></div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Dammam, KSA</div>
               </div>
             </TiltCard>
             <TiltCard 
               className="h-48 sm:h-56 mt-[-20px]"
-              data-cursor-label="STAT: 5M+ TONS"
+              data-cursor-label="STAT: LICENSED"
             >
               <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm overflow-hidden text-zinc-600/30 hover:text-primary">
-                 <CardCrosshairs refLabel="REF: STAT-TON" lotLabel="LOT-ID: 2026/TON" />
-                 {/* Diagonal strip background effect */}
-                 <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(0,0,0,0.02)_10px,rgba(0,0,0,0.02)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
-                 <div className="relative z-10 font-display text-4xl sm:text-5xl uppercase tracking-widest text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={5} suffix="M+" /></div>
-                 <div className="relative z-10 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mt-2">Tons Processed</div>
+                 <div className="relative z-10 font-display text-3xl sm:text-4xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><ShieldCheck className="w-10 h-10 mx-auto" /></div>
+                 <div className="relative z-10 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mt-2">Licensed Dealer</div>
               </div>
             </TiltCard>
             <TiltCard 
               className="h-48 sm:h-56 mt-[-20px]"
-              data-cursor-label="STAT: 24H SWAP"
+              data-cursor-label="STAT: EASTERN PROVINCE"
             >
               <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
-                 <CardCrosshairs refLabel="REF: STAT-SWP" lotLabel="LOT-ID: 2026/SWP" />
-                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={24} suffix="h" /></div>
-                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Container Swap<br/>Time Guarantee</div>
+                 <div className="font-display text-3xl sm:text-4xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><Truck className="w-10 h-10 mx-auto" /></div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Eastern Province<br/>Coverage</div>
               </div>
             </TiltCard>
           </div>
@@ -1974,32 +1889,7 @@ export default function App() {
                 Our commitment to integrity, efficiency, and environmental sustainability has made us a trusted partner in the region's expanding industrial sector. We manage the complete lifecycle of scrap metal trading—from reliable site collection to meticulous sorting and processing.
               </p>
 
-              {/* Facility Tour / Overview Video */}
-              <div className="relative w-full aspect-video mb-12 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 group overflow-hidden rounded-sm flex flex-col justify-center items-center shadow-md transition-colors duration-300">
-                {!isVideoPlaying ? (
-                  <>
-                    <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 m-2 pointer-events-none z-10 flex flex-col justify-center items-center">
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.1),transparent_50%)] pointer-events-none"></div>
-                      <button onClick={() => setIsVideoPlaying(true)} className="w-20 h-20 bg-primary/90 hover:bg-orange-600 rounded-full flex items-center justify-center text-white z-20 pointer-events-auto transition-all duration-300 hover:scale-110 shadow-[0_0_30px_rgba(249,115,22,0.4)] backdrop-blur-sm border border-orange-400 active:scale-95" aria-label="Play facility tour video">
-                        <Play className="w-8 h-8 ml-1 fill-white" />
-                      </button>
-                      <p className="mt-6 text-zinc-600 dark:text-zinc-400 text-sm tracking-widest uppercase font-semibold relative z-20">Watch Facility Tour</p>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1536617621572-1d5f1e62675b?q=80&w=2070&auto=format&fit=crop" alt="Facility Tour Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500 contrast-125 saturate-50 mix-blend-luminosity" />
-                  </>
-                ) : (
-                  <iframe 
-                    width="100%" 
-                    height="100%" 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&modestbranding=1" 
-                    title="AALKC Facility Tour" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                    className="z-20 border border-zinc-200 dark:border-zinc-800 m-2 w-[calc(100%-16px)] h-[calc(100%-16px)]"
-                  ></iframe>
-                )}
-              </div>
+
 
               <h3 className="text-2xl font-display uppercase tracking-wide text-zinc-900 dark:text-white mb-6 mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-4">Our Services Include</h3>
               <div className="grid sm:grid-cols-2 gap-6 mb-12">
@@ -2168,12 +2058,13 @@ export default function App() {
                   if (!validateForm()) return;
                   setFormStatus('submitting');
                   setFormMessage('');
-                  // Simulate network request
-                  setTimeout(() => {
-                    setFormStatus('success');
-                    setFormMessage('Thank you for your request. Our team will contact you shortly.');
-                    setFormData({ name: '', company: '', email: '', phone: '', message: '' });
-                  }, 1500);
+                  // Send via mailto link
+                  const subject = encodeURIComponent(`Quote Request from ${formData.name} - ${formData.company}`);
+                  const body = encodeURIComponent(`Name: ${formData.name}\nCompany: ${formData.company}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`);
+                  window.open(`mailto:contact@aalkc.com?subject=${subject}&body=${body}`, '_self');
+                  setFormStatus('success');
+                  setFormMessage('Your email client has been opened with the quote request. Please send the email to complete your request.');
+                  setFormData({ name: '', company: '', email: '', phone: '', message: '' });
                 }}
               >
                 {formStatus === 'error' && (
@@ -2267,20 +2158,7 @@ export default function App() {
                <span className="text-zinc-300 dark:text-zinc-800">|</span>
                <a href="#terms" className="hover:text-orange-700 dark:hover:text-primary transition-colors">Terms of Service</a>
              </div>
-             <div className="flex gap-4 text-zinc-700 dark:text-zinc-400">
-               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
-                 <Linkedin className="w-5 h-5" />
-                 <span className="sr-only">LinkedIn</span>
-               </a>
-               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
-                 <Twitter className="w-5 h-5" />
-                 <span className="sr-only">Twitter</span>
-               </a>
-               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
-                 <Facebook className="w-5 h-5" />
-                 <span className="sr-only">Facebook</span>
-               </a>
-             </div>
+
            </div>
         </div>
       </footer>
@@ -2307,7 +2185,7 @@ export default function App() {
               className="fixed right-0 top-0 bottom-0 w-full max-w-[320px] sm:max-w-[360px] bg-zinc-950/90 backdrop-blur-xl border-l border-zinc-800/80 z-50 md:hidden flex flex-col justify-between shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden"
             >
               {/* Engineering accents inside drawer */}
-              <CardCrosshairs refLabel="REF: MOB-DRAWER / KSA" lotLabel="LOT-ID: 2026/NAV" />
+              <CardCrosshairs />
               
               {/* Upper Section */}
               <div className="p-6 relative z-10">
@@ -2364,7 +2242,7 @@ export default function App() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                   </span>
-                  <span>DAMMAM HQ: ACTIVE | SCALE: CERTIFIED</span>
+                  <span>AALKC — DAMMAM, EASTERN PROVINCE</span>
                 </div>
 
                 {/* Quick contact buttons */}

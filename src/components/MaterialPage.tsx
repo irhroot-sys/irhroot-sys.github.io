@@ -29,7 +29,7 @@ const SPEC_DATA: Record<string, {
       "ISO 9001:2015 Quality Inspected",
       "KSA Environmental License Compliant",
       "100% Radiation Screening Certified",
-      "SABIC/Aramco Standard Equivalent"
+      "Industry Standard Compliance"
     ],
     whatsappMessage: "Hello AALKC team, I am looking for a spot price quote for Copper Scrap. Please provide the current rates for Grade #1 Millberry."
   },
@@ -55,7 +55,7 @@ const SPEC_DATA: Record<string, {
       "ISO 9001:2015 Quality Inspected",
       "Chamber of Commerce Verified License",
       "Heavy Shear Dimension Standardized",
-      "KSA Royal Commission Waste Compliant"
+      "Environmental Waste Management Compliant"
     ],
     whatsappMessage: "Hello AALKC team, I want to inquire about selling/purchasing Heavy Melting Steel (HMS 1 & 2). Please share the current market price per ton."
   },
@@ -81,7 +81,7 @@ const SPEC_DATA: Record<string, {
       "ISO 14001:2015 Eco Management",
       "KSA Ministry of Environment Authorized",
       "100% Alloy Inspected (XRF Analyzed)",
-      "SABIC Structural Scrap Standard"
+      "Industry Grade Standard"
     ],
     whatsappMessage: "Hello AALKC team, I would like to get a quote for Aluminum Scrap (Extrusions/Rims). Please advise."
   }
@@ -185,8 +185,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
             <div className="tech-corner tech-corner-bl"></div>
             <div className="tech-corner tech-corner-br"></div>
             
-            <div className="absolute top-2.5 left-4 font-mono text-[8px] tracking-widest text-zinc-500/40 select-none pointer-events-none">REF: PHYS-PROP/{materialKey.toUpperCase()}</div>
-            <div className="absolute bottom-2.5 right-4 font-mono text-[8px] tracking-widest text-zinc-550/40 select-none pointer-events-none">LOT-ID: KSA-DMM-01</div>
+
             
             <div className={`absolute top-0 right-0 w-24 h-24 ${accentBg} blur-2xl rounded-full`}></div>
             <h3 className="text-lg font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-6 flex items-center gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800/60 relative z-10">
@@ -210,8 +209,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
             <div className="tech-corner tech-corner-bl"></div>
             <div className="tech-corner tech-corner-br"></div>
             
-            <div className="absolute top-2.5 left-4 font-mono text-[8px] tracking-widest text-zinc-500/40 select-none pointer-events-none">REF: CHEM-SPEC/{materialKey.toUpperCase()}</div>
-            <div className="absolute bottom-2.5 right-4 font-mono text-[8px] tracking-widest text-zinc-550/40 select-none pointer-events-none">LOT-ID: KSA-DMM-02</div>
+
 
             <div className={`absolute top-0 right-0 w-24 h-24 ${accentBg} blur-2xl rounded-full`}></div>
             <h3 className="text-lg font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-6 flex items-center gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800/60 relative z-10">
@@ -236,8 +234,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           <div className="tech-corner tech-corner-bl"></div>
           <div className="tech-corner tech-corner-br"></div>
           
-          <div className="absolute top-2.5 left-4 font-mono text-[8px] tracking-widest text-zinc-500/40 select-none pointer-events-none">REF: COMP-CERT/{materialKey.toUpperCase()}</div>
-          <div className="absolute bottom-2.5 right-4 font-mono text-[8px] tracking-widest text-zinc-550/40 select-none pointer-events-none">LOT-ID: KSA-DMM-03</div>
+
 
           <h3 className="text-lg font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-6 flex items-center gap-3 relative z-10">
             <Recycle className={`w-5 h-5 ${accentTextClass}`} /> Grade Inspection & Compliance
@@ -264,8 +261,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           <div className="tech-corner tech-corner-bl"></div>
           <div className="tech-corner tech-corner-br"></div>
           
-          <div className="absolute top-2.5 left-4 font-mono text-[8px] tracking-widest text-zinc-500/40 select-none pointer-events-none">REF: CALC-SPEC/{materialKey.toUpperCase()}</div>
-          <div className="absolute bottom-2.5 right-4 font-mono text-[8px] tracking-widest text-zinc-550/40 select-none pointer-events-none">LOT-ID: KSA-DMM-CALC</div>
+
 
           <div className="relative z-10">
             <h3 className="text-lg font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-6 flex items-center gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800/60">
