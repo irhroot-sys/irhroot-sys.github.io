@@ -1011,7 +1011,7 @@ export default function App() {
                      exit={{ opacity: 0 }} 
                      className="h-[280px] w-full"
                    >
-                     <ResponsiveContainer width="100%" height="100%">
+                     <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                        <AreaChart data={mockChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                          <defs>
                            <linearGradient id="colorCopper" x1="0" y1="0" x2="0" y2="1">
