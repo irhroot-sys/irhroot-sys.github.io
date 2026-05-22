@@ -499,7 +499,7 @@ function HeroSlider() {
             </motion.p>
             
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 flex-wrap">
-              <a href="#contact" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(249,115,22,0.2)] dark:shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-0.5 rounded-sm">
+              <a href="#contact" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(249,115,22,0.2)] dark:shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-0.5 rounded-sm">
                 {slide.primaryButton.text} <slide.primaryButton.icon className="w-4 h-4" />
               </a>
               <a href="#services" className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/80 border border-zinc-700/50 hover:border-zinc-500 text-white px-8 py-4 uppercase tracking-widest font-semibold text-sm transition-all flex items-center justify-center gap-3 group rounded-sm">
@@ -836,7 +836,7 @@ export default function App() {
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
              </button>
 
-             <button onClick={() => window.location.hash = '#contact'} className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_25px_rgba(249,115,22,0.35)] text-white px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-orange-700 hover:border-orange-600 dark:border-primary dark:hover:border-orange-500 whitespace-nowrap">
+             <button onClick={() => window.location.hash = '#contact'} className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_25px_rgba(249,115,22,0.35)] text-white dark:text-zinc-950 px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-orange-700 hover:border-orange-600 dark:border-primary dark:hover:border-orange-500 whitespace-nowrap">
                Get Quote <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </button>
           </div>
@@ -877,7 +877,7 @@ export default function App() {
                   <button 
                    key={cat}
                    onClick={() => setServiceFilter(cat)}
-                   className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-orange-700 dark:bg-primary text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                   className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                   >
                     {cat}
                   </button>
@@ -957,13 +957,13 @@ export default function App() {
                  <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded border border-zinc-200 dark:border-zinc-800">
                    <button 
                      onClick={() => setMarketTab('live')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      Live
                    </button>
                    <button 
                      onClick={() => setMarketTab('history')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      History
                    </button>
@@ -1099,7 +1099,7 @@ export default function App() {
             </div>
             <div className="bg-white text-zinc-950 p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl">
                <div className="font-display text-5xl sm:text-6xl mb-2 text-zinc-900"><AnimatedNumber to={500} suffix="+" /></div>
-               <div className="text-xs uppercase tracking-widest text-zinc-700 dark:text-zinc-400">Active Clients</div>
+               <div className="text-xs uppercase tracking-widest text-zinc-900">Active Clients</div>
             </div>
             <div className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl relative overflow-hidden">
                {/* Diagonal strip background effect */}
@@ -1245,7 +1245,7 @@ export default function App() {
                <a href="tel:+966551811700" className="bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-md">
                  <Phone className="w-5 h-5" /> Call Now: +966 55 181 1700
                </a>
-               <a href="mailto:contact@aalkc.com" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.2)] dark:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+               <a href="mailto:contact@aalkc.com" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.2)] dark:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                  <Mail className="w-5 h-5" /> contact@aalkc.com
                </a>
             </div>
@@ -1269,7 +1269,7 @@ export default function App() {
                       <MapPin className="w-5 h-5 text-orange-700 dark:text-primary" />
                     </div>
                     <div>
-                      <h4 className="text-zinc-900 dark:text-white font-bold uppercase tracking-widest text-xs mb-2">Visit Our Yard</h4>
+                      <h3 className="text-zinc-900 dark:text-white font-bold uppercase tracking-widest text-xs mb-2">Visit Our Yard</h3>
                       <p className="text-zinc-600 dark:text-zinc-400 text-[10px] leading-relaxed uppercase tracking-wider">
                         3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, KSA
                       </p>
@@ -1283,7 +1283,7 @@ export default function App() {
                   <div className="w-12 h-12 mx-auto mb-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center group-hover:border-primary/50 transition-colors shadow-sm">
                     <MapPin className="w-6 h-6 text-orange-700 dark:text-primary" />
                   </div>
-                  <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Headquarters</h4>
+                  <h3 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Headquarters</h3>
                   <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3">
                     3508 Al Qatif 1, Unit 7260<br/>Dammam 32517, Eastern Province<br/>Kingdom Of Saudi Arabia
                   </p>
@@ -1293,7 +1293,7 @@ export default function App() {
                </div>
                <div className="flex flex-col items-center justify-start">
                   <Phone className="w-6 h-6 mx-auto mb-4 text-zinc-600 dark:text-zinc-400" />
-                  <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Contact Us</h4>
+                  <h3 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Contact Us</h3>
                   <p className="text-zinc-600 dark:text-zinc-400 text-sm flex flex-col gap-2">
                     <a href="tel:+966551811700" className="hover:text-orange-700 dark:hover:text-primary transition-colors">+966 55 181 1700</a>
                     <a href="mailto:contact@aalkc.com" className="hover:text-orange-700 dark:hover:text-primary transition-colors">contact@aalkc.com</a>
@@ -1302,7 +1302,7 @@ export default function App() {
                </div>
                <div>
                   <Truck className="w-6 h-6 mx-auto mb-4 text-zinc-600 dark:text-zinc-400" />
-                  <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Operations</h4>
+                  <h3 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Operations</h3>
                   <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
                     Premium metal scrap<br/>dealership and industrial<br/>dismantling services.
                   </p>
@@ -1376,7 +1376,7 @@ export default function App() {
                 <button 
                   type="submit" 
                   disabled={formStatus === 'submitting'}
-                  className="w-full bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 disabled:opacity-70 disabled:hover:bg-orange-700 dark:disabled:hover:bg-primary text-white font-bold tracking-widest text-sm uppercase py-4 rounded-sm transition-colors mt-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-orange-700 dark:focus:ring-primary flex items-center justify-center gap-2"
+                  className="w-full bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 disabled:opacity-70 disabled:hover:bg-orange-700 dark:disabled:hover:bg-primary text-white dark:text-zinc-950 font-bold tracking-widest text-sm uppercase py-4 rounded-sm transition-colors mt-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-orange-700 dark:focus:ring-primary flex items-center justify-center gap-2"
                 >
                   {formStatus === 'submitting' ? (
                     <><Loader2 className="w-4 h-4 animate-spin text-white" /> Submitting</>
@@ -1411,7 +1411,7 @@ export default function App() {
                <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800">|</span>
                <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:underline">www.aalkc.com</a>
              </div>
-             <div className="mt-2 text-xs text-zinc-700 dark:text-zinc-500">&copy; {new Date().getFullYear()} Amanat Al-Kalima Company (AALKC). All Rights Reserved.</div>
+             <div className="mt-2 text-xs text-zinc-700 dark:text-zinc-400">&copy; {new Date().getFullYear()} Amanat Al-Kalima Company (AALKC). All Rights Reserved.</div>
            </div>
            <div className="flex flex-col gap-4 items-center md:items-end">
              <div className="flex gap-4 text-xs font-semibold text-zinc-700 dark:text-zinc-400">
