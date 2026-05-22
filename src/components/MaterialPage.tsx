@@ -70,7 +70,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           </h3>
           <p className="leading-relaxed">{data.criteria}</p>
           <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-800">
-            <a href="#contact" className="inline-flex items-center gap-2 bg-primary hover:bg-orange-600 text-white font-bold tracking-widest text-xs uppercase px-6 py-3 rounded-sm transition-colors shadow-lg">
+            <a href="#contact" className="inline-flex items-center gap-2 bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white font-bold tracking-widest text-xs uppercase px-6 py-3 rounded-sm transition-colors shadow-lg">
               Request Spot Pricing <ArrowRight className="w-4 h-4" />
             </a>
           </div>

@@ -5,6 +5,9 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianG
 
 const MaterialPage = lazy(() => import('./components/MaterialPage'));
 
+import logoImg from './assets/images/aalkkoo.png';
+import footerLogoImg from './assets/images/regenerated_image_1778927709543.jpg';
+
 const mockChartData = [
   { month: 'Jan', copper: 3.80, steel: 1.20, aluminum: 1.05 },
   { month: 'Feb', copper: 3.85, steel: 1.25, aluminum: 1.10 },
@@ -273,9 +276,9 @@ function FAQSection() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-12 bg-primary"></div>
-          <span className="text-primary font-semibold tracking-widest uppercase text-xs">Knowledge Base</span>
+          <span className="text-orange-700 dark:text-primary font-semibold tracking-widest uppercase text-xs">Knowledge Base</span>
         </div>
-        <h3 className="text-3xl md:text-5xl font-display uppercase tracking-wide text-zinc-900 dark:text-white mb-10">Frequently Asked <span className="text-zinc-400 dark:text-zinc-600">Questions</span></h3>
+        <h2 className="text-3xl md:text-5xl font-display uppercase tracking-wide text-zinc-900 dark:text-white mb-10">Frequently Asked <span className="text-zinc-500 dark:text-zinc-400">Questions</span></h2>
         <div className="space-y-3">
           {FAQ_DATA.map((faq, idx) => (
             <FAQItem 
@@ -479,7 +482,7 @@ function HeroSlider() {
               <div className="flex bg-primary/20 p-1.5 rounded-sm">
                 <Truck className="w-4 h-4 text-primary" />
               </div>
-              <span className="text-primary font-semibold tracking-[0.3em] uppercase text-xs">AALKC Solutions</span>
+              <span className="text-orange-700 dark:text-primary font-semibold tracking-[0.3em] uppercase text-xs">AALKC Solutions</span>
             </motion.div>
             
             <motion.h1 
@@ -496,7 +499,7 @@ function HeroSlider() {
             </motion.p>
             
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 flex-wrap">
-              <a href="#contact" className="bg-primary hover:bg-orange-500 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] hover:-translate-y-0.5 rounded-sm">
+              <a href="#contact" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(249,115,22,0.2)] dark:shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-0.5 rounded-sm">
                 {slide.primaryButton.text} <slide.primaryButton.icon className="w-4 h-4" />
               </a>
               <a href="#services" className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/80 border border-zinc-700/50 hover:border-zinc-500 text-white px-8 py-4 uppercase tracking-widest font-semibold text-sm transition-all flex items-center justify-center gap-3 group rounded-sm">
@@ -616,7 +619,7 @@ function ScrollToTop() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[60] bg-primary hover:bg-orange-600 text-white p-3 md:p-4 rounded-sm shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all border border-orange-400/20 group flex items-center justify-center"
+          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[60] bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white p-3 md:p-4 rounded-sm shadow-[0_0_20px_rgba(249,115,22,0.3)] dark:shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.7)] transition-all border border-orange-600/20 dark:border-orange-400/20 group flex items-center justify-center"
           aria-label="Scroll to top"
         >
           <ChevronUp className="w-5 h-5 md:w-6 h-6 group-hover:-translate-y-1 transition-transform" />
@@ -804,7 +807,7 @@ export default function App() {
           <div className="flex items-center shrink-0 w-auto lg:w-[280px]">
             <a href="#" className={`flex items-center relative group py-2 outline-none transition-opacity duration-300 ${!isScrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               <img 
-                src="/src/assets/images/aalkkoo.png" 
+                src={logoImg} 
                 alt="AALKC Logo" 
                 className="h-12 sm:h-14 md:h-16 lg:h-16 w-auto object-contain transition-all duration-500 relative z-10 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]" 
               />
@@ -833,7 +836,7 @@ export default function App() {
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
              </button>
 
-             <button onClick={() => window.location.hash = '#contact'} className="bg-primary hover:bg-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.3)] text-white px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-primary hover:border-orange-500 whitespace-nowrap">
+             <button onClick={() => window.location.hash = '#contact'} className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_25px_rgba(249,115,22,0.35)] text-white px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-orange-700 hover:border-orange-600 dark:border-primary dark:hover:border-orange-500 whitespace-nowrap">
                Get Quote <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </button>
           </div>
@@ -874,7 +877,7 @@ export default function App() {
                   <button 
                    key={cat}
                    onClick={() => setServiceFilter(cat)}
-                   className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-primary text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                   className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-orange-700 dark:bg-primary text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                   >
                     {cat}
                   </button>
@@ -900,7 +903,7 @@ export default function App() {
                 
                 <service.icon className="w-10 h-10 text-zinc-300 dark:text-zinc-600 group-hover:text-primary transition-colors mb-6" />
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[10px] text-primary font-mono uppercase tracking-widest border border-primary/20 px-2 py-0.5 rounded-full">{service.category}</span>
+                  <span className="text-[10px] text-orange-700 dark:text-primary font-mono uppercase tracking-widest border border-orange-700/20 dark:border-primary/20 px-2 py-0.5 rounded-full">{service.category}</span>
                 </div>
                 <h3 className="font-display text-2xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">{service.title}</h3>
                 <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm flex-1">{service.desc}</p>
@@ -923,10 +926,10 @@ export default function App() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px w-12 bg-primary"></div>
-                <span className="text-primary font-semibold tracking-widest uppercase text-xs">What We Buy</span>
+                <span className="text-orange-700 dark:text-primary font-semibold tracking-widest uppercase text-xs">What We Buy</span>
               </div>
               <h2 className="font-display text-4xl md:text-6xl uppercase tracking-wide text-zinc-900 dark:text-white mb-8">
-                Ferrous & <br/><span className="text-zinc-400 dark:text-zinc-600">Non-Ferrous</span>
+                Ferrous & <br/><span className="text-zinc-500 dark:text-zinc-400">Non-Ferrous</span>
               </h2>
               <p className="text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed max-w-lg">
                 We accept a wide variety of metals and alloys. Our state-of-the-art analyzing equipment ensures precise grading and honest pricing for every load.
@@ -954,13 +957,13 @@ export default function App() {
                  <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded border border-zinc-200 dark:border-zinc-800">
                    <button 
                      onClick={() => setMarketTab('live')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      Live
                    </button>
                    <button 
                      onClick={() => setMarketTab('history')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      History
                    </button>
@@ -1096,7 +1099,7 @@ export default function App() {
             </div>
             <div className="bg-white text-zinc-950 p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl">
                <div className="font-display text-5xl sm:text-6xl mb-2 text-zinc-900"><AnimatedNumber to={500} suffix="+" /></div>
-               <div className="text-xs uppercase tracking-widest text-zinc-650">Active Clients</div>
+               <div className="text-xs uppercase tracking-widest text-zinc-700 dark:text-zinc-400">Active Clients</div>
             </div>
             <div className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl relative overflow-hidden">
                {/* Diagonal strip background effect */}
@@ -1118,10 +1121,10 @@ export default function App() {
           <div className="mb-0">
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px w-12 bg-primary"></div>
-              <span className="text-primary font-semibold tracking-widest uppercase text-xs">Company Profile</span>
+              <span className="text-orange-700 dark:text-primary font-semibold tracking-widest uppercase text-xs">Company Profile</span>
             </div>
             <h2 className="font-display text-4xl md:text-5xl uppercase tracking-wide text-zinc-900 dark:text-white mb-6">
-              About Amanat <br/><span className="text-zinc-400 dark:text-zinc-600">Al-Kalima Company</span>
+              About Amanat <br/><span className="text-zinc-500 dark:text-zinc-400">Al-Kalima Company</span>
             </h2>
             <div className="prose dark:prose-invert prose-zinc max-w-none text-zinc-600 dark:text-zinc-400">
               <p className="text-lg leading-relaxed mb-6">
@@ -1235,14 +1238,14 @@ export default function App() {
             </div>
             
             <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tight text-zinc-900 dark:text-white mb-10">
-              Start Maximizing <br/><span className="text-zinc-400 dark:text-zinc-600">Your Scrap Value</span>
+              Start Maximizing <br/><span className="text-zinc-500 dark:text-zinc-400">Your Scrap Value</span>
             </h2>
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
                <a href="tel:+966551811700" className="bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-md">
                  <Phone className="w-5 h-5" /> Call Now: +966 55 181 1700
                </a>
-               <a href="mailto:contact@aalkc.com" className="bg-primary hover:bg-orange-600 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+               <a href="mailto:contact@aalkc.com" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(249,115,22,0.2)] dark:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                  <Mail className="w-5 h-5" /> contact@aalkc.com
                </a>
             </div>
@@ -1310,7 +1313,7 @@ export default function App() {
             <div className="mt-20 max-w-2xl mx-auto border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-8 text-left relative overflow-hidden shadow-xl transition-colors duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] pointer-events-none"></div>
               <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white mb-2">Request a Quote</h3>
-              <p className="text-zinc-655 dark:text-zinc-400 mb-8 text-sm">Fill out the form below and our team will get back to you with competitive pricing for your materials.</p>
+              <p className="text-zinc-700 dark:text-zinc-400 mb-8 text-sm">Fill out the form below and our team will get back to you with competitive pricing for your materials.</p>
               
               <form 
                 className="space-y-5 relative z-10" 
@@ -1366,14 +1369,14 @@ export default function App() {
                 
                 <div className="space-y-1.5">
                   <label htmlFor="message" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Message *</label>
-                  <textarea value={formData.message} onChange={handleInputChange} id="message" rows={4} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all resize-none`} placeholder="Please describe the materials, estimated quantity, and your location..."></textarea>
+                  <textarea value={formData.message} onChange={handleInputChange} id="message" rows={4} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-orange-700 focus:ring-orange-700 dark:focus:border-primary dark:focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all resize-none`} placeholder="Please describe the materials, estimated quantity, and your location..."></textarea>
                   {formErrors.message && <p className="text-red-500 text-xs mt-1">{formErrors.message}</p>}
                 </div>
                 
                 <button 
                   type="submit" 
                   disabled={formStatus === 'submitting'}
-                  className="w-full bg-primary hover:bg-orange-600 disabled:opacity-70 disabled:hover:bg-primary text-white font-bold tracking-widest text-sm uppercase py-4 rounded-sm transition-colors mt-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-primary flex items-center justify-center gap-2"
+                  className="w-full bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 disabled:opacity-70 disabled:hover:bg-orange-700 dark:disabled:hover:bg-primary text-white font-bold tracking-widest text-sm uppercase py-4 rounded-sm transition-colors mt-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-orange-700 dark:focus:ring-primary flex items-center justify-center gap-2"
                 >
                   {formStatus === 'submitting' ? (
                     <><Loader2 className="w-4 h-4 animate-spin text-white" /> Submitting</>
@@ -1389,14 +1392,14 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-12 text-center text-zinc-650 dark:text-zinc-400 text-sm uppercase tracking-widest font-medium transition-colors duration-300">
+      <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-12 text-center text-zinc-700 dark:text-zinc-400 text-sm uppercase tracking-widest font-medium transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4">
            <div className="flex flex-col items-center md:items-start gap-4">
              <div className="flex items-center gap-2 text-zinc-900 dark:text-white opacity-80 hover:opacity-100 transition-opacity">
-               <img src="/src/assets/images/regenerated_image_1778927709543.jpg" alt="AALKC" className="h-10 md:h-12 w-auto object-contain transition-all duration-300" />
+               <img src={footerLogoImg} alt="AALKC" className="h-10 md:h-12 w-auto object-contain transition-all duration-300" />
              </div>
              <div className="text-left leading-relaxed">
-               <div className="text-zinc-750 dark:text-zinc-300 text-xs tracking-widest">AMANAT AL-KALIMA COMPANY</div>
+               <div className="text-zinc-800 dark:text-zinc-200 text-xs tracking-widest font-semibold">AMANAT AL-KALIMA COMPANY</div>
                <div className="text-zinc-600 dark:text-zinc-400 text-xs tracking-wider mt-1 font-sans" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</div>
              </div>
            </div>
@@ -1408,17 +1411,17 @@ export default function App() {
                <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800">|</span>
                <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:underline">www.aalkc.com</a>
              </div>
-             <div className="mt-2 text-xs text-zinc-600">&copy; {new Date().getFullYear()} Amanat Al-Kalima Company (AALKC). All Rights Reserved.</div>
+             <div className="mt-2 text-xs text-zinc-700 dark:text-zinc-500">&copy; {new Date().getFullYear()} Amanat Al-Kalima Company (AALKC). All Rights Reserved.</div>
            </div>
            <div className="flex flex-col gap-4 items-center md:items-end">
-             <div className="flex gap-4 text-xs font-semibold text-zinc-650 dark:text-zinc-400">
+             <div className="flex gap-4 text-xs font-semibold text-zinc-700 dark:text-zinc-400">
                <a href="#about" className="hover:text-orange-700 dark:hover:text-primary transition-colors">About Company</a>
                <span className="text-zinc-300 dark:text-zinc-800">|</span>
                <a href="#privacy" className="hover:text-orange-700 dark:hover:text-primary transition-colors">Privacy Policy</a>
                <span className="text-zinc-300 dark:text-zinc-800">|</span>
                <a href="#terms" className="hover:text-orange-700 dark:hover:text-primary transition-colors">Terms of Service</a>
              </div>
-             <div className="flex gap-4 text-zinc-650 dark:text-zinc-400">
+             <div className="flex gap-4 text-zinc-700 dark:text-zinc-400">
                <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
                  <Linkedin className="w-5 h-5" />
                  <span className="sr-only">LinkedIn</span>
