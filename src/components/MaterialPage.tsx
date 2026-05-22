@@ -29,7 +29,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
 
   return (
     <div className="pt-32 pb-24 max-w-4xl mx-auto px-6 min-h-screen">
-      <a href="#materials" className="inline-flex items-center gap-2 text-primary hover:text-zinc-900 dark:hover:text-white uppercase tracking-widest text-xs font-semibold mb-8 transition-colors">
+      <a href="#materials" className="inline-flex items-center gap-2 text-orange-700 dark:text-primary hover:text-zinc-900 dark:hover:text-white uppercase tracking-widest text-xs font-semibold mb-8 transition-colors">
         <ChevronRight className="w-4 h-4 rotate-180" /> Back to Materials
       </a>
       <div className="flex items-center gap-6 mb-6">
@@ -45,20 +45,20 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] pointer-events-none"></div>
            <div className="relative z-10">
              <h3 className="text-xl font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-4">Current Market Trend</h3>
-             <p className="text-xl text-primary font-mono font-bold tracking-wider">{data.priceTrend}</p>
+             <p className="text-xl text-orange-700 dark:text-primary font-mono font-bold tracking-wider">{data.priceTrend}</p>
            </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div className="p-6 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/50 shadow-sm">
             <h3 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-primary" /> Properties
+              <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-primary" /> Properties
             </h3>
             <p className="leading-relaxed text-sm">{data.properties}</p>
           </div>
           <div className="p-6 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/50 shadow-sm">
             <h3 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
-              <Factory className="w-5 h-5 text-primary" /> Common Uses
+              <Factory className="w-5 h-5 text-orange-700 dark:text-primary" /> Common Uses
             </h3>
             <p className="leading-relaxed text-sm">{data.uses}</p>
           </div>
@@ -66,7 +66,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
 
         <div className="p-8 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 shadow-sm">
           <h3 className="text-lg font-bold uppercase tracking-widest text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
-            <Recycle className="w-5 h-5 text-primary" /> AALKC Purchasing Criteria
+            <Recycle className="w-5 h-5 text-orange-700 dark:text-primary" /> AALKC Purchasing Criteria
           </h3>
           <p className="leading-relaxed">{data.criteria}</p>
           <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-800">

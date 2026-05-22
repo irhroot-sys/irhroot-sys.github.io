@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-zinc-950 border border-zinc-800 p-4 rounded-sm shadow-xl">
-        <p className="text-zinc-500 text-xs font-mono mb-3 uppercase tracking-widest border-b border-zinc-800/50 pb-2">
+        <p className="text-zinc-400 text-xs font-mono mb-3 uppercase tracking-widest border-b border-zinc-800/50 pb-2">
           Month: <span className="text-zinc-300 font-semibold">{label}</span>
         </p>
         <div className="space-y-2">
@@ -147,7 +147,7 @@ const highlightMatch = (text: string, query: string) => {
     <span>
       {parts.map((part, i) => 
         part.toLowerCase() === query.toLowerCase() 
-          ? <span key={i} className="text-primary font-bold">{part}</span> 
+          ? <span key={i} className="text-orange-700 dark:text-primary font-bold">{part}</span> 
           : <span key={i}>{part}</span>
       )}
     </span>
@@ -181,6 +181,7 @@ function SearchBar() {
             type="button"
             onClick={() => setQuery('')}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+            aria-label="Clear search query"
           >
             <X className="w-3 h-3" />
           </button>
@@ -189,7 +190,7 @@ function SearchBar() {
       
       {isFocused && query && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm shadow-xl p-1 max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold px-3 py-2 border-b border-zinc-100 dark:border-zinc-900 mb-1 font-mono">Search Results</div>
+          <div className="text-[10px] uppercase tracking-widest text-zinc-600 dark:text-zinc-400 font-bold px-3 py-2 border-b border-zinc-100 dark:border-zinc-900 mb-1 font-mono">Search Results</div>
           {results.length > 0 ? (
             results.map((result, idx) => (
               <a 
@@ -201,13 +202,13 @@ function SearchBar() {
                 <div className="text-zinc-700 dark:text-zinc-300 text-sm group-hover/item:text-zinc-950 dark:group-hover/item:text-white transition-colors">
                   {highlightMatch(result.title, query)}
                 </div>
-                <div className="text-zinc-400 text-[10px] uppercase tracking-widest mt-0.5 group-hover/item:text-zinc-500">
+                <div className="text-zinc-500 dark:text-zinc-400 text-[10px] uppercase tracking-widest mt-0.5 group-hover/item:text-zinc-500">
                   {highlightMatch(result.type, query)}
                 </div>
               </a>
             ))
           ) : (
-            <div className="px-3 py-6 text-zinc-400 text-xs text-center italic">No results found for "{query}"</div>
+            <div className="px-3 py-6 text-zinc-600 dark:text-zinc-400 text-xs text-center italic">No results found for "{query}"</div>
           )}
         </div>
       )}
@@ -255,7 +256,7 @@ function FAQItem({ question, answer, isOpen, onClick }: { key?: number | string,
         className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
       >
         <div className="overflow-hidden">
-           <div className="p-6 pt-0 text-zinc-500 dark:text-zinc-500 text-sm leading-relaxed border-t border-zinc-100 dark:border-zinc-900/50">
+           <div className="p-6 pt-0 text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed border-t border-zinc-100 dark:border-zinc-900/50">
              {answer}
            </div>
         </div>
@@ -323,42 +324,42 @@ function MaterialsGuide() {
   ];
 
   return (
-    <div className="mt-24 border-t border-zinc-800 pt-20">
+    <div className="mt-24 border-t border-zinc-200 dark:border-zinc-800 pt-20">
       <div className="flex flex-col items-center text-center mb-16">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-12 bg-primary"></div>
-          <span className="text-primary font-semibold tracking-widest uppercase text-xs">Quality Standards</span>
+          <span className="text-orange-700 dark:text-primary font-semibold tracking-widest uppercase text-xs">Quality Standards</span>
         </div>
-        <h3 className="font-display text-3xl md:text-5xl uppercase tracking-wide text-white mb-6">
-          Grading & <span className="text-zinc-600">Acceptance</span>
+        <h3 className="font-display text-3xl md:text-5xl uppercase tracking-wide text-zinc-900 dark:text-white mb-6">
+          Grading & <span className="text-zinc-500 dark:text-zinc-400">Acceptance</span>
         </h3>
-        <p className="text-zinc-400 max-w-2xl text-sm leading-relaxed">
+        <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl text-sm leading-relaxed">
           To ensure the highest market value and safety standards, AALKC employs a strict grading criteria. Please review our visual guide for condition requirements prior to scheduling a pickup.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
         {guideData.map((item, idx) => (
-          <div key={idx} className="border border-zinc-800 bg-zinc-900/50 p-6 md:p-8 rounded-sm hover:border-zinc-700 transition-colors flex flex-col relative overflow-hidden group">
+          <div key={idx} className="border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 p-6 md:p-8 rounded-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors flex flex-col relative overflow-hidden group">
              <div className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-[40px] rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 group-hover:opacity-20" style={{ backgroundColor: item.color.replace('text-[', '').replace(']', '') }}></div>
              
-             <div className="flex items-center gap-4 border-b border-zinc-800/80 pb-6 mb-6 relative z-10">
+             <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6 mb-6 relative z-10">
                <div className={`p-4 rounded-full ${item.bg} ${item.border} border flex items-center justify-center`}>
                  <item.icon className={`w-6 h-6 ${item.color}`} />
                </div>
-               <h4 className="text-xl font-display uppercase tracking-widest text-white m-0">
+               <h4 className="text-xl font-display uppercase tracking-widest text-zinc-900 dark:text-white m-0">
                  {item.metal}
                </h4>
              </div>
              
              <div className="w-full text-left space-y-8 relative z-10">
                <div>
-                  <h5 className="text-[10px] uppercase tracking-widest text-green-500 font-bold mb-4 flex items-center gap-2">
+                  <h5 className="text-[10px] uppercase tracking-widest text-green-600 dark:text-green-500 font-bold mb-4 flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Acceptable Conditions
                   </h5>
                   <ul className="space-y-3">
                     {item.acceptable.map((desc, i) => (
-                      <li key={i} className="text-zinc-400 text-xs sm:text-sm flex items-start gap-2.5">
+                      <li key={i} className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm flex items-start gap-2.5">
                         <div className="w-1.5 h-1.5 bg-green-500/50 rounded-full mt-1.5 shrink-0"></div>
                         <span className="leading-relaxed">{desc}</span>
                       </li>
@@ -366,13 +367,13 @@ function MaterialsGuide() {
                   </ul>
                </div>
 
-               <div className="pt-6 border-t border-zinc-800/50">
-                  <h5 className="text-[10px] uppercase tracking-widest text-red-500 font-bold mb-4 flex items-center gap-2">
+               <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800/50">
+                  <h5 className="text-[10px] uppercase tracking-widest text-red-600 dark:text-red-500 font-bold mb-4 flex items-center gap-2">
                     <XCircle className="w-3.5 h-3.5" /> Common Downgrades
                   </h5>
                   <ul className="space-y-3">
                     {item.unacceptable.map((desc, i) => (
-                      <li key={i} className="text-zinc-500 text-xs sm:text-sm flex items-start gap-2.5">
+                      <li key={i} className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm flex items-start gap-2.5">
                         <div className="w-1.5 h-1.5 bg-red-500/50 rounded-full mt-1.5 shrink-0"></div>
                         <span className="leading-relaxed">{desc}</span>
                       </li>
@@ -514,12 +515,14 @@ function HeroSlider() {
             <button 
               onClick={prevSlide}
               className="w-10 h-10 rounded-full border border-white/10 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-900 transition-all"
+              aria-label="Previous slide"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             <button 
               onClick={nextSlide}
               className="w-10 h-10 rounded-full border border-white/10 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-900 transition-all"
+              aria-label="Next slide"
             >
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -533,6 +536,7 @@ function HeroSlider() {
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 className="relative h-2 w-16 bg-white/20 dark:bg-zinc-800 rounded-full overflow-hidden group"
+                aria-label={`Go to slide ${idx + 1}`}
               >
                 {idx === currentIndex && (
                   <motion.div 
@@ -752,35 +756,35 @@ export default function App() {
 
     return (
       <div className="pt-32 pb-24 max-w-4xl mx-auto px-6 min-h-screen">
-        <a href="#" className="inline-flex items-center gap-2 text-primary hover:text-white uppercase tracking-widest text-xs font-semibold mb-8 transition-colors">
+        <a href="#" className="inline-flex items-center gap-2 text-orange-700 dark:text-primary hover:text-orange-950 dark:hover:text-white uppercase tracking-widest text-xs font-semibold mb-8 transition-colors">
           <ChevronRight className="w-4 h-4 rotate-180" /> Back to Home
         </a>
-        <h1 className="font-display text-5xl md:text-7xl uppercase tracking-tight text-white mb-6">
+        <h1 className="font-display text-5xl md:text-7xl uppercase tracking-tight text-zinc-900 dark:text-white mb-6">
           {isPrivacy ? "Privacy Policy" : "Terms of Service"}
         </h1>
-        <div className="prose prose-invert prose-zinc max-w-none text-zinc-400 leading-relaxed">
+        <div className="prose dark:prose-invert prose-zinc max-w-none text-zinc-600 dark:text-zinc-400 leading-relaxed">
           {isPrivacy ? (
             <div className="space-y-6">
                <p className="text-lg">At Amanat Al-Kalima Company (AALKC), we are committed to protecting your privacy. This Privacy Policy outlines how we collect, use, and safeguard your information when you visit our website or use our services.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Information Collection</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Information Collection</h3>
                <p>We may collect personal information such as your name, email address, phone number, and company details when you utilize our "Request a Quote" form or contact us via email. We also collect anonymous usage data through cookies to analyze website traffic and improve our user experience.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Use of Information</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Use of Information</h3>
                <p>The information we collect is used primarily to process your service requests, provide accurate pricing for materials, and communicate effectively with our industrial partners. We do not sell or share your personal data with third parties for marketing purposes.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Data Security</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Data Security</h3>
                <p>We implement a variety of security measures to maintain the safety of your personal information. Your data is stored on secure servers and access is restricted to authorized personnel who are required to keep the information confidential.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Contact Us</h3>
-               <p>If you have any questions regarding this Privacy Policy, you may contact us at <a href="mailto:contact@aalkc.com" className="text-primary hover:underline">contact@aalkc.com</a>.</p>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Contact Us</h3>
+               <p>If you have any questions regarding this Privacy Policy, you may contact us at <a href="mailto:contact@aalkc.com" className="text-orange-700 dark:text-primary hover:underline">contact@aalkc.com</a>.</p>
             </div>
           ) : (
             <div className="space-y-6">
                <p className="text-lg">By accessing or using the services provided by Amanat Al-Kalima Company (AALKC), you agree to be bound by these Terms of Service and all applicable laws and regulations in the Kingdom of Saudi Arabia.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Service Terms</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Service Terms</h3>
                <p>AALKC provides professional scrap metal recycling and trading services. All material weights are determined by our certified industrial scales, and we reserve the right to inspect all materials for quality and safety compliance before purchase.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Pricing & Quotes</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Pricing & Quotes</h3>
                <p>Estimates provided through our website or via email are based on current market conditions and are subject to change until materials are physically inspected and weighed at our Dammam facility.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Compliance & Safety</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Compliance & Safety</h3>
                <p>Suppliers are responsible for ensuring that all scrap metal provided is free from hazardous materials, including but not limited to, explosive, radioactive, or pressurized containers. Suppliers must also confirm legal ownership of all materials sold to AALKC.</p>
-               <h3 className="text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-800 pb-2">Governing Law</h3>
+               <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Governing Law</h3>
                <p>These terms are governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia, and any disputes relating to these terms will be subject to the exclusive jurisdiction of the courts of Saudi Arabia.</p>
             </div>
           )}
@@ -809,11 +813,11 @@ export default function App() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-10 text-[13px] font-bold tracking-widest uppercase">
-            <a href="#services" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
-            <a href="#why-us" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
-            <a href="#materials" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
-            <a href="#faq" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
-            <a href="#contact" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
+            <a href="#services" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
+            <a href="#why-us" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
+            <a href="#materials" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
+            <a href="#faq" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
+            <a href="#contact" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
           </div>
 
           {/* CTA & Search */}
@@ -836,7 +840,7 @@ export default function App() {
           
           {/* Mobile Menu Icon (Placeholder for layout balance) */}
           <div className="md:hidden flex items-center justify-end">
-             <button className="text-zinc-400 hover:text-white p-2">
+             <button className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white p-2" aria-label="Open mobile menu">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
              </button>
           </div>
@@ -865,17 +869,17 @@ export default function App() {
             </div>
             
             {/* Filter Buttons */}
-            <div className="flex bg-white dark:bg-zinc-950 p-1 border border-zinc-200 dark:border-zinc-800 rounded-sm shadow-sm">
-               {['All', 'Collection', 'Processing', 'Trading'].map((cat) => (
-                 <button 
-                  key={cat}
-                  onClick={() => setServiceFilter(cat)}
-                  className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-primary text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
-                 >
-                   {cat}
-                 </button>
-               ))}
-            </div>
+             <div className="flex bg-white dark:bg-zinc-950 p-1 border border-zinc-200 dark:border-zinc-800 rounded-sm shadow-sm">
+                {['All', 'Collection', 'Processing', 'Trading'].map((cat) => (
+                  <button 
+                   key={cat}
+                   onClick={() => setServiceFilter(cat)}
+                   className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-primary text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+             </div>
           </div>
 
           <motion.div 
@@ -899,7 +903,7 @@ export default function App() {
                   <span className="text-[10px] text-primary font-mono uppercase tracking-widest border border-primary/20 px-2 py-0.5 rounded-full">{service.category}</span>
                 </div>
                 <h3 className="font-display text-2xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">{service.title}</h3>
-                <p className="text-zinc-500 dark:text-zinc-500 leading-relaxed text-sm flex-1">{service.desc}</p>
+                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm flex-1">{service.desc}</p>
                 
                 <div className="mt-8 h-px w-full bg-zinc-100 dark:bg-zinc-800 group-hover:bg-primary/30 transition-colors relative">
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-zinc-100 dark:bg-zinc-800 group-hover:bg-primary transition-colors flex items-center justify-center">
@@ -929,9 +933,9 @@ export default function App() {
               </p>
               
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 font-mono text-sm uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
-                <a href="#material-copper" className="flex items-center gap-3 hover:text-primary transition-colors cursor-pointer group"><Zap className="w-4 h-4 text-[#f97316] group-hover:scale-125 transition-transform" /> Copper</a>
-                <a href="#material-steel" className="flex items-center gap-3 hover:text-primary transition-colors cursor-pointer group"><Anvil className="w-4 h-4 text-[#a1a1aa] group-hover:scale-125 transition-transform" /> Heavy Melt Steel</a>
-                <a href="#material-aluminum" className="flex items-center gap-3 hover:text-primary transition-colors cursor-pointer group"><Feather className="w-4 h-4 text-[#38bdf8] group-hover:scale-125 transition-transform" /> Aluminum</a>
+                <a href="#material-copper" className="flex items-center gap-3 hover:text-orange-700 dark:hover:text-primary transition-colors cursor-pointer group"><Zap className="w-4 h-4 text-[#f97316] group-hover:scale-125 transition-transform" /> Copper</a>
+                <a href="#material-steel" className="flex items-center gap-3 hover:text-orange-700 dark:hover:text-primary transition-colors cursor-pointer group"><Anvil className="w-4 h-4 text-[#a1a1aa] group-hover:scale-125 transition-transform" /> Heavy Melt Steel</a>
+                <a href="#material-aluminum" className="flex items-center gap-3 hover:text-orange-700 dark:hover:text-primary transition-colors cursor-pointer group"><Feather className="w-4 h-4 text-[#38bdf8] group-hover:scale-125 transition-transform" /> Aluminum</a>
                 <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 bg-zinc-300 dark:bg-zinc-500"></div> Rebar</div>
                 <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 bg-primary"></div> Brass</div>
                 <div className="flex items-center gap-3"><div className="w-1.5 h-1.5 bg-zinc-300 dark:bg-zinc-500"></div> Cast Iron</div>
@@ -943,7 +947,6 @@ export default function App() {
             <div className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 sm:p-8 pt-8 relative overflow-hidden flex flex-col h-full min-h-[400px] shadow-sm">
                {/* Abstract grid background */}
                <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
-               
                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 relative z-10">
                  <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white m-0">
                    Market Trends
@@ -951,13 +954,13 @@ export default function App() {
                  <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded border border-zinc-200 dark:border-zinc-800">
                    <button 
                      onClick={() => setMarketTab('live')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-primary text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'live' ? 'bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      Live
                    </button>
                    <button 
                      onClick={() => setMarketTab('history')}
-                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-primary text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                     className={`px-4 py-1.5 text-xs font-semibold tracking-wider uppercase transition-colors rounded-sm ${marketTab === 'history' ? 'bg-primary text-white' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      History
                    </button>
@@ -983,16 +986,16 @@ export default function App() {
                          <Wrapper 
                            key={idx} 
                            href={item.link}
-                           className={`flex justify-between items-center py-4 border-b border-zinc-800/80 ${item.link ? 'hover:bg-zinc-800/50 -mx-4 px-4 cursor-pointer transition-colors group' : ''}`}
+                           className={`flex justify-between items-center py-4 border-b border-zinc-200 dark:border-zinc-800/80 ${item.link ? 'hover:bg-zinc-100 dark:hover:bg-zinc-800/50 -mx-4 px-4 cursor-pointer transition-colors group' : ''}`}
                          >
-                           <span className={`font-mono text-sm uppercase text-zinc-300 ${item.link ? 'group-hover:text-primary transition-colors' : ''}`}>{item.name}</span>
-                           <span className={`text-sm font-semibold tracking-wider ${item.up === true ? 'text-green-500' : item.up === false ? 'text-red-500' : 'text-zinc-500'}`}>
+                           <span className={`font-mono text-sm uppercase text-zinc-700 dark:text-zinc-300 ${item.link ? 'group-hover:text-orange-700 dark:group-hover:text-primary transition-colors' : ''}`}>{item.name}</span>
+                           <span className={`text-sm font-semibold tracking-wider ${item.up === true ? 'text-green-600 dark:text-green-500' : item.up === false ? 'text-red-600 dark:text-red-500' : 'text-zinc-600 dark:text-zinc-400'}`}>
                              {item.trend}
                            </span>
                          </Wrapper>
                        );
                      })}
-                     <div className="mt-8 text-xs text-zinc-600 font-mono tracking-widest">
+                     <div className="mt-8 text-xs text-zinc-600 dark:text-zinc-400 font-mono tracking-widest">
                        UPDATED: TODAY 08:00 AM EST. CONTACT FOR SPOT PRICING.
                      </div>
                    </motion.div>
@@ -1027,7 +1030,7 @@ export default function App() {
                            content={(props: any) => {
                              const { payload } = props;
                              return (
-                               <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-zinc-800/50">
+                               <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800/50">
                                  {payload?.map((entry: any, index: number) => {
                                    const isHidden = hiddenSeries[entry.dataKey];
                                    return (
@@ -1037,7 +1040,7 @@ export default function App() {
                                        className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider transition-all duration-300 ${isHidden ? 'opacity-40 grayscale' : 'opacity-100 hover:opacity-80'}`}
                                      >
                                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }}></div>
-                                       <span className="text-zinc-300">{entry.value}</span>
+                                       <span className="text-zinc-700 dark:text-zinc-300">{entry.value}</span>
                                      </button>
                                    )
                                  })}
@@ -1049,7 +1052,7 @@ export default function App() {
                          {!hiddenSeries.steel && <Area type="monotone" dataKey="steel" name="Steel" stroke="#a1a1aa" strokeWidth={2} fillOpacity={1} fill="url(#colorSteel)" />}
                        </AreaChart>
                      </ResponsiveContainer>
-                     <div className="mt-4 text-xs text-zinc-600 font-mono tracking-widest text-center">
+                     <div className="mt-4 text-xs text-zinc-600 dark:text-zinc-400 font-mono tracking-widest text-center">
                        12-MONTH HISTORICAL PRICE TRENDS ($/LB)
                      </div>
                    </motion.div>
@@ -1068,7 +1071,7 @@ export default function App() {
             <h2 className="font-display text-4xl md:text-6xl uppercase tracking-wide mb-8">
               Built on <br/>Integrity
             </h2>
-            <p className="mb-8 leading-relaxed max-w-lg font-medium text-zinc-900/80">
+            <p className="mb-8 leading-relaxed max-w-lg font-medium text-zinc-950">
               For over three decades, we have partnered with leading manufacturers, fabricators, and demolition contractors. Our reputation is our most valuable asset.
             </p>
             <ul className="space-y-6">
@@ -1078,7 +1081,7 @@ export default function App() {
                 "Full environmental compliance and sustainability reporting.",
                 "Dedicated account managers for high-volume producers."
               ].map((text, i) => (
-                <li key={i} className="flex items-start gap-4 font-medium uppercase tracking-wide text-xs sm:text-sm text-zinc-900">
+                <li key={i} className="flex items-start gap-4 font-medium uppercase tracking-wide text-xs sm:text-sm text-zinc-950">
                   <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5 text-zinc-950" />
                   <span>{text}</span>
                 </li>
@@ -1089,21 +1092,21 @@ export default function App() {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-zinc-900 dark:bg-zinc-950 text-white p-8 border border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 shadow-lg">
                <div className="font-display text-5xl sm:text-6xl text-primary mb-2"><AnimatedNumber to={30} suffix="+" /></div>
-               <div className="text-xs uppercase tracking-widest text-zinc-400">Years in Business</div>
+               <div className="text-xs uppercase tracking-widest text-zinc-300 dark:text-zinc-400">Years in Business</div>
             </div>
             <div className="bg-white text-zinc-950 p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl">
                <div className="font-display text-5xl sm:text-6xl mb-2 text-zinc-900"><AnimatedNumber to={500} suffix="+" /></div>
-               <div className="text-xs uppercase tracking-widest text-zinc-500">Active Clients</div>
+               <div className="text-xs uppercase tracking-widest text-zinc-650">Active Clients</div>
             </div>
-            <div className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 shadow-xl relative overflow-hidden">
+            <div className="bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white p-8 border border-zinc-200 dark:border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-xl relative overflow-hidden">
                {/* Diagonal strip background effect */}
                <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(0,0,0,0.02)_10px,rgba(0,0,0,0.02)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
                <div className="relative z-10 font-display text-4xl sm:text-5xl uppercase tracking-widest text-zinc-900 dark:text-white"><AnimatedNumber to={5} suffix="M+" /></div>
-               <div className="relative z-10 text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mt-2">Tons Processed</div>
+               <div className="relative z-10 text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-400 mt-2">Tons Processed</div>
             </div>
             <div className="bg-zinc-900 dark:bg-zinc-950 text-white p-8 border border-black/20 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-lg">
                <div className="font-display text-5xl sm:text-6xl text-primary mb-2"><AnimatedNumber to={24} suffix="h" /></div>
-               <div className="text-xs uppercase tracking-widest text-zinc-400">Container Swap<br/>Time Guarantee</div>
+               <div className="text-xs uppercase tracking-widest text-zinc-300 dark:text-zinc-400">Container Swap<br/>Time Guarantee</div>
             </div>
           </div>
         </div>
@@ -1134,10 +1137,10 @@ export default function App() {
                   <>
                     <div className="absolute inset-0 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 m-2 pointer-events-none z-10 flex flex-col justify-center items-center">
                       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.1),transparent_50%)] pointer-events-none"></div>
-                      <button onClick={() => setIsVideoPlaying(true)} className="w-20 h-20 bg-primary/90 hover:bg-orange-500 rounded-full flex items-center justify-center text-white z-20 pointer-events-auto transition-all duration-300 hover:scale-110 shadow-[0_0_30px_rgba(249,115,22,0.4)] backdrop-blur-sm border border-orange-400 active:scale-95">
+                      <button onClick={() => setIsVideoPlaying(true)} className="w-20 h-20 bg-primary/90 hover:bg-orange-600 rounded-full flex items-center justify-center text-white z-20 pointer-events-auto transition-all duration-300 hover:scale-110 shadow-[0_0_30px_rgba(249,115,22,0.4)] backdrop-blur-sm border border-orange-400 active:scale-95" aria-label="Play facility tour video">
                         <Play className="w-8 h-8 ml-1 fill-white" />
                       </button>
-                      <p className="mt-6 text-zinc-500 dark:text-zinc-400 text-sm tracking-widest uppercase font-semibold relative z-20">Watch Facility Tour</p>
+                      <p className="mt-6 text-zinc-600 dark:text-zinc-400 text-sm tracking-widest uppercase font-semibold relative z-20">Watch Facility Tour</p>
                     </div>
                     <img src="https://images.unsplash.com/photo-1536617621572-1d5f1e62675b?q=80&w=2070&auto=format&fit=crop" alt="Facility Tour Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500 contrast-125 saturate-50 mix-blend-luminosity" />
                   </>
@@ -1182,7 +1185,7 @@ export default function App() {
                 ].map((item, i) => (
                   <div key={i} className="p-5 border-l-2 border-zinc-200 dark:border-zinc-800 hover:border-primary bg-white dark:bg-zinc-950/50 transition-colors shadow-sm">
                     <h4 className="text-zinc-900 dark:text-white font-semibold mb-2 uppercase tracking-wide text-sm">{item.title}</h4>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-500 leading-relaxed">{item.desc}</p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -1192,24 +1195,24 @@ export default function App() {
             <div className="mt-16 p-8 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col lg:flex-row gap-8 justify-between items-start lg:items-center relative overflow-hidden shadow-md transition-colors duration-300">
                <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none"></div>
                <div className="relative z-10 max-w-lg">
-                 <h4 className="text-primary text-xs font-bold tracking-widest uppercase mb-4">Official Contact Details</h4>
+                 <h4 className="text-orange-700 dark:text-primary text-xs font-bold tracking-widest uppercase mb-4">Official Contact Details</h4>
                  <h3 className="text-zinc-900 dark:text-white text-xl md:text-2xl font-bold tracking-wider mb-1">AMANAT AL-KALIMA COMPANY</h3>
-                 <p className="text-zinc-400 dark:text-zinc-500 font-sans tracking-wide mb-6 text-lg" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</p>
+                 <p className="text-zinc-600 dark:text-zinc-400 font-sans tracking-wide mb-6 text-lg" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</p>
                  <address className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base not-italic leading-relaxed flex flex-col gap-3">
                    <span>3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, Kingdom Of Saudi Arabia</span>
-                   <span className="font-sans text-zinc-400 dark:text-zinc-500" dir="rtl">اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠ ، اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ، اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ</span>
+                   <span className="font-sans text-zinc-600 dark:text-zinc-400" dir="rtl">اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠ ، اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ، اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ</span>
                  </address>
                </div>
                <div className="relative z-10 flex flex-col gap-4 text-sm md:text-base lg:text-right w-full lg:w-auto mt-2 lg:mt-0 border-t lg:border-t-0 border-zinc-100 dark:border-zinc-800 pt-6 lg:pt-0">
-                 <a href="tel:+966551811700" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors group">
+                 <a href="tel:+966551811700" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-orange-700 dark:hover:text-white transition-colors group">
                     <span className="lg:order-2 bg-zinc-100 dark:bg-zinc-900 p-2.5 rounded group-hover:bg-primary transition-colors group-hover:text-white"><Phone className="w-5 h-5" /></span>
                     <span className="lg:order-1 font-semibold tracking-widest text-zinc-900 dark:text-zinc-300">+966 55 181 1700</span>
                  </a>
-                 <a href="mailto:contact@aalkc.com" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors group">
+                 <a href="mailto:contact@aalkc.com" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-orange-700 dark:hover:text-white transition-colors group">
                     <span className="lg:order-2 bg-zinc-100 dark:bg-zinc-900 p-2.5 rounded group-hover:bg-primary transition-colors group-hover:text-white"><Mail className="w-5 h-5" /></span>
                     <span className="lg:order-1 tracking-wider font-medium text-zinc-900 dark:text-zinc-300">contact@aalkc.com</span>
                  </a>
-                 <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-white transition-colors group">
+                 <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="flex items-center lg:justify-end gap-4 text-zinc-600 dark:text-zinc-300 hover:text-orange-700 dark:hover:text-white transition-colors group">
                     <span className="lg:order-2 bg-zinc-100 dark:bg-zinc-900 p-2.5 rounded group-hover:bg-primary transition-colors group-hover:text-white"><MapPin className="w-5 h-5" /></span>
                     <span className="lg:order-1 tracking-wider font-medium text-zinc-900 dark:text-zinc-300">www.aalkc.com</span>
                  </a>
@@ -1255,15 +1258,16 @@ export default function App() {
                  loading="lazy" 
                  referrerPolicy="no-referrer-when-downgrade"
                  className="opacity-60 group-hover:opacity-100 transition-opacity duration-700"
+                 title="Google Maps showing AALKC location"
                ></iframe>
                <div className="absolute bottom-6 left-6 z-20 bg-white dark:bg-zinc-950/90 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 p-4 shadow-2xl max-w-xs text-left transition-colors duration-300">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-2 rounded-sm">
-                      <MapPin className="w-5 h-5 text-primary" />
+                      <MapPin className="w-5 h-5 text-orange-700 dark:text-primary" />
                     </div>
                     <div>
                       <h4 className="text-zinc-900 dark:text-white font-bold uppercase tracking-widest text-xs mb-2">Visit Our Yard</h4>
-                      <p className="text-zinc-500 dark:text-zinc-400 text-[10px] leading-relaxed uppercase tracking-wider">
+                      <p className="text-zinc-600 dark:text-zinc-400 text-[10px] leading-relaxed uppercase tracking-wider">
                         3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, KSA
                       </p>
                     </div>
@@ -1274,29 +1278,29 @@ export default function App() {
             <div className="grid sm:grid-cols-3 gap-8 text-center border-t border-zinc-100 dark:border-zinc-800 pt-16 transition-colors duration-300">
                <div>
                   <div className="w-12 h-12 mx-auto mb-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center group-hover:border-primary/50 transition-colors shadow-sm">
-                    <MapPin className="w-6 h-6 text-primary" />
+                    <MapPin className="w-6 h-6 text-orange-700 dark:text-primary" />
                   </div>
                   <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Headquarters</h4>
-                  <p className="text-zinc-500 dark:text-zinc-500 text-xs sm:text-sm leading-relaxed mb-3">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3">
                     3508 Al Qatif 1, Unit 7260<br/>Dammam 32517, Eastern Province<br/>Kingdom Of Saudi Arabia
                   </p>
-                  <p className="text-zinc-400 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans" dir="rtl">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans" dir="rtl">
                     اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠<br/>اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ<br/>اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ
                   </p>
                </div>
                <div className="flex flex-col items-center justify-start">
-                  <Phone className="w-6 h-6 mx-auto mb-4 text-zinc-300 dark:text-zinc-600" />
+                  <Phone className="w-6 h-6 mx-auto mb-4 text-zinc-600 dark:text-zinc-400" />
                   <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Contact Us</h4>
-                  <p className="text-zinc-500 dark:text-zinc-500 text-sm flex flex-col gap-2">
-                    <a href="tel:+966551811700" className="hover:text-primary transition-colors">+966 55 181 1700</a>
-                    <a href="mailto:contact@aalkc.com" className="hover:text-primary transition-colors">contact@aalkc.com</a>
-                    <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">www.aalkc.com</a>
+                  <p className="text-zinc-600 dark:text-zinc-400 text-sm flex flex-col gap-2">
+                    <a href="tel:+966551811700" className="hover:text-orange-700 dark:hover:text-primary transition-colors">+966 55 181 1700</a>
+                    <a href="mailto:contact@aalkc.com" className="hover:text-orange-700 dark:hover:text-primary transition-colors">contact@aalkc.com</a>
+                    <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-700 dark:hover:text-primary transition-colors">www.aalkc.com</a>
                   </p>
                </div>
                <div>
-                  <Truck className="w-6 h-6 mx-auto mb-4 text-zinc-300 dark:text-zinc-600" />
+                  <Truck className="w-6 h-6 mx-auto mb-4 text-zinc-600 dark:text-zinc-400" />
                   <h4 className="font-semibold uppercase tracking-widest text-sm text-zinc-900 dark:text-white mb-2">Operations</h4>
-                  <p className="text-zinc-500 dark:text-zinc-500 text-sm leading-relaxed">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
                     Premium metal scrap<br/>dealership and industrial<br/>dismantling services.
                   </p>
                </div>
@@ -1306,7 +1310,7 @@ export default function App() {
             <div className="mt-20 max-w-2xl mx-auto border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-8 text-left relative overflow-hidden shadow-xl transition-colors duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] pointer-events-none"></div>
               <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white mb-2">Request a Quote</h3>
-              <p className="text-zinc-500 dark:text-zinc-500 mb-8 text-sm">Fill out the form below and our team will get back to you with competitive pricing for your materials.</p>
+              <p className="text-zinc-655 dark:text-zinc-400 mb-8 text-sm">Fill out the form below and our team will get back to you with competitive pricing for your materials.</p>
               
               <form 
                 className="space-y-5 relative z-10" 
@@ -1337,31 +1341,31 @@ export default function App() {
                 )}
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label htmlFor="name" className="text-xs font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 block">Name *</label>
+                    <label htmlFor="name" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Name *</label>
                     <input value={formData.name} onChange={handleInputChange} type="text" id="name" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="Enter your name" />
                     {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="company" className="text-xs font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 block">Company Name</label>
+                    <label htmlFor="company" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Company Name</label>
                     <input value={formData.company} onChange={handleInputChange} type="text" id="company" className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Enter your company" />
                   </div>
                 </div>
                 
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label htmlFor="email" className="text-xs font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 block">Email *</label>
+                    <label htmlFor="email" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Email *</label>
                     <input value={formData.email} onChange={handleInputChange} type="email" id="email" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="your@email.com" />
                     {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="phone" className="text-xs font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 block">Phone Number *</label>
+                    <label htmlFor="phone" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Phone Number *</label>
                     <input value={formData.phone} onChange={handleInputChange} type="tel" id="phone" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="+966 5X XXX XXXX" />
                     {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
                   </div>
                 </div>
                 
                 <div className="space-y-1.5">
-                  <label htmlFor="message" className="text-xs font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 block">Message *</label>
+                  <label htmlFor="message" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Message *</label>
                   <textarea value={formData.message} onChange={handleInputChange} id="message" rows={4} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all resize-none`} placeholder="Please describe the materials, estimated quantity, and your location..."></textarea>
                   {formErrors.message && <p className="text-red-500 text-xs mt-1">{formErrors.message}</p>}
                 </div>
@@ -1385,45 +1389,45 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-12 text-center text-zinc-500 dark:text-zinc-600 text-sm uppercase tracking-widest font-medium transition-colors duration-300">
+      <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-12 text-center text-zinc-650 dark:text-zinc-400 text-sm uppercase tracking-widest font-medium transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4">
            <div className="flex flex-col items-center md:items-start gap-4">
              <div className="flex items-center gap-2 text-zinc-900 dark:text-white opacity-80 hover:opacity-100 transition-opacity">
                <img src="/src/assets/images/regenerated_image_1778927709543.jpg" alt="AALKC" className="h-10 md:h-12 w-auto object-contain transition-all duration-300" />
              </div>
              <div className="text-left leading-relaxed">
-               <div className="text-zinc-700 dark:text-zinc-300 text-xs tracking-widest">AMANAT AL-KALIMA COMPANY</div>
-               <div className="text-zinc-500 dark:text-zinc-500 text-xs tracking-wider mt-1 font-sans" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</div>
+               <div className="text-zinc-750 dark:text-zinc-300 text-xs tracking-widest">AMANAT AL-KALIMA COMPANY</div>
+               <div className="text-zinc-600 dark:text-zinc-400 text-xs tracking-wider mt-1 font-sans" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</div>
              </div>
            </div>
            <div className="flex flex-col items-center gap-3">
-             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-xs text-zinc-400">
-               <a href="tel:+966551811700" className="hover:text-primary transition-colors flex items-center gap-2 whitespace-nowrap"><Phone className="w-3 h-3" /> +966 55 181 1700</a>
-               <span className="hidden sm:inline text-zinc-800">|</span>
-               <a href="mailto:contact@aalkc.com" className="hover:text-primary transition-colors flex items-center gap-2"><Mail className="w-3 h-3" /> contact@aalkc.com</a>
-               <span className="hidden sm:inline text-zinc-800">|</span>
-               <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:underline">www.aalkc.com</a>
+             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-xs text-zinc-600 dark:text-zinc-400">
+               <a href="tel:+966551811700" className="hover:text-orange-700 dark:hover:text-primary transition-colors flex items-center gap-2 whitespace-nowrap"><Phone className="w-3 h-3" /> +966 55 181 1700</a>
+               <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800">|</span>
+               <a href="mailto:contact@aalkc.com" className="hover:text-orange-700 dark:hover:text-primary transition-colors flex items-center gap-2"><Mail className="w-3 h-3" /> contact@aalkc.com</a>
+               <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800">|</span>
+               <a href="https://www.aalkc.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:underline">www.aalkc.com</a>
              </div>
              <div className="mt-2 text-xs text-zinc-600">&copy; {new Date().getFullYear()} Amanat Al-Kalima Company (AALKC). All Rights Reserved.</div>
            </div>
            <div className="flex flex-col gap-4 items-center md:items-end">
-             <div className="flex gap-4 text-xs font-semibold text-zinc-500">
-               <a href="#about" className="hover:text-primary transition-colors">About Company</a>
-               <span className="text-zinc-800">|</span>
-               <a href="#privacy" className="hover:text-primary transition-colors">Privacy Policy</a>
-               <span className="text-zinc-800">|</span>
-               <a href="#terms" className="hover:text-primary transition-colors">Terms of Service</a>
+             <div className="flex gap-4 text-xs font-semibold text-zinc-650 dark:text-zinc-400">
+               <a href="#about" className="hover:text-orange-700 dark:hover:text-primary transition-colors">About Company</a>
+               <span className="text-zinc-300 dark:text-zinc-800">|</span>
+               <a href="#privacy" className="hover:text-orange-700 dark:hover:text-primary transition-colors">Privacy Policy</a>
+               <span className="text-zinc-300 dark:text-zinc-800">|</span>
+               <a href="#terms" className="hover:text-orange-700 dark:hover:text-primary transition-colors">Terms of Service</a>
              </div>
-             <div className="flex gap-4 text-zinc-500">
-               <a href="#" className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
+             <div className="flex gap-4 text-zinc-650 dark:text-zinc-400">
+               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
                  <Linkedin className="w-5 h-5" />
                  <span className="sr-only">LinkedIn</span>
                </a>
-               <a href="#" className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
+               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
                  <Twitter className="w-5 h-5" />
                  <span className="sr-only">Twitter</span>
                </a>
-               <a href="#" className="hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
+               <a href="#" className="hover:text-orange-700 dark:hover:text-primary transition-colors hover:-translate-y-1 transform duration-300">
                  <Facebook className="w-5 h-5" />
                  <span className="sr-only">Facebook</span>
                </a>
