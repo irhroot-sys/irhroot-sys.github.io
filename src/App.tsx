@@ -48,12 +48,72 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const TICKER_ITEMS = [
-  { name: 'LME Copper', value: '$8,945.50', change: '+1.4%', up: true },
-  { name: 'LME Aluminum', value: '$2,240.00', change: '-0.3%', up: false },
-  { name: 'LME Nickel', value: '$17,215.00', change: '+2.1%', up: true },
-  { name: 'LME Steel Scrap', value: '$382.50', change: '+0.8%', up: true },
-  { name: 'LME Zinc', value: '$2,610.50', change: '-0.9%', up: false },
-  { name: 'LME Lead', value: '$2,085.00', change: '+0.5%', up: true },
+  { 
+    name: 'LME Copper', 
+    value: '$8,945.50', 
+    change: '+1.4%', 
+    up: true,
+    symbol: 'LME-Cu',
+    contract: '3M Seller',
+    low: '$8,850.00',
+    high: '$9,010.00',
+    sparkline: 'M 0 25 Q 15 10, 30 22 T 60 12 T 90 5 T 100 8'
+  },
+  { 
+    name: 'LME Aluminum', 
+    value: '$2,240.00', 
+    change: '-0.3%', 
+    up: false,
+    symbol: 'LME-Al',
+    contract: '3M Seller',
+    low: '$2,230.00',
+    high: '$2,260.00',
+    sparkline: 'M 0 10 Q 15 18, 30 12 T 60 22 T 90 18 T 100 24'
+  },
+  { 
+    name: 'LME Nickel', 
+    value: '$17,215.00', 
+    change: '+2.1%', 
+    up: true,
+    symbol: 'LME-Ni',
+    contract: '3M Seller',
+    low: '$16,980.00',
+    high: '$17,350.00',
+    sparkline: 'M 0 25 Q 15 15, 30 8 T 60 12 T 90 4 T 100 5'
+  },
+  { 
+    name: 'LME Steel Scrap', 
+    value: '$382.50', 
+    change: '+0.8%', 
+    up: true,
+    symbol: 'LME-Steel',
+    contract: 'FOB Bosphorus',
+    low: '$378.00',
+    high: '$385.00',
+    sparkline: 'M 0 18 Q 15 14, 30 16 T 60 10 T 90 8 T 100 6'
+  },
+  { 
+    name: 'LME Zinc', 
+    value: '$2,610.50', 
+    change: '-0.9%', 
+    up: false,
+    symbol: 'LME-Zn',
+    contract: '3M Seller',
+    low: '$2,590.00',
+    high: '$2,640.00',
+    sparkline: 'M 0 8 Q 15 14, 30 20 T 60 16 T 90 22 T 100 26'
+  },
+  { 
+    name: 'LME Lead', 
+    value: '$2,085.00', 
+    change: '+0.5%', 
+    up: true,
+    symbol: 'LME-Pb',
+    contract: '3M Seller',
+    low: '$2,070.00',
+    high: '$2,100.00',
+    sparkline: 'M 0 20 Q 15 18, 30 15 T 60 10 T 90 12 T 100 8'
+  },
 ];
 
 const CALCULATOR_METALS = [
@@ -63,6 +123,151 @@ const CALCULATOR_METALS = [
   { id: 'brass', name: 'Honey Brass', usdPricePerTon: 4500 },
   { id: 'stainless', name: 'Stainless Steel 304', usdPricePerTon: 1800 },
 ];
+
+function TiltCard({ children, className = "", ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLDivElement>) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [shine, setShine] = useState({ x: 50, y: 50, opacity: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Tilt calculation - max 8 degrees for premium visual subtlety
+    const tiltX = ((y / rect.height) - 0.5) * -10;
+    const tiltY = ((x / rect.width) - 0.5) * 10;
+    
+    const shineX = (x / rect.width) * 100;
+    const shineY = (y / rect.height) * 100;
+    
+    setTilt({ x: tiltX, y: tiltY });
+    setShine({ x: shineX, y: shineY, opacity: 0.15 });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setShine(prev => ({ ...prev, opacity: 0 }));
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`perspective-1000 preserve-3d transition-transform duration-300 ease-out ${className}`}
+      style={{
+        transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.015, 1.015, 1.015)`,
+      }}
+      {...props}
+    >
+      {/* Glare Shine Overlay */}
+      <div 
+        className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300 rounded-sm overflow-hidden"
+        style={{
+          background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(255,255,255,0.18) 0%, transparent 60%)`,
+          opacity: shine.opacity,
+        }}
+      />
+      {children}
+    </div>
+  );
+}
+
+function PrecisionCursor() {
+  const [position, setPosition] = useState({ x: -100, y: -100 });
+  const [trail, setTrail] = useState({ x: -100, y: -100 });
+  const [hoveredEl, setHoveredEl] = useState<{ type: string; label?: string } | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const isTouch = !window.matchMedia('(pointer: fine)').matches;
+    setIsMobile(isTouch);
+    if (isTouch) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+      
+      const target = e.target as HTMLElement;
+      const interactive = target.closest('a, button, select, input, [role="button"], .tech-card, [data-cursor-label]');
+      if (interactive) {
+        let label = interactive.getAttribute('data-cursor-label') || '';
+        if (!label) {
+          const header = interactive.querySelector('h3');
+          if (header) label = header.textContent || '';
+        }
+        setHoveredEl({ 
+          type: interactive.tagName.toLowerCase(), 
+          label: label ? label.slice(0, 20).toUpperCase() : ''
+        });
+      } else {
+        setHoveredEl(null);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+    let frameId: number;
+    const animateTrail = () => {
+      setTrail(prev => {
+        const dx = position.x - prev.x;
+        const dy = position.y - prev.y;
+        return {
+          x: prev.x + dx * 0.15,
+          y: prev.y + dy * 0.15
+        };
+      });
+      frameId = requestAnimationFrame(animateTrail);
+    };
+    frameId = requestAnimationFrame(animateTrail);
+    return () => cancelAnimationFrame(frameId);
+  }, [position, isMobile]);
+
+  if (isMobile) return null;
+
+  return (
+    <>
+      {/* Outer Rotating Reticle Ring */}
+      <div 
+        className="fixed pointer-events-none z-[9999] transition-transform duration-200 ease-out select-none"
+        style={{
+          left: `${trail.x}px`,
+          top: `${trail.y}px`,
+          transform: `translate(-50%, -50%) scale(${hoveredEl ? 1.35 : 1})`,
+        }}
+      >
+        <div className={`w-8 h-8 rounded-full border border-primary/50 flex items-center justify-center relative animate-reticle-spin`}>
+          <div className="absolute top-0 w-[1.5px] h-1.5 bg-primary/75"></div>
+          <div className="absolute bottom-0 w-[1.5px] h-1.5 bg-primary/75"></div>
+          <div className="absolute left-0 h-[1.5px] w-1.5 bg-primary/75"></div>
+          <div className="absolute right-0 h-[1.5px] w-1.5 bg-primary/75"></div>
+        </div>
+      </div>
+      
+      {/* Inner Dot and HUD Display */}
+      <div 
+        className="fixed pointer-events-none z-[9999] w-2 h-2 rounded-full bg-primary/90 flex items-center justify-center select-none"
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        {hoveredEl?.label && (
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 bg-zinc-950/95 dark:bg-black/95 text-[9px] font-mono tracking-widest text-primary border border-primary/45 px-2.5 py-1 whitespace-nowrap rounded-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-left-2 duration-200">
+            <span className="opacity-50 mr-1.5">&gt;&gt;</span>{hoveredEl.label}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 
 function CardCrosshairs({ refLabel = "REF: SEC-A / KSA", lotLabel = "LOT-ID: 2026/AAL" }: { refLabel?: string; lotLabel?: string }) {
   return (
@@ -86,25 +291,31 @@ function CardCrosshairs({ refLabel = "REF: SEC-A / KSA", lotLabel = "LOT-ID: 202
   );
 }
 
-function AnimatedNumber({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
+function AnimatedNumber({ to, suffix = "", formatter }: { to: number; suffix?: string; formatter?: (val: number) => string }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const prevToRef = useRef(0);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
     if (isInView) {
-      const controls = animate(0, to, {
-        duration: 2,
+      const controls = animate(prevToRef.current, to, {
+        duration: 0.8,
         ease: "easeOut",
         onUpdate: (value) => {
-          setCount(Math.round(value));
+          setDisplayValue(value);
         }
       });
+      prevToRef.current = to;
       return () => controls.stop();
     }
   }, [isInView, to]);
 
-  return <span ref={ref}>{count}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {formatter ? formatter(displayValue) : `${Math.round(displayValue)}${suffix}`}
+    </span>
+  );
 }
 
 
@@ -894,6 +1105,31 @@ export default function App() {
   const [calcWeight, setCalcWeight] = useState(5);
   const [calcCurrency, setCalcCurrency] = useState<'SAR' | 'USD'>('SAR');
 
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([
+    'AALKC ESTIMATOR OS v4.8 - SECURE CONNECT ESTABLISHED',
+    'SYSTEM READY. READY TO COMMENCE ESTIMATES...',
+  ]);
+
+  useEffect(() => {
+    const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
+    const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+    
+    const log1 = `[${timestamp}] [SYS] CALIBRATING SCALE -> METAL: ${metalObj.name.toUpperCase()}`;
+    const log2 = `[${timestamp}] [SYS] CURRENT MASS LOAD -> ${calcWeight.toFixed(1)} TONS`;
+    const log3 = `[${timestamp}] [SYS] EXCHANGE SETTING -> CURRENCY: ${calcCurrency}`;
+    
+    setTerminalLogs(prev => {
+      const next = [...prev, log1, log2, log3];
+      return next.slice(-4); // Keep last 4 logs to fit console window height
+    });
+  }, [calcMetal, calcWeight, calcCurrency]);
+
+  const [activeTickerTooltip, setActiveTickerTooltip] = useState<{
+    item: typeof TICKER_ITEMS[0];
+    x: number;
+    y: number;
+  } | null>(null);
+
   const [marketTab, setMarketTab] = useState<'live' | 'history' | 'calculator'>('history');
   const [chartRendered, setChartRendered] = useState(false);
 
@@ -1041,7 +1277,7 @@ export default function App() {
           
           {/* Logo Container */}
           <div className="flex items-center shrink-0 w-auto lg:w-[280px]">
-            <a href="#" className="flex items-center relative group py-2 outline-none transition-all duration-300 opacity-100">
+            <a href="#" data-cursor-label="NAV: HOME" className="flex items-center relative group py-2 outline-none transition-all duration-300 opacity-100">
               <img 
                 src={logoImg} 
                 alt="AALKC Logo" 
@@ -1052,11 +1288,11 @@ export default function App() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-10 text-[13px] font-bold tracking-widest uppercase">
-            <a href="#services" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
-            <a href="#why-us" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
-            <a href="#materials" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
-            <a href="#faq" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
-            <a href="#contact" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
+            <a href="#services" data-cursor-label="NAV: SERVICES" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
+            <a href="#why-us" data-cursor-label="NAV: WHY US" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
+            <a href="#materials" data-cursor-label="NAV: MATERIALS" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
+            <a href="#faq" data-cursor-label="NAV: FAQ" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
+            <a href="#contact" data-cursor-label="NAV: CONTACT" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
           </div>
 
           {/* CTA & Search */}
@@ -1066,13 +1302,14 @@ export default function App() {
              {/* Theme Toggle */}
              <button 
                onClick={toggleTheme}
+               data-cursor-label="THEME: SWAP"
                className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-655 dark:text-zinc-400 hover:text-primary active:scale-95"
                aria-label="Toggle theme"
              >
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
              </button>
 
-             <button onClick={() => window.location.hash = '#contact'} className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_25px_rgba(249,115,22,0.35)] text-white dark:text-zinc-950 px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-orange-700 hover:border-orange-600 dark:border-primary dark:hover:border-orange-500 whitespace-nowrap">
+             <button onClick={() => window.location.hash = '#contact'} data-cursor-label="GET QUOTE" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_25px_rgba(249,115,22,0.35)] text-white dark:text-zinc-950 px-6 py-2.5 rounded font-bold text-[13px] transition-all uppercase tracking-widest flex items-center gap-2 active:scale-95 group border border-orange-700 hover:border-orange-600 dark:border-primary dark:hover:border-orange-500 whitespace-nowrap">
                Get Quote <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </button>
           </div>
@@ -1101,7 +1338,28 @@ export default function App() {
           <div className="ticker-wrap flex items-center">
             <div className="ticker-content flex gap-12 select-none uppercase font-mono text-[10px] tracking-wider text-zinc-400">
               {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-                <div key={idx} className="inline-flex items-center gap-2">
+                <div 
+                  key={idx} 
+                  className="inline-flex items-center gap-2 cursor-crosshair relative py-0.5 px-2.5 rounded hover:bg-zinc-800/40 transition-colors"
+                  onMouseEnter={(e) => {
+                    setActiveTickerTooltip({
+                      item,
+                      x: e.clientX,
+                      y: e.clientY
+                    });
+                  }}
+                  onMouseMove={(e) => {
+                    setActiveTickerTooltip({
+                      item,
+                      x: e.clientX,
+                      y: e.clientY
+                    });
+                  }}
+                  onMouseLeave={() => {
+                    setActiveTickerTooltip(null);
+                  }}
+                  data-cursor-label="LME DATA"
+                >
                   <span className="relative flex h-1.5 w-1.5 shrink-0">
                     <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${item.up ? 'bg-green-500' : 'bg-red-500'}`}></span>
                     <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${item.up ? 'bg-green-500' : 'bg-red-500'}`}></span>
@@ -1172,27 +1430,32 @@ export default function App() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5 }}
                 key={service.title} 
-                className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 hover:-translate-y-1 rounded-sm text-zinc-300/30 dark:text-zinc-750/30 hover:text-primary"
+                className="h-full"
               >
-                <CardCrosshairs refLabel={`REF: SRV-${service.category.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${service.title.toUpperCase().slice(0,3)}`} />
+                <TiltCard 
+                  className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col h-full shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 rounded-sm text-zinc-300/30 dark:text-zinc-750/30 hover:text-primary"
+                  data-cursor-label={`SERVICE: ${service.title}`}
+                >
+                  <CardCrosshairs refLabel={`REF: SRV-${service.category.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${service.title.toUpperCase().slice(0,3)}`} />
 
-                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl rounded-full translate-x-12 -translate-y-12 group-hover:bg-primary/10 transition-colors"></div>
-                
-                <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center mb-6 group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-300 shadow-inner">
-                  <service.icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500 group-hover:text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
-                </div>
-                
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[10px] text-orange-700 dark:text-primary font-mono uppercase tracking-widest border border-orange-700/20 dark:border-primary/20 px-2 py-0.5 rounded-full bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm">{service.category}</span>
-                </div>
-                <h3 className="font-display text-2xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">{service.title}</h3>
-                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm flex-1">{service.desc}</p>
-                
-                <div className="mt-8 h-[1px] w-full bg-zinc-200/80 dark:bg-zinc-800/80 group-hover:bg-primary/30 transition-colors relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 group-hover:border-primary/50 group-hover:bg-primary transition-all duration-300 flex items-center justify-center shadow-sm">
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-950 transition-colors" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl rounded-full translate-x-12 -translate-y-12 group-hover:bg-primary/10 transition-colors"></div>
+                  
+                  <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center mb-6 group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-300 shadow-inner">
+                    <service.icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500 group-hover:text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
                   </div>
-                </div>
+                  
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-[10px] text-orange-700 dark:text-primary font-mono uppercase tracking-widest border border-orange-700/20 dark:border-primary/20 px-2 py-0.5 rounded-full bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm">{service.category}</span>
+                  </div>
+                  <h3 className="font-display text-2xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">{service.title}</h3>
+                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm flex-1">{service.desc}</p>
+                  
+                  <div className="mt-8 h-[1px] w-full bg-zinc-200/80 dark:bg-zinc-800/80 group-hover:bg-primary/30 transition-colors relative">
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 group-hover:border-primary/50 group-hover:bg-primary transition-all duration-300 flex items-center justify-center shadow-sm">
+                      <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-950 transition-colors" />
+                    </div>
+                  </div>
+                </TiltCard>
               </motion.div>
             ))}
           </motion.div>
@@ -1226,44 +1489,49 @@ export default function App() {
                   const linkProps = mat.isLink ? { href: mat.href } : {};
                   
                   return (
-                    <Wrapper 
-                      key={index} 
-                      {...linkProps}
-                      className={`tech-card flex flex-col p-4 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/25 backdrop-blur-sm transition-all duration-300 rounded-sm relative group shadow-sm ${
-                        mat.isLink 
-                          ? 'text-zinc-400/30 dark:text-zinc-700/30 hover:text-primary hover:border-primary/50 hover:bg-primary/[0.02] cursor-pointer hover:shadow-[0_8px_20px_rgba(249,115,22,0.08)] hover:-translate-y-0.5' 
-                          : 'text-zinc-400/20 dark:text-zinc-700/20 hover:text-zinc-650 dark:hover:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/30 dark:hover:bg-zinc-900/30'
-                      }`}
+                    <TiltCard 
+                      key={index}
+                      className="h-full"
                     >
-                      <CardCrosshairs refLabel={`REF: MAT-${mat.name.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${mat.spec.toUpperCase().split(' ')[0]}`} />
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className={`p-2 rounded-sm ${mat.bg} ${mat.border} border flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
-                          <Icon className={`w-4 h-4 ${mat.color}`} />
+                      <Wrapper 
+                        {...linkProps}
+                        className={`tech-card flex flex-col p-4 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/25 backdrop-blur-sm transition-all duration-300 rounded-sm relative group shadow-sm h-full ${
+                          mat.isLink 
+                            ? 'text-zinc-400/30 dark:text-zinc-700/30 hover:text-primary hover:border-primary/50 hover:bg-primary/[0.02] cursor-pointer hover:shadow-[0_8px_20px_rgba(249,115,22,0.08)]' 
+                            : 'text-zinc-400/20 dark:text-zinc-700/20 hover:text-zinc-650 dark:hover:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/30 dark:hover:bg-zinc-900/30'
+                        }`}
+                        data-cursor-label={mat.isLink ? `SPEC SHEET: ${mat.name}` : `MATERIAL: ${mat.name}`}
+                      >
+                        <CardCrosshairs refLabel={`REF: MAT-${mat.name.toUpperCase().slice(0,3)}`} lotLabel={`LOT-ID: 2026/AAL-${mat.spec.toUpperCase().split(' ')[0]}`} />
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className={`p-2 rounded-sm ${mat.bg} ${mat.border} border flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
+                            <Icon className={`w-4 h-4 ${mat.color}`} />
+                          </div>
+                          <span className="text-sm font-semibold tracking-widest text-zinc-900 dark:text-white transition-colors">{mat.name}</span>
                         </div>
-                        <span className="text-sm font-semibold tracking-widest text-zinc-900 dark:text-white transition-colors">{mat.name}</span>
-                      </div>
-                      
-                      <div className="space-y-1.5 border-t border-zinc-200/50 dark:border-zinc-800/40 pt-3 text-[10px] text-zinc-600 dark:text-zinc-400 font-sans tracking-wide">
-                        <div className="flex justify-between">
-                          <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">SPEC:</span>
-                          <span className="font-semibold text-zinc-900 dark:text-zinc-300 text-right">{mat.spec}</span>
+                        
+                        <div className="space-y-1.5 border-t border-zinc-200/50 dark:border-zinc-800/40 pt-3 text-[10px] text-zinc-600 dark:text-zinc-400 font-sans tracking-wide">
+                          <div className="flex justify-between">
+                            <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">SPEC:</span>
+                            <span className="font-semibold text-zinc-900 dark:text-zinc-300 text-right">{mat.spec}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">PURITY:</span>
+                            <span className="font-bold text-orange-700 dark:text-primary text-right">{mat.purity}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">INDUSTRY:</span>
+                            <span className="text-zinc-800 dark:text-zinc-400 text-right">{mat.industry}</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">PURITY:</span>
-                          <span className="font-bold text-orange-700 dark:text-primary text-right">{mat.purity}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">INDUSTRY:</span>
-                          <span className="text-zinc-800 dark:text-zinc-400 text-right">{mat.industry}</span>
-                        </div>
-                      </div>
 
-                      {mat.isLink && (
-                        <div className="mt-3 pt-2.5 border-t border-zinc-200/30 dark:border-zinc-800/20 flex items-center justify-end text-[10px] text-orange-700 dark:text-primary font-semibold tracking-wider transition-colors group-hover:text-orange-600 dark:group-hover:text-orange-400">
-                          TECHNICAL SPEC SHEET <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      )}
-                    </Wrapper>
+                        {mat.isLink && (
+                          <div className="mt-3 pt-2.5 border-t border-zinc-200/30 dark:border-zinc-800/20 flex items-center justify-end text-[10px] text-orange-700 dark:text-primary font-semibold tracking-wider transition-colors group-hover:text-orange-600 dark:group-hover:text-orange-400">
+                            TECHNICAL SPEC SHEET <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        )}
+                      </Wrapper>
+                    </TiltCard>
                   );
                 })}
               </div>
@@ -1346,129 +1614,186 @@ export default function App() {
                         </div>
                       </motion.div>
                     )}
-
                     {marketTab === 'calculator' && (
                       <motion.div 
                         key="calculator"
                         initial={{ opacity: 0, y: 10 }} 
                         animate={{ opacity: 1, y: 0 }} 
                         exit={{ opacity: 0, y: -10 }}
-                        className="space-y-4 text-zinc-700 dark:text-zinc-300"
+                        className="border-beam-container border-beam-glow rounded-sm w-full"
                       >
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div>
-                            <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1 font-bold">Select Material</label>
-                            <select 
-                              value={calcMetal} 
-                              onChange={(e) => setCalcMetal(e.target.value)}
-                              className="w-full bg-white dark:bg-zinc-950 border border-zinc-205 dark:border-zinc-800 text-zinc-900 dark:text-white px-2.5 py-2.5 rounded text-xs focus:border-primary outline-none transition-colors"
-                            >
-                              {CALCULATOR_METALS.map((m) => (
-                                <option key={m.id} value={m.id}>{m.name}</option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1 font-bold">Currency</label>
-                            <div className="flex bg-zinc-150 dark:bg-zinc-900 p-0.5 rounded border border-zinc-200 dark:border-zinc-800">
-                              <button 
-                                type="button"
-                                onClick={() => setCalcCurrency('SAR')}
-                                className={`flex-1 py-1.5 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'SAR' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400'}`}
-                              >
-                                SAR
-                              </button>
-                              <button 
-                                type="button"
-                                onClick={() => setCalcCurrency('USD')}
-                                className={`flex-1 py-1.5 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'USD' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400'}`}
-                              >
-                                USD
-                              </button>
+                        <div className="border-beam-inner bg-white/95 dark:bg-zinc-950/95 p-5 md:p-6 rounded-sm text-zinc-700 dark:text-zinc-300">
+                          <div className="flex flex-col md:flex-row gap-6">
+                            {/* Left Side: LED Segmented Progress Gauge */}
+                            <div className="flex flex-row md:flex-col items-center justify-between md:justify-center gap-3 bg-zinc-100 dark:bg-zinc-900/60 p-3 rounded border border-zinc-200/50 dark:border-zinc-800/50 shrink-0">
+                              <span className="font-mono text-[8px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500 [writing-mode:vertical-lr] rotate-180 hidden md:block select-none">MASS LOAD LEVEL</span>
+                              <div className="flex flex-row md:flex-col-reverse gap-1.5 h-3 md:h-64 w-full md:w-3.5 items-center justify-between flex-1 md:flex-initial">
+                                {Array.from({ length: 20 }).map((_, i) => {
+                                  const threshold = (i + 1) * 2.5;
+                                  const isActive = calcWeight >= threshold;
+                                  return (
+                                    <div 
+                                      key={i} 
+                                      className={`h-2.5 md:h-2 w-full md:w-3.5 rounded-[1px] transition-all duration-300 ${
+                                        isActive 
+                                          ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]' 
+                                          : 'bg-zinc-250 dark:bg-zinc-800'
+                                      }`}
+                                      title={`${threshold} Tons`}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <span className="font-mono text-[9px] font-bold text-orange-600 dark:text-primary mt-0 md:mt-2 shrink-0">{calcWeight.toFixed(1)}T</span>
                             </div>
-                          </div>
 
-                          <div>
-                            <div className="flex justify-between items-center mb-1">
-                              <label className="text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase font-bold">Weight (Tons)</label>
-                              <span className="text-xs font-mono font-bold text-zinc-900 dark:text-white">{calcWeight.toFixed(1)} Tons</span>
+                            {/* Main Area */}
+                            <div className="flex-1 flex flex-col gap-4">
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1.5 font-bold">Select Material</label>
+                                  <select 
+                                    value={calcMetal} 
+                                    onChange={(e) => setCalcMetal(e.target.value)}
+                                    className="w-full bg-white dark:bg-zinc-950 border border-zinc-205 dark:border-zinc-800 text-zinc-900 dark:text-white px-2.5 py-2.5 rounded text-xs focus:border-primary outline-none transition-colors font-mono uppercase tracking-wider cursor-pointer"
+                                    data-cursor-label="SELECT METAL"
+                                  >
+                                    {CALCULATOR_METALS.map((m) => (
+                                      <option key={m.id} value={m.id}>{m.name.toUpperCase()}</option>
+                                    ))}
+                                  </select>
+                                </div>
+
+                                <div>
+                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1.5 font-bold">Currency</label>
+                                  <div className="flex bg-zinc-150 dark:bg-zinc-900 p-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                                    <button 
+                                      type="button"
+                                      onClick={() => setCalcCurrency('SAR')}
+                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'SAR' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
+                                      data-cursor-label="SET CURRENCY: SAR"
+                                    >
+                                      SAR (SR)
+                                    </button>
+                                    <button 
+                                      type="button"
+                                      onClick={() => setCalcCurrency('USD')}
+                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'USD' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
+                                      data-cursor-label="SET CURRENCY: USD"
+                                    >
+                                      USD ($)
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <div className="flex justify-between items-center mb-1.5">
+                                    <label className="text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase font-bold">Weight (Tons)</label>
+                                    <span className="text-xs font-mono font-bold text-orange-600 dark:text-primary">{calcWeight.toFixed(1)} Tons</span>
+                                  </div>
+                                  <input 
+                                    type="range" 
+                                    min="0.1" 
+                                    max="50" 
+                                    step="0.1"
+                                    value={calcWeight}
+                                    onChange={(e) => setCalcWeight(parseFloat(e.target.value))}
+                                    className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary mt-3"
+                                    data-cursor-label="ADJUST WEIGHT"
+                                  />
+                                  <div className="flex justify-between text-[8px] font-mono text-zinc-400 mt-1">
+                                    <span>MIN: 0.1T</span>
+                                    <span>MAX: 50.0T</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Real-time Monospace System Terminal Console Log */}
+                              <div className="bg-black/95 dark:bg-zinc-950/95 border border-zinc-800/80 p-3 rounded font-mono text-[9px] text-green-500 shadow-inner space-y-1 select-none overflow-hidden h-28 relative">
+                                <div className="absolute top-2 right-3 flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                  <span className="text-[8px] text-green-500/60 uppercase tracking-widest">AALKC-CALIB</span>
+                                </div>
+                                <div className="text-green-500/40 border-b border-zinc-800/40 pb-1 mb-1.5 uppercase tracking-widest text-[8px]">--- ESTIMATOR OSCILLOSCOPE LOGS ---</div>
+                                {terminalLogs.map((log, idx) => (
+                                  <div key={idx} className="whitespace-pre-wrap leading-relaxed animate-in fade-in slide-in-from-bottom-1 duration-150">
+                                    <span className="text-green-600 font-bold mr-1">&gt;</span> {log}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {(() => {
+                                const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
+                                const activeUSDRate = metalObj.usdPricePerTon;
+                                const exchangeRate = 3.75;
+                                const baseRate = calcCurrency === 'SAR' ? activeUSDRate * exchangeRate : activeUSDRate;
+                                
+                                let bonusPercent = 0;
+                                let bonusLabel = "No Bulk Bonus";
+                                if (calcWeight >= 25) {
+                                  bonusPercent = 0.08;
+                                  bonusLabel = "+8% Bulk Tier 3 (Premium)";
+                                } else if (calcWeight >= 10) {
+                                  bonusPercent = 0.05;
+                                  bonusLabel = "+5% Bulk Tier 2";
+                                } else if (calcWeight >= 5) {
+                                  bonusPercent = 0.03;
+                                  bonusLabel = "+3% Bulk Tier 1";
+                                }
+
+                                const rawTotal = baseRate * calcWeight;
+                                const bonusAmount = rawTotal * bonusPercent;
+                                const grandTotal = rawTotal + bonusAmount;
+
+                                const whatsAppMsg = `Hello AALKC Team, I used the calculator for ${metalObj.name} and estimated ${calcWeight.toFixed(1)} Tons at a payout of ${grandTotal.toLocaleString(undefined, {maximumFractionDigits:2})} ${calcCurrency}. I'd like to lock in this rate and book an inspection.`;
+
+                                return (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-zinc-50 dark:bg-zinc-900/40 p-4 border border-zinc-200 dark:border-zinc-800/80 rounded-sm">
+                                    <div className="space-y-2.5 font-mono text-[10px]">
+                                      <div className="flex justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-1.5">
+                                        <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Rate / Ton:</span>
+                                        <span className="font-semibold text-zinc-900 dark:text-zinc-250">
+                                          {baseRate.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between pb-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50">
+                                        <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Discounts/Bonus:</span>
+                                        <span className={`font-bold ${bonusPercent > 0 ? 'text-green-600 dark:text-green-400' : 'text-zinc-550 dark:text-zinc-400'}`}>
+                                          {bonusLabel}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between text-[9px] text-zinc-500 dark:text-zinc-400">
+                                        <span>SYS REF:</span>
+                                        <span>REF-LME-{calcMetal.toUpperCase()}-EST</span>
+                                      </div>
+                                    </div>
+
+                                    <div className="text-center md:text-right border-t md:border-t-0 md:border-l border-zinc-200 dark:border-zinc-800/80 pt-3.5 md:pt-0 md:pl-4 flex flex-col items-center md:items-end justify-center">
+                                      <span className="text-[9px] text-zinc-550 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Grand Payout</span>
+                                      <span className="text-3xl font-mono font-extrabold text-orange-700 dark:text-primary tracking-wider mt-1.5 mb-3.5 flex items-baseline">
+                                        <AnimatedNumber to={grandTotal} formatter={(val) => val.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
+                                        <span className="text-xs font-semibold ml-1.5 text-zinc-500 dark:text-zinc-400">{calcCurrency}</span>
+                                      </span>
+
+                                      <a 
+                                        href={`https://wa.me/966551811700?text=${encodeURIComponent(whatsAppMsg)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full bg-green-600 hover:bg-green-500 text-white font-bold tracking-widest text-[9px] uppercase px-4 py-2.5 rounded-sm transition-all hover:scale-105 flex items-center justify-center gap-2 shadow-sm cursor-pointer border border-green-700/20"
+                                        data-cursor-label="LOCK CONTRACT"
+                                      >
+                                        <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.455h.008c6.56 0 11.895-5.336 11.898-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                        </svg>
+                                        Lock Rate via WhatsApp
+                                      </a>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
                             </div>
-                            <input 
-                              type="range" 
-                              min="0.1" 
-                              max="50" 
-                              step="0.1"
-                              value={calcWeight}
-                              onChange={(e) => setCalcWeight(parseFloat(e.target.value))}
-                              className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary mt-2"
-                            />
                           </div>
                         </div>
-
-                        {(() => {
-                          const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
-                          const activeUSDRate = metalObj.usdPricePerTon;
-                          const exchangeRate = 3.75;
-                          const baseRate = calcCurrency === 'SAR' ? activeUSDRate * exchangeRate : activeUSDRate;
-                          
-                          let bonusPercent = 0;
-                          let bonusLabel = "None";
-                          if (calcWeight >= 25) {
-                            bonusPercent = 0.08;
-                            bonusLabel = "+8% (Premium Tier)";
-                          } else if (calcWeight >= 10) {
-                            bonusPercent = 0.05;
-                            bonusLabel = "+5% (Bulk Tier 2)";
-                          } else if (calcWeight >= 5) {
-                            bonusPercent = 0.03;
-                            bonusLabel = "+3% (Bulk Tier 1)";
-                          }
-
-                          const rawTotal = baseRate * calcWeight;
-                          const bonusAmount = rawTotal * bonusPercent;
-                          const grandTotal = rawTotal + bonusAmount;
-
-                          const whatsAppMsg = `Hello AALKC Team, I used the calculator for ${metalObj.name} and estimated ${calcWeight.toFixed(1)} Tons at a payout of ${grandTotal.toLocaleString(undefined, {maximumFractionDigits:2})} ${calcCurrency}. I'd like to lock in this rate and book an inspection.`;
-
-                          return (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-white dark:bg-zinc-950 p-4 border border-zinc-200 dark:border-zinc-800/80 rounded-sm">
-                              <div className="space-y-2 font-mono text-[10px]">
-                                <div className="flex justify-between border-b border-zinc-100 dark:border-zinc-900 pb-1.5">
-                                  <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Base Rate:</span>
-                                  <span className="font-semibold text-zinc-900 dark:text-zinc-250">
-                                    {baseRate.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}/Ton
-                                  </span>
-                                </div>
-                                <div className="flex justify-between pb-0.5">
-                                  <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Bulk Bonus:</span>
-                                  <span className={`font-bold ${bonusPercent > 0 ? 'text-green-600 dark:text-green-400' : 'text-zinc-550 dark:text-zinc-400'}`}>
-                                    {bonusLabel}
-                                  </span>
-                                </div>
-                              </div>
-
-                              <div className="text-center md:text-right border-t md:border-t-0 md:border-l border-zinc-200 dark:border-zinc-800 pt-3 md:pt-0 md:pl-4 flex flex-col items-center md:items-end justify-center">
-                                <span className="text-[9px] text-zinc-550 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Payout</span>
-                                <span className="text-2xl font-mono font-extrabold text-orange-700 dark:text-primary tracking-wider mt-0.5 mb-2.5">
-                                  {grandTotal.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}
-                                </span>
-
-                                <a 
-                                  href={`https://wa.me/966551811700?text=${encodeURIComponent(whatsAppMsg)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="w-full sm:w-auto bg-green-600 hover:bg-green-500 text-white font-bold tracking-widest text-[9px] uppercase px-4 py-2 rounded-sm transition-all hover:scale-105 flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
-                                >
-                                  <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.455h.008c6.56 0 11.895-5.336 11.898-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                  </svg>
-                                  Lock Rate via WhatsApp
-                                </a>
-                              </div>
-                            </div>
-                          );
-                        })()}
                       </motion.div>
                     )}
 
@@ -1580,28 +1905,48 @@ export default function App() {
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 text-center flex flex-col justify-center items-center h-48 sm:h-56 shadow-2xl relative group rounded-sm hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] text-zinc-600/30 hover:text-primary">
-               <CardCrosshairs refLabel="REF: STAT-YRS" lotLabel="LOT-ID: 1996/AAL" />
-               <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={30} suffix="+" /></div>
-               <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Years in Business</div>
-            </div>
-            <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-2xl relative group rounded-sm hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] text-zinc-600/30 hover:text-primary">
-               <CardCrosshairs refLabel="REF: STAT-CLT" lotLabel="LOT-ID: 2026/CLT" />
-               <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={500} suffix="+" /></div>
-               <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Active Clients</div>
-            </div>
-            <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-2xl relative group rounded-sm hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] overflow-hidden text-zinc-600/30 hover:text-primary">
-               <CardCrosshairs refLabel="REF: STAT-TON" lotLabel="LOT-ID: 2026/TON" />
-               {/* Diagonal strip background effect */}
-               <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(0,0,0,0.02)_10px,rgba(0,0,0,0.02)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
-               <div className="relative z-10 font-display text-4xl sm:text-5xl uppercase tracking-widest text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={5} suffix="M+" /></div>
-               <div className="relative z-10 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mt-2">Tons Processed</div>
-            </div>
-            <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 text-center flex flex-col justify-center items-center h-48 sm:h-56 mt-[-20px] shadow-2xl relative group rounded-sm hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] text-zinc-600/30 hover:text-primary">
-               <CardCrosshairs refLabel="REF: STAT-SWP" lotLabel="LOT-ID: 2026/SWP" />
-               <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={24} suffix="h" /></div>
-               <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Container Swap<br/>Time Guarantee</div>
-            </div>
+            <TiltCard 
+              className="h-48 sm:h-56"
+              data-cursor-label="STAT: 30+ YEARS"
+            >
+              <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
+                 <CardCrosshairs refLabel="REF: STAT-YRS" lotLabel="LOT-ID: 1996/AAL" />
+                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={30} suffix="+" /></div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Years in Business</div>
+              </div>
+            </TiltCard>
+            <TiltCard 
+              className="h-48 sm:h-56 mt-[-20px]"
+              data-cursor-label="STAT: 500+ CLIENTS"
+            >
+              <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
+                 <CardCrosshairs refLabel="REF: STAT-CLT" lotLabel="LOT-ID: 2026/CLT" />
+                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={500} suffix="+" /></div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Active Clients</div>
+              </div>
+            </TiltCard>
+            <TiltCard 
+              className="h-48 sm:h-56 mt-[-20px]"
+              data-cursor-label="STAT: 5M+ TONS"
+            >
+              <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm overflow-hidden text-zinc-600/30 hover:text-primary">
+                 <CardCrosshairs refLabel="REF: STAT-TON" lotLabel="LOT-ID: 2026/TON" />
+                 {/* Diagonal strip background effect */}
+                 <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(0,0,0,0.02)_10px,rgba(0,0,0,0.02)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
+                 <div className="relative z-10 font-display text-4xl sm:text-5xl uppercase tracking-widest text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={5} suffix="M+" /></div>
+                 <div className="relative z-10 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mt-2">Tons Processed</div>
+              </div>
+            </TiltCard>
+            <TiltCard 
+              className="h-48 sm:h-56 mt-[-20px]"
+              data-cursor-label="STAT: 24H SWAP"
+            >
+              <div className="bg-zinc-950/40 backdrop-blur-sm text-white p-8 border border-zinc-200/10 dark:border-zinc-800/80 transition-all duration-300 text-center flex flex-col justify-center items-center h-full shadow-2xl relative group rounded-sm text-zinc-600/30 hover:text-primary">
+                 <CardCrosshairs refLabel="REF: STAT-SWP" lotLabel="LOT-ID: 2026/SWP" />
+                 <div className="font-display text-5xl sm:text-6xl text-primary mb-2 group-hover:scale-105 transition-transform duration-300"><AnimatedNumber to={24} suffix="h" /></div>
+                 <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Container Swap<br/>Time Guarantee</div>
+              </div>
+            </TiltCard>
           </div>
         </div>
       </section>
@@ -2060,7 +2405,61 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {activeTickerTooltip && (
+        <div 
+          className="fixed bg-zinc-950/95 dark:bg-black/95 backdrop-blur-md border border-zinc-800 text-left p-3.5 rounded-md shadow-2xl z-[9999] pointer-events-none select-none transition-all duration-155 w-52"
+          style={{
+            left: `${activeTickerTooltip.x}px`,
+            top: `${activeTickerTooltip.y - 12}px`,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[8px] font-mono text-zinc-500 tracking-wider">SYMBOL: {activeTickerTooltip.item.symbol}</span>
+            <span className="text-[8px] font-mono text-zinc-500 tracking-wider">{activeTickerTooltip.item.contract}</span>
+          </div>
+          <div className="font-display text-[11px] font-bold text-white uppercase mb-1">{activeTickerTooltip.item.name}</div>
+          <div className="flex items-baseline justify-between mb-2">
+            <span className="text-xs font-mono font-bold text-orange-400">{activeTickerTooltip.item.value}</span>
+            <span className={`text-[9px] font-mono font-bold ${activeTickerTooltip.item.up ? 'text-green-400' : 'text-red-400'}`}>
+              {activeTickerTooltip.item.up ? '↑' : '↓'} {activeTickerTooltip.item.change}
+            </span>
+          </div>
+          <div className="h-10 w-full bg-zinc-900/50 rounded-sm border border-zinc-800/40 p-1 flex items-center justify-center relative overflow-hidden mb-1.5">
+            <svg className="w-full h-full" viewBox="0 0 100 30" fill="none">
+              <path 
+                d={activeTickerTooltip.item.sparkline} 
+                stroke={activeTickerTooltip.item.up ? '#22c55e' : '#ef4444'} 
+                strokeWidth="1.5" 
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path 
+                d={`${activeTickerTooltip.item.sparkline} L 100 30 L 0 30 Z`} 
+                fill={activeTickerTooltip.item.up ? 'url(#tooltip-green-glow)' : 'url(#tooltip-red-glow)'}
+                className="opacity-15"
+              />
+              <defs>
+                <linearGradient id="tooltip-green-glow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="tooltip-red-glow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div className="flex justify-between text-[7.5px] font-mono text-zinc-500 uppercase tracking-widest">
+            <span>24H LOW: {activeTickerTooltip.item.low}</span>
+            <span>HIGH: {activeTickerTooltip.item.high}</span>
+          </div>
+        </div>
+      )}
+
       <ScrollToTop />
+      <PrecisionCursor />
     </div>
   );
 }
