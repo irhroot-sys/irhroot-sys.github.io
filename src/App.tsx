@@ -1203,7 +1203,7 @@ export default function App() {
       />
 
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 flex flex-col ${isScrolled ? 'bg-white/90 dark:bg-zinc-950/85 backdrop-blur-lg border-b border-zinc-200/50 dark:border-zinc-850/50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.3)]' : 'bg-transparent border-b border-transparent'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-300 flex flex-col ${isScrolled ? 'bg-white/90 dark:bg-zinc-950/85 backdrop-blur-lg border-b border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.3)]' : 'bg-transparent border-b border-transparent'}`}>
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent z-50 pointer-events-none"></div>
         
         {/* Main Nav Row */}
@@ -1222,11 +1222,11 @@ export default function App() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-10 text-[13px] font-bold tracking-widest uppercase">
-            <a href="#services" data-cursor-label="NAV: SERVICES" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
-            <a href="#why-us" data-cursor-label="NAV: WHY US" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
-            <a href="#materials" data-cursor-label="NAV: MATERIALS" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
-            <a href="#faq" data-cursor-label="NAV: FAQ" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
-            <a href="#contact" data-cursor-label="NAV: CONTACT" className="text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
+            <a href="#services" data-cursor-label="NAV: SERVICES" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Services</a>
+            <a href="#why-us" data-cursor-label="NAV: WHY US" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Why Us</a>
+            <a href="#materials" data-cursor-label="NAV: MATERIALS" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Materials</a>
+            <a href="#faq" data-cursor-label="NAV: FAQ" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">FAQ</a>
+            <a href="#contact" data-cursor-label="NAV: CONTACT" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300">Contact</a>
           </div>
 
           {/* CTA & Search */}
@@ -1237,7 +1237,7 @@ export default function App() {
              <button 
                onClick={toggleTheme}
                data-cursor-label="THEME: SWAP"
-               className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-655 dark:text-zinc-400 hover:text-primary active:scale-95"
+               className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-primary active:scale-95"
                aria-label="Toggle theme"
              >
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -1252,14 +1252,14 @@ export default function App() {
           <div className="md:hidden flex items-center justify-end gap-3">
              <button 
                onClick={toggleTheme}
-               className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-655 dark:text-zinc-400"
+               className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400"
                aria-label="Toggle theme"
              >
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
              </button>
              <button 
                onClick={() => setIsMobileMenuOpen(true)}
-               className="text-zinc-655 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white p-2 border border-zinc-200 dark:border-zinc-800 rounded-sm"
+               className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white p-2 border border-zinc-200 dark:border-zinc-800 rounded-sm"
                aria-label="Open mobile menu"
              >
                 <Menu className="w-6 h-6" />
@@ -1367,7 +1367,7 @@ export default function App() {
                 className="h-full"
               >
                 <TiltCard 
-                  className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col h-full shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 rounded-sm text-zinc-300/30 dark:text-zinc-750/30 hover:text-primary"
+                  className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col h-full shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 rounded-sm text-zinc-300/30 dark:text-zinc-700/30 hover:text-primary"
                   data-cursor-label={`SERVICE: ${service.title}`}
                 >
                   <CardCrosshairs />
@@ -1432,7 +1432,7 @@ export default function App() {
                         className={`tech-card flex flex-col p-4 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/25 backdrop-blur-sm transition-all duration-300 rounded-sm relative group shadow-sm h-full ${
                           mat.isLink 
                             ? 'text-zinc-400/30 dark:text-zinc-700/30 hover:text-primary hover:border-primary/50 hover:bg-primary/[0.02] cursor-pointer hover:shadow-[0_8px_20px_rgba(249,115,22,0.08)]' 
-                            : 'text-zinc-400/20 dark:text-zinc-700/20 hover:text-zinc-650 dark:hover:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/30 dark:hover:bg-zinc-900/30'
+                            : 'text-zinc-400/20 dark:text-zinc-700/20 hover:text-zinc-600 dark:hover:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/30 dark:hover:bg-zinc-900/30'
                         }`}
                         data-cursor-label={mat.isLink ? `SPEC SHEET: ${mat.name}` : `MATERIAL: ${mat.name}`}
                       >
@@ -1489,19 +1489,19 @@ export default function App() {
                  <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded border border-zinc-200 dark:border-zinc-800">
                    <button 
                      onClick={() => setMarketTab('live')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-650 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      Rates
                    </button>
                    <button 
                      onClick={() => setMarketTab('history')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-655 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      History
                    </button>
                    <button 
                      onClick={() => setMarketTab('calculator')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'calculator' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-655 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'calculator' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
                    >
                      Estimator
                    </button>
@@ -1584,7 +1584,7 @@ export default function App() {
                             <div className="flex-1 flex flex-col gap-4">
                               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
-                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1.5 font-bold">Select Material</label>
+                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase mb-1.5 font-bold">Select Material</label>
                                   <select 
                                     value={calcMetal} 
                                     onChange={(e) => setCalcMetal(e.target.value)}
@@ -1598,12 +1598,12 @@ export default function App() {
                                 </div>
 
                                 <div>
-                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase mb-1.5 font-bold">Currency</label>
+                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase mb-1.5 font-bold">Currency</label>
                                   <div className="flex bg-zinc-150 dark:bg-zinc-900 p-0.5 rounded border border-zinc-200 dark:border-zinc-800">
                                     <button 
                                       type="button"
                                       onClick={() => setCalcCurrency('SAR')}
-                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'SAR' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
+                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'SAR' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
                                       data-cursor-label="SET CURRENCY: SAR"
                                     >
                                       SAR (SR)
@@ -1611,7 +1611,7 @@ export default function App() {
                                     <button 
                                       type="button"
                                       onClick={() => setCalcCurrency('USD')}
-                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'USD' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
+                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'USD' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
                                       data-cursor-label="SET CURRENCY: USD"
                                     >
                                       USD ($)
@@ -1621,7 +1621,7 @@ export default function App() {
 
                                 <div>
                                   <div className="flex justify-between items-center mb-1.5">
-                                    <label className="text-[9px] font-mono tracking-widest text-zinc-450 dark:text-zinc-500 uppercase font-bold">Weight (Tons)</label>
+                                    <label className="text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase font-bold">Weight (Tons)</label>
                                     <span className="text-xs font-mono font-bold text-orange-600 dark:text-primary">{calcWeight.toFixed(1)} Tons</span>
                                   </div>
                                   <input 
@@ -1672,14 +1672,14 @@ export default function App() {
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-zinc-50 dark:bg-zinc-900/40 p-4 border border-zinc-200 dark:border-zinc-800/80 rounded-sm">
                                     <div className="space-y-2.5 font-mono text-[10px]">
                                       <div className="flex justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-1.5">
-                                        <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Rate / Ton:</span>
-                                        <span className="font-semibold text-zinc-900 dark:text-zinc-250">
+                                        <span className="text-zinc-500 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Rate / Ton:</span>
+                                        <span className="font-semibold text-zinc-900 dark:text-zinc-200">
                                           {baseRate.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}
                                         </span>
                                       </div>
                                       <div className="flex justify-between pb-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50">
-                                        <span className="text-zinc-550 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Discounts/Bonus:</span>
-                                        <span className={`font-bold ${bonusPercent > 0 ? 'text-green-600 dark:text-green-400' : 'text-zinc-550 dark:text-zinc-400'}`}>
+                                        <span className="text-zinc-500 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Discounts/Bonus:</span>
+                                        <span className={`font-bold ${bonusPercent > 0 ? 'text-green-600 dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
                                           {bonusLabel}
                                         </span>
                                       </div>
@@ -1690,7 +1690,7 @@ export default function App() {
                                     </div>
 
                                     <div className="text-center md:text-right border-t md:border-t-0 md:border-l border-zinc-200 dark:border-zinc-800/80 pt-3.5 md:pt-0 md:pl-4 flex flex-col items-center md:items-end justify-center">
-                                      <span className="text-[9px] text-zinc-550 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Grand Payout</span>
+                                      <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Grand Payout</span>
                                       <span className="text-3xl font-mono font-extrabold text-orange-700 dark:text-primary tracking-wider mt-1.5 mb-3.5 flex items-baseline">
                                         <AnimatedNumber to={grandTotal} formatter={(val) => val.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
                                         <span className="text-xs font-semibold ml-1.5 text-zinc-500 dark:text-zinc-400">{calcCurrency}</span>
@@ -2190,7 +2190,7 @@ export default function App() {
               {/* Upper Section */}
               <div className="p-6 relative z-10">
                 {/* Drawer Header */}
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-850/80">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800/80">
                   <div className="flex items-center gap-2">
                     <img src={logoImg} alt="AALKC" className="h-8 w-auto object-contain" />
                     <span className="font-display font-semibold tracking-wider text-[10px] text-zinc-400 uppercase">MENU</span>
@@ -2249,7 +2249,7 @@ export default function App() {
                 <div className="flex flex-col gap-2.5 mb-6">
                   <a 
                     href="tel:+966551811700" 
-                    className="flex items-center justify-center gap-2.5 bg-zinc-900 border border-zinc-800 text-white py-3 rounded-sm font-semibold text-xs tracking-widest uppercase hover:bg-zinc-850 transition-colors"
+                    className="flex items-center justify-center gap-2.5 bg-zinc-900 border border-zinc-800 text-white py-3 rounded-sm font-semibold text-xs tracking-widest uppercase hover:bg-zinc-800 transition-colors"
                   >
                     <Phone className="w-3.5 h-3.5" /> Call Direct
                   </a>

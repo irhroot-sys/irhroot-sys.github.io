@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ShieldCheck, Factory, Recycle, ArrowRight, Zap, Anvil, Feather, Phone, Mail, CheckCircle2, Calculator } from 'lucide-react';
 
 const SPEC_DATA: Record<string, {
@@ -92,9 +92,22 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
   const isSteel = currentHash === '#material-steel';
   const isAluminum = currentHash === '#material-aluminum';
 
+  const materialKey = isCopper ? 'copper' : isSteel ? 'steel' : 'aluminum';
+
+  // Calculator States — hooks must be declared before any conditional return
+  const [calcGrade, setCalcGrade] = useState<string>(
+    isCopper ? "millberry" : isSteel ? "hms1" : "extrusion"
+  );
+  const [calcWeight, setCalcWeight] = useState<number>(5.0);
+  const [calcCurrency, setCalcCurrency] = useState<'SAR' | 'USD'>('SAR');
+
+  // Sync grade to the first grade of the new material when the hash changes
+  useEffect(() => {
+    setCalcGrade(isCopper ? "millberry" : isSteel ? "hms1" : "extrusion");
+  }, [materialKey]);
+
   if (!isCopper && !isSteel && !isAluminum) return null;
 
-  const materialKey = isCopper ? 'copper' : isSteel ? 'steel' : 'aluminum';
   const spec = SPEC_DATA[materialKey];
 
   const data = {
@@ -113,13 +126,6 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
   const accentGlow = isCopper ? 'hover:shadow-[0_0_30px_rgba(249,115,22,0.12)]' : isSteel ? 'hover:shadow-[0_0_30px_rgba(161,161,170,0.12)]' : 'hover:shadow-[0_0_30px_rgba(56,189,248,0.12)]';
   const accentBg = isCopper ? 'bg-[#f97316]/10' : isSteel ? 'bg-[#a1a1aa]/10' : 'bg-[#38bdf8]/10';
   const accentOrb = isCopper ? 'bg-primary/10' : isSteel ? 'bg-zinc-400/10' : 'bg-sky-400/10';
-
-  // Calculator States
-  const [calcGrade, setCalcGrade] = useState<string>(
-    isCopper ? "millberry" : isSteel ? "hms1" : "extrusion"
-  );
-  const [calcWeight, setCalcWeight] = useState<number>(5.0);
-  const [calcCurrency, setCalcCurrency] = useState<'SAR' | 'USD'>('SAR');
 
   const gradeRates: Record<string, { name: string; rateUSD: number }> = {
     // Copper
@@ -171,14 +177,14 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           <div className="max-w-md lg:text-right">
             <div className="text-[10px] font-mono tracking-widest text-zinc-400 dark:text-zinc-500 uppercase mb-1">Target Price Range</div>
             <div className="text-2xl sm:text-3xl text-orange-700 dark:text-primary font-mono font-bold tracking-wider">{data.priceRange}</div>
-            <div className="text-[9px] text-zinc-550 dark:text-zinc-400 font-mono mt-1">LME INDEXED | SPOT KSA MARKET RATES APPLY</div>
+            <div className="text-[9px] text-zinc-500 dark:text-zinc-400 font-mono mt-1">LME INDEXED | SPOT KSA MARKET RATES APPLY</div>
           </div>
         </div>
 
         {/* Grid Dashboard */}
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Physical properties */}
-          <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-6 sm:p-8 rounded-sm shadow-sm relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 text-zinc-400/25 dark:text-zinc-750/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow}`}>
+          <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-6 sm:p-8 rounded-sm shadow-sm relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 text-zinc-400/25 dark:text-zinc-700/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow}`}>
             {/* Tech Blueprint Corners */}
             <div className="tech-corner tech-corner-tl"></div>
             <div className="tech-corner tech-corner-tr"></div>
@@ -193,16 +199,16 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
             </h3>
             <div className="space-y-2.5 font-sans text-sm relative z-10">
               {Object.entries(spec.properties).map(([label, val], idx) => (
-                <div key={idx} className="flex justify-between items-center py-2 px-3 border-b border-zinc-200/40 dark:border-zinc-850/20 last:border-0 hover:bg-zinc-100/50 dark:hover:bg-zinc-900/30 transition-colors rounded-sm">
+                <div key={idx} className="flex justify-between items-center py-2 px-3 border-b border-zinc-200/40 dark:border-zinc-800/20 last:border-0 hover:bg-zinc-100/50 dark:hover:bg-zinc-900/30 transition-colors rounded-sm">
                   <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{label}</span>
-                  <span className="font-semibold text-zinc-855 dark:text-zinc-200 text-right max-w-xs">{val}</span>
+                  <span className="font-semibold text-zinc-800 dark:text-zinc-200 text-right max-w-xs">{val}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Chemical properties */}
-          <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-6 sm:p-8 rounded-sm shadow-sm relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 text-zinc-400/25 dark:text-zinc-750/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow}`}>
+          <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-6 sm:p-8 rounded-sm shadow-sm relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 text-zinc-400/25 dark:text-zinc-700/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow}`}>
             {/* Tech Blueprint Corners */}
             <div className="tech-corner tech-corner-tl"></div>
             <div className="tech-corner tech-corner-tr"></div>
@@ -217,9 +223,9 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
             </h3>
             <div className="space-y-2.5 font-sans text-sm relative z-10">
               {Object.entries(spec.chemical).map(([label, val], idx) => (
-                <div key={idx} className="flex justify-between items-center py-2 px-3 border-b border-zinc-200/40 dark:border-zinc-850/20 last:border-0 hover:bg-zinc-100/50 dark:hover:bg-zinc-900/30 transition-colors rounded-sm">
+                <div key={idx} className="flex justify-between items-center py-2 px-3 border-b border-zinc-200/40 dark:border-zinc-800/20 last:border-0 hover:bg-zinc-100/50 dark:hover:bg-zinc-900/30 transition-colors rounded-sm">
                   <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{label}</span>
-                  <span className="font-bold text-zinc-855 dark:text-zinc-200 text-right">{val}</span>
+                  <span className="font-bold text-zinc-800 dark:text-zinc-200 text-right">{val}</span>
                 </div>
               ))}
             </div>
@@ -227,7 +233,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
         </div>
 
         {/* Compliance Section */}
-        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/20 backdrop-blur-sm p-8 rounded-sm shadow-sm mb-12 text-zinc-400/25 dark:text-zinc-750/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow} transition-all duration-300`}>
+        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/20 backdrop-blur-sm p-8 rounded-sm shadow-sm mb-12 text-zinc-400/25 dark:text-zinc-700/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow} transition-all duration-300`}>
           {/* Tech Blueprint Corners */}
           <div className="tech-corner tech-corner-tl"></div>
           <div className="tech-corner tech-corner-tr"></div>
@@ -239,7 +245,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           <h3 className="text-lg font-display uppercase tracking-widest text-zinc-900 dark:text-white mb-6 flex items-center gap-3 relative z-10">
             <Recycle className={`w-5 h-5 ${accentTextClass}`} /> Grade Inspection & Compliance
           </h3>
-          <p className="text-zinc-650 dark:text-zinc-400 mb-8 text-sm leading-relaxed max-w-3xl relative z-10">
+          <p className="text-zinc-600 dark:text-zinc-400 mb-8 text-sm leading-relaxed max-w-3xl relative z-10">
             {data.desc} Every dispatch lot undergoes structural grading, X-Ray Fluorescence (XRF) alloy verification, and radiation screening at our Dammam scrap terminal.
           </p>
           
@@ -254,7 +260,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
         </div>
 
         {/* Spot Payout Calculator */}
-        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-8 rounded-sm shadow-lg mb-12 relative overflow-hidden text-zinc-400/25 dark:text-zinc-750/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow} transition-all duration-300`}>
+        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-8 rounded-sm shadow-lg mb-12 relative overflow-hidden text-zinc-400/25 dark:text-zinc-700/30 ${isCopper ? 'hover:text-[#f97316]' : isSteel ? 'hover:text-[#a1a1aa]' : 'hover:text-[#38bdf8]'} ${accentGlow} transition-all duration-300`}>
           {/* Tech Blueprint Corners */}
           <div className="tech-corner tech-corner-tl"></div>
           <div className="tech-corner tech-corner-tr"></div>
@@ -366,7 +372,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
                   </div>
 
                   <div className="text-center md:text-right border-t md:border-t-0 md:border-l border-zinc-200 dark:border-zinc-800 pt-6 md:pt-0 md:pl-6 flex flex-col items-center md:items-end justify-center">
-                    <span className="text-[10px] text-zinc-550 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Total Payout</span>
+                    <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Total Payout</span>
                     <span className="text-3xl font-mono font-extrabold text-orange-700 dark:text-primary tracking-wider mt-1 mb-4">
                       {grandTotal.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}
                     </span>
@@ -390,7 +396,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
         </div>
 
         {/* Calls to Action */}
-        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-white dark:bg-zinc-950 p-8 rounded-sm shadow-lg flex flex-col lg:flex-row justify-between items-center gap-8 relative overflow-hidden text-zinc-400/25 dark:text-zinc-750/30 hover:text-primary ${accentGlow} transition-all duration-300`}>
+        <div className={`tech-card border border-zinc-200/80 dark:border-zinc-800/60 bg-white dark:bg-zinc-950 p-8 rounded-sm shadow-lg flex flex-col lg:flex-row justify-between items-center gap-8 relative overflow-hidden text-zinc-400/25 dark:text-zinc-700/30 hover:text-primary ${accentGlow} transition-all duration-300`}>
           {/* Tech Blueprint Corners */}
           <div className="tech-corner tech-corner-tl"></div>
           <div className="tech-corner tech-corner-tr"></div>
@@ -401,7 +407,7 @@ export default function MaterialPage({ currentHash }: { currentHash: string }) {
           <div className="relative z-10 text-center lg:text-left">
             <h4 className="text-orange-700 dark:text-primary text-xs font-bold tracking-widest uppercase mb-1">Direct Spot Trading</h4>
             <h3 className="text-zinc-900 dark:text-white text-xl sm:text-2xl font-bold tracking-wide uppercase">Request Live Custom Rates</h3>
-            <p className="text-zinc-550 dark:text-zinc-400 text-xs mt-1">Connect with our trading department to lock in rates for your load.</p>
+            <p className="text-zinc-500 dark:text-zinc-400 text-xs mt-1">Connect with our trading department to lock in rates for your load.</p>
           </div>
           
           <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
