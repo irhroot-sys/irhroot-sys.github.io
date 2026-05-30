@@ -1,0 +1,352 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-zinc-950: #09090b;
+  --color-zinc-900: #18181b;
+  --color-zinc-800: #27272a;
+  --color-primary: #f97316; /* Orange for metallic heat/rust accent */
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  @apply bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Custom scrollbar to match industrial theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-zinc-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-zinc-800);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Custom engineering grid mesh */
+.bg-grid-mesh {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+}
+.dark .bg-grid-mesh {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Animations for premium ambient backgrounds */
+@keyframes float {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-25px) scale(1.1); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.2; filter: blur(80px); }
+  50% { opacity: 0.45; filter: blur(120px); }
+}
+
+.animate-float {
+  animation: float 15s infinite ease-in-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 8s infinite ease-in-out;
+}
+
+/* Premium micro-interactions */
+.glow-border-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-border-hover:hover {
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.2);
+}
+
+.glow-border-gold-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-border-gold-hover:hover {
+  border-color: rgba(234, 179, 8, 0.5); /* Gold / Amber border */
+  box-shadow: 0 0 30px rgba(234, 179, 8, 0.15);
+}
+
+/* Premium Glassmorphic container */
+.glass-premium {
+  @apply bg-white/70 dark:bg-zinc-950/75 backdrop-blur-md border border-zinc-200 dark:border-zinc-800/80 shadow-[0_15px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)];
+}
+
+/* Gold Gradient text and backgrounds */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.border-gold-gradient {
+  border-image: linear-gradient(to right, #f59e0b, #b45309) 1;
+}
+
+/* Custom indicator animations */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  70% { transform: scale(2); opacity: 0; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Metallic gold shine effect */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+.shine-effect::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 55%
+  );
+  transform: rotate(45deg);
+  transition: transform 0.6s ease;
+}
+.shine-effect:hover::after {
+  transform: translate(50%, 50%) rotate(45deg);
+}
+
+/* Technical blueprint corner drafting style */
+.tech-card {
+  position: relative;
+}
+
+.tech-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: currentColor;
+  opacity: 0.25;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tech-corner-tl {
+  top: 0;
+  left: 0;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+
+.tech-corner-tr {
+  top: 0;
+  right: 0;
+  border-top: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+.tech-corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1.5px solid;
+  border-left: 1.5px solid;
+}
+
+.tech-corner-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+.tech-card:hover .tech-corner {
+  width: 12px;
+  height: 12px;
+  opacity: 0.85;
+}
+
+/* Luxury Copper-to-Gold text gradient */
+.text-copper-gold {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 45%, #eab308 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* New Metallic gradients */
+.text-liquid-copper {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fdba74 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-heated-steel {
+  background: linear-gradient(135deg, #a1a1aa 0%, #e4e4e7 40%, #ff781f 90%, #ea580c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-sterling-silver {
+  background: linear-gradient(135deg, #ffffff 0%, #f4f4f5 30%, #d4d4d8 70%, #71717a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium micro border-glow transitions */
+.glow-border-gold-hover:hover {
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+
+.glow-border-primary-hover:hover {
+  border-color: rgba(249, 115, 22, 0.45) !important;
+}
+
+/* Ticker Animation for LME Index tape */
+@keyframes ticker-slide {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-33.3333%, 0, 0); }
+}
+
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-content {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker-slide 30s linear infinite;
+}
+
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+/* Technical schematic crosshair styling */
+.tech-crosshair {
+  position: relative;
+}
+.tech-crosshair::before,
+.tech-crosshair::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  opacity: 0.15;
+  transition: all 0.3s ease;
+}
+.tech-crosshair::before {
+  width: 12px;
+  height: 1px;
+}
+.tech-crosshair::after {
+  width: 1px;
+  height: 12px;
+}
+.tech-card:hover .tech-crosshair::before,
+.tech-card:hover .tech-crosshair::after {
+  opacity: 0.45;
+}
+
+/* 3D Perspective and Card Tilt Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Reticle rotation for Precision Cursor */
+@keyframes reticle-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-reticle-spin {
+  animation: reticle-spin 15s linear infinite;
+}
+
+/* Rotating border-beam animation */
+@keyframes border-beam-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.border-beam-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.border-beam-glow::before {
+  content: '';
+  position: absolute;
+  width: 250%;
+  height: 250%;
+  top: -75%;
+  left: -75%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 15%,
+    var(--color-primary) 30%,
+    rgba(234, 179, 8, 0.8) 45%,
+    transparent 60%
+  );
+  animation: border-beam-spin 6s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+}
+
+.border-beam-inner {
+  position: relative;
+  z-index: 10;
+  background: inherit;
+  margin: 1.5px;
+  height: calc(100% - 3px);
+  width: calc(100% - 3px);
+  border-radius: inherit;
+}
+
+/* Fluid gauge transition animation */
+.gauge-transition {
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+/* Ambient dynamic grid animation */
+@keyframes grid-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.animate-grid-pulse {
+  animation: grid-pulse 10s ease-in-out infinite;
+}
