@@ -1,4 +1,4 @@
-﻿# robots.txt for AMANAT AL-KALIMA COMPANY (www.aalkc.com)
+# robots.txt for AMANAT AL-KALIMA COMPANY (aalkc.com)
 
 User-agent: *
 Allow: /
@@ -12,7 +12,7 @@ Allow: /assets/
 Allow: /erp/
 
 # Sitemap location
-Sitemap: https://www.aalkc.com/sitemap.xml
+Sitemap: https://aalkc.com/sitemap.xml
 
 # Crawl delay (optional, in seconds)
 Crawl-delay: 1
