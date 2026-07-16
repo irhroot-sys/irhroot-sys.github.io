@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+worker/wrangler.jsonc
+worker/.dev.vars
+.wrangler/
+.lighthouseci/
+test-results/
+playwright-report/

@@ -1,128 +1,14 @@
 import { motion, animate, useInView, AnimatePresence } from 'motion/react';
-import { ArrowRight, ArrowLeft, ChevronRight, ChevronUp, Recycle, Truck, Factory, ShieldCheck, Phone, Mail, MapPin, Search, X, Play, AlertCircle, Loader2, Plus, Minus, ImageOff, Linkedin, Twitter, Facebook, Zap, Anvil, Feather, CheckCircle2, XCircle, Sun, Moon, Layers, Sparkles, Menu } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ChevronRight, ChevronUp, Recycle, Truck, Factory, ShieldCheck, Phone, Mail, MapPin, Search, X, Play, Pause, AlertCircle, Loader2, Plus, Minus, ImageOff, Linkedin, Twitter, Facebook, Zap, Anvil, Feather, CheckCircle2, XCircle, Sun, Moon, Layers, Sparkles, Menu } from 'lucide-react';
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
 const MaterialPage = lazy(() => import('./components/MaterialPage'));
+const MarketPanel = lazy(() => import('./components/MarketPanel'));
+const TurnstileWidget = lazy(() => import('./components/TurnstileWidget'));
 
-import logoImg from './assets/images/aalkkoo.png';
+import logoImg from './assets/images/aalkkoo.webp';
 import footerLogoImg from './assets/images/regenerated_image_1778927709543.jpg';
 
-const sampleChartData = [
-  { month: 'Jan', copper: 3.80, steel: 1.20, aluminum: 1.05 },
-  { month: 'Feb', copper: 3.85, steel: 1.25, aluminum: 1.10 },
-  { month: 'Mar', copper: 4.02, steel: 1.30, aluminum: 1.15 },
-  { month: 'Apr', copper: 4.15, steel: 1.35, aluminum: 1.22 },
-  { month: 'May', copper: 4.30, steel: 1.40, aluminum: 1.28 },
-  { month: 'Jun', copper: 4.25, steel: 1.42, aluminum: 1.30 },
-  { month: 'Jul', copper: 4.40, steel: 1.48, aluminum: 1.35 },
-  { month: 'Aug', copper: 4.60, steel: 1.50, aluminum: 1.40 },
-  { month: 'Sep', copper: 4.55, steel: 1.45, aluminum: 1.38 },
-  { month: 'Oct', copper: 4.70, steel: 1.55, aluminum: 1.45 },
-  { month: 'Nov', copper: 4.85, steel: 1.60, aluminum: 1.50 },
-  { month: 'Dec', copper: 5.10, steel: 1.65, aluminum: 1.55 },
-];
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-zinc-950/85 backdrop-blur-md border border-zinc-800/80 p-4 rounded shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-l-2 border-l-primary">
-        <p className="text-zinc-400 text-[10px] font-mono mb-3 uppercase tracking-widest border-b border-zinc-800/50 pb-2 flex justify-between items-center gap-4">
-          <span>PERIOD</span> <span className="text-zinc-200 font-bold">{label}</span>
-        </p>
-        <div className="space-y-2">
-          {payload.map((entry: any, index: number) => (
-            <div key={index} className="flex items-center justify-between gap-6 font-mono text-xs">
-              <div className="flex items-center gap-2 text-zinc-400">
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }}></div>
-                <span className="uppercase">{entry.name}</span>
-              </div>
-              <span className="text-white font-bold tracking-wider">${entry.value.toFixed(2)}/LB</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
-
-const TICKER_ITEMS = [
-  { 
-    name: 'LME Copper', 
-    value: '$8,945.50', 
-    change: '+1.4%', 
-    up: true,
-    symbol: 'LME-Cu',
-    contract: '3M Seller',
-    low: '$8,850.00',
-    high: '$9,010.00',
-    sparkline: 'M 0 25 Q 15 10, 30 22 T 60 12 T 90 5 T 100 8'
-  },
-  { 
-    name: 'LME Aluminum', 
-    value: '$2,240.00', 
-    change: '-0.3%', 
-    up: false,
-    symbol: 'LME-Al',
-    contract: '3M Seller',
-    low: '$2,230.00',
-    high: '$2,260.00',
-    sparkline: 'M 0 10 Q 15 18, 30 12 T 60 22 T 90 18 T 100 24'
-  },
-  { 
-    name: 'LME Nickel', 
-    value: '$17,215.00', 
-    change: '+2.1%', 
-    up: true,
-    symbol: 'LME-Ni',
-    contract: '3M Seller',
-    low: '$16,980.00',
-    high: '$17,350.00',
-    sparkline: 'M 0 25 Q 15 15, 30 8 T 60 12 T 90 4 T 100 5'
-  },
-  { 
-    name: 'LME Steel Scrap', 
-    value: '$382.50', 
-    change: '+0.8%', 
-    up: true,
-    symbol: 'LME-Steel',
-    contract: 'FOB Bosphorus',
-    low: '$378.00',
-    high: '$385.00',
-    sparkline: 'M 0 18 Q 15 14, 30 16 T 60 10 T 90 8 T 100 6'
-  },
-  { 
-    name: 'LME Zinc', 
-    value: '$2,610.50', 
-    change: '-0.9%', 
-    up: false,
-    symbol: 'LME-Zn',
-    contract: '3M Seller',
-    low: '$2,590.00',
-    high: '$2,640.00',
-    sparkline: 'M 0 8 Q 15 14, 30 20 T 60 16 T 90 22 T 100 26'
-  },
-  { 
-    name: 'LME Lead', 
-    value: '$2,085.00', 
-    change: '+0.5%', 
-    up: true,
-    symbol: 'LME-Pb',
-    contract: '3M Seller',
-    low: '$2,070.00',
-    high: '$2,100.00',
-    sparkline: 'M 0 20 Q 15 18, 30 15 T 60 10 T 90 12 T 100 8'
-  },
-];
-
-const CALCULATOR_METALS = [
-  { id: 'copper', name: 'Copper #1 Millberry', usdPricePerTon: 8900 },
-  { id: 'steel', name: 'Steel HMS 1&2', usdPricePerTon: 380 },
-  { id: 'aluminum', name: 'Aluminum 6063', usdPricePerTon: 2200 },
-  { id: 'brass', name: 'Honey Brass', usdPricePerTon: 4500 },
-  { id: 'stainless', name: 'Stainless Steel 304', usdPricePerTon: 1800 },
-];
 
 function TiltCard({ children, className = "", ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLDivElement>) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -135,14 +21,14 @@ function TiltCard({ children, className = "", ...props }: { children: React.Reac
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     // Tilt calculation - max 8 degrees for premium visual subtlety
     const tiltX = ((y / rect.height) - 0.5) * -10;
     const tiltY = ((x / rect.width) - 0.5) * 10;
-    
+
     const shineX = (x / rect.width) * 100;
     const shineY = (y / rect.height) * 100;
-    
+
     setTilt({ x: tiltX, y: tiltY });
     setShine({ x: shineX, y: shineY, opacity: 0.15 });
   };
@@ -164,7 +50,7 @@ function TiltCard({ children, className = "", ...props }: { children: React.Reac
       {...props}
     >
       {/* Glare Shine Overlay */}
-      <div 
+      <div
         className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300 rounded-sm overflow-hidden"
         style={{
           background: `radial-gradient(circle at ${shine.x}% ${shine.y}%, rgba(255,255,255,0.18) 0%, transparent 60%)`,
@@ -189,7 +75,7 @@ function PrecisionCursor() {
 
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
-      
+
       const target = e.target as HTMLElement;
       const interactive = target.closest('a, button, select, input, [role="button"], .tech-card, [data-cursor-label]');
       if (interactive) {
@@ -198,8 +84,8 @@ function PrecisionCursor() {
           const header = interactive.querySelector('h3');
           if (header) label = header.textContent || '';
         }
-        setHoveredEl({ 
-          type: interactive.tagName.toLowerCase(), 
+        setHoveredEl({
+          type: interactive.tagName.toLowerCase(),
           label: label ? label.slice(0, 20).toUpperCase() : ''
         });
       } else {
@@ -234,7 +120,7 @@ function PrecisionCursor() {
   return (
     <>
       {/* Outer Rotating Reticle Ring */}
-      <div 
+      <div
         className="fixed pointer-events-none z-[9999] transition-transform duration-200 ease-out select-none"
         style={{
           left: `${trail.x}px`,
@@ -249,9 +135,9 @@ function PrecisionCursor() {
           <div className="absolute right-0 h-[1.5px] w-1.5 bg-primary/75"></div>
         </div>
       </div>
-      
+
       {/* Inner Dot and HUD Display */}
-      <div 
+      <div
         className="fixed pointer-events-none z-[9999] w-2 h-2 rounded-full bg-primary/90 flex items-center justify-center select-none"
         style={{
           left: `${position.x}px`,
@@ -277,7 +163,7 @@ function CardCrosshairs() {
       <div className="tech-corner tech-corner-tr text-primary/30 pointer-events-none"></div>
       <div className="tech-corner tech-corner-bl text-primary/30 pointer-events-none"></div>
       <div className="tech-corner tech-corner-br text-primary/30 pointer-events-none"></div>
-      
+
       {/* Technical crosshairs at corners */}
       <div className="tech-crosshair absolute top-2 left-2 text-primary/35 pointer-events-none w-3 h-3"></div>
       <div className="tech-crosshair absolute top-2 right-2 text-primary/35 pointer-events-none w-3 h-3"></div>
@@ -406,9 +292,9 @@ const highlightMatch = (text: string, query: string) => {
   const parts = text.split(new RegExp(`(${query})`, 'gi'));
   return (
     <span>
-      {parts.map((part, i) => 
-        part.toLowerCase() === query.toLowerCase() 
-          ? <span key={i} className="text-orange-700 dark:text-primary font-bold">{part}</span> 
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase()
+          ? <span key={i} className="text-orange-700 dark:text-primary font-bold">{part}</span>
           : <span key={i}>{part}</span>
       )}
     </span>
@@ -419,8 +305,8 @@ function SearchBar() {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  const results = query ? SEARCH_DATA.filter(item => 
-    item.title.toLowerCase().includes(query.toLowerCase()) || 
+  const results = query ? SEARCH_DATA.filter(item =>
+    item.title.toLowerCase().includes(query.toLowerCase()) ||
     item.type.toLowerCase().includes(query.toLowerCase())
   ) : [];
 
@@ -428,19 +314,19 @@ function SearchBar() {
     <div className="relative group z-50">
       <div className="relative">
         <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-        <input 
-          type="text" 
+        <input
+          type="text"
           name="search"
           autoComplete="off"
-          placeholder="Search materials, services..." 
+          placeholder="Search materials, services..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-sm pl-9 pr-8 py-2 text-[11px] text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary transition-all w-36 lg:w-48 focus:w-56 lg:focus:w-64 placeholder:text-zinc-500 shadow-sm" 
+          className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-sm pl-9 pr-8 py-2 text-[11px] text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary transition-all w-36 lg:w-48 focus:w-56 lg:focus:w-64 placeholder:text-zinc-500 shadow-sm"
         />
         {query && (
-          <button 
+          <button
             type="button"
             onClick={() => setQuery('')}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
@@ -450,15 +336,15 @@ function SearchBar() {
           </button>
         )}
       </div>
-      
+
       {isFocused && query && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm shadow-xl p-1 max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="text-[10px] uppercase tracking-widest text-zinc-600 dark:text-zinc-400 font-bold px-3 py-2 border-b border-zinc-100 dark:border-zinc-900 mb-1 font-mono">Search Results</div>
           {results.length > 0 ? (
             results.map((result, idx) => (
-              <a 
-                key={idx} 
-                href={result.url} 
+              <a
+                key={idx}
+                href={result.url}
                 className="block px-3 py-2 text-left hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-sm transition-colors group/item border-l-2 border-transparent hover:border-primary"
                 onClick={() => setQuery('')}
               >
@@ -505,7 +391,7 @@ const FAQ_DATA = [
 function FAQItem({ question, answer, isOpen, onClick }: { key?: number | string, question: string, answer: string, isOpen: boolean, onClick: () => void }) {
   return (
     <div className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col group overflow-hidden transition-colors duration-300">
-      <button 
+      <button
         type="button"
         onClick={onClick}
         className={`flex items-center justify-between p-6 w-full text-left transition-colors ${isOpen ? 'bg-zinc-50 dark:bg-zinc-900/50' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}
@@ -515,7 +401,7 @@ function FAQItem({ question, answer, isOpen, onClick }: { key?: number | string,
           {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         </span>
       </button>
-      <div 
+      <div
         className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
       >
         <div className="overflow-hidden">
@@ -541,12 +427,12 @@ function FAQSection() {
         <h2 className="text-3xl md:text-5xl font-display uppercase tracking-wide text-zinc-900 dark:text-white mb-10">Frequently Asked <span className="text-zinc-500 dark:text-zinc-400">Questions</span></h2>
         <div className="space-y-3">
           {FAQ_DATA.map((faq, idx) => (
-            <FAQItem 
-              key={idx} 
-              question={faq.question} 
-              answer={faq.answer} 
-              isOpen={openIndex === idx} 
-              onClick={() => setOpenIndex(openIndex === idx ? null : idx)} 
+            <FAQItem
+              key={idx}
+              question={faq.question}
+              answer={faq.answer}
+              isOpen={openIndex === idx}
+              onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
             />
           ))}
         </div>
@@ -605,7 +491,7 @@ function MaterialsGuide() {
         {guideData.map((item, idx) => (
           <div key={idx} className="border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 p-6 md:p-8 rounded-sm hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors flex flex-col relative overflow-hidden group">
              <div className="absolute top-0 right-0 w-32 h-32 opacity-10 blur-[40px] rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 group-hover:opacity-20" style={{ backgroundColor: item.color.replace('text-[', '').replace(']', '') }}></div>
-             
+
              <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6 mb-6 relative z-10">
                <div className={`p-4 rounded-full ${item.bg} ${item.border} border flex items-center justify-center`}>
                  <item.icon className={`w-6 h-6 ${item.color}`} />
@@ -614,7 +500,7 @@ function MaterialsGuide() {
                  {item.metal}
                </h4>
              </div>
-             
+
              <div className="w-full text-left space-y-8 relative z-10">
                <div>
                   <h5 className="text-[10px] uppercase tracking-widest text-green-600 dark:text-green-500 font-bold mb-4 flex items-center gap-2">
@@ -660,15 +546,15 @@ const HERO_SLIDES = [
     secondaryButton: { text: "View Pricing", icon: ChevronRight }
   },
   {
-    title: ["Global", "Market Direct", "Pricing"],
-    desc: "Leverage our real-time market data and direct mill relationships to ensure you get the highest possible return for your scrap materials.",
-    image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop", 
-    primaryButton: { text: "Check Live Rates", icon: Zap },
+    title: ["Verified", "Market-Aware", "Quoting"],
+    desc: "Review timestamped market snapshots when a licensed source is available, then request a non-binding spot quote for your materials.",
+    image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop",
+    primaryButton: { text: "Request Spot Quote", icon: Zap },
     secondaryButton: { text: "Contact Trading", icon: Phone }
   },
   {
     title: ["Sustainable", "Industrial", "Excellence"],
-    desc: "Committed to zero-waste initiatives and ISO 14001 environmental compliance for a greener, more sustainable industrial future.",
+    desc: "Practical recovery and recycling services designed to reduce waste and return industrial materials to productive use.",
     image: "https://images.unsplash.com/photo-1473876637968-47eacfd48023?q=80&w=2070&auto=format&fit=crop",
     primaryButton: { text: "View Certifications", icon: ShieldCheck },
     secondaryButton: { text: "Learn More", icon: Factory }
@@ -678,14 +564,22 @@ const HERO_SLIDES = [
 function HeroSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isPaused, setIsPaused] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isPaused) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [isHovered, currentIndex]);
+  }, [isHovered, isPaused, currentIndex]);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (isPaused) videoRef.current.pause();
+    else void videoRef.current.play().catch(() => setIsPaused(true));
+  }, [isPaused]);
 
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
@@ -699,7 +593,9 @@ function HeroSlider() {
   };
 
   return (
-    <section 
+    <section
+      id="home"
+      tabIndex={-1}
       className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden min-h-[90vh] flex items-center bg-zinc-950"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -707,31 +603,39 @@ function HeroSlider() {
       {/* Video & Background Visual Effects */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
+          preload="metadata"
+          poster="/hero-poster.webp"
           className="w-full h-full object-cover opacity-[0.55] transition-opacity duration-1000"
         >
           <source src="/AALKC.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/30"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-zinc-950/60"></div>
-        
+
         {/* Engineering Grid Mesh */}
         <div className="absolute inset-0 bg-grid-mesh opacity-25 pointer-events-none"></div>
-        
+
         {/* Ambient Glowing Orbs */}
         <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px] animate-pulse-glow pointer-events-none"></div>
         <div className="absolute bottom-1/3 left-10 w-[400px] h-[400px] bg-orange-600/5 rounded-full blur-[120px] animate-float pointer-events-none"></div>
 
         {/* Subtle noise texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-overlay" 
+        <div
+          className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-overlay"
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
         ></div>
       </div>
-      
+
+      <button type="button" onClick={() => setIsPaused((paused) => !paused)} className="absolute bottom-6 right-6 z-20 inline-flex items-center gap-2 border border-white/30 bg-black/60 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur" aria-label={isPaused ? 'Play hero motion and video' : 'Pause hero motion and video'}>
+        {isPaused ? <Play className="h-3.5 w-3.5" aria-hidden="true" /> : <Pause className="h-3.5 w-3.5" aria-hidden="true" />}
+        {isPaused ? 'Play motion' : 'Pause motion'}
+      </button>
+
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full mt-10 md:mt-12 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           <motion.div
@@ -750,9 +654,9 @@ function HeroSlider() {
               </div>
               <span className="text-orange-700 dark:text-primary font-semibold tracking-[0.3em] uppercase text-xs">AALKC Solutions</span>
             </motion.div>
-            
-            <motion.h1 
-              variants={fadeIn} 
+
+            <motion.h1
+              variants={fadeIn}
               className="font-display text-5xl sm:text-6xl md:text-8xl leading-[0.95] text-white mb-8 uppercase tracking-tight font-medium drop-shadow-2xl"
             >
               {slide.title[0]} <br />
@@ -765,11 +669,11 @@ function HeroSlider() {
                 {slide.title[2]}
               </span>
             </motion.h1>
-            
+
             <motion.p variants={fadeIn} className="text-zinc-300/90 text-lg md:text-xl font-light max-w-lg mb-10 text-balance leading-relaxed h-[80px]">
               {slide.desc}
             </motion.p>
-            
+
             <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 flex-wrap">
               <a href="#contact" className="bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(249,115,22,0.2)] dark:shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] hover:-translate-y-0.5 rounded-sm">
                 {slide.primaryButton.text} <slide.primaryButton.icon className="w-4 h-4" />
@@ -787,14 +691,14 @@ function HeroSlider() {
         {/* Global Slider Controls positioned independently so they don't animate out */}
         <div className="flex items-center gap-8 mt-16 md:mt-24 pl-8 md:pl-12">
           <div className="flex gap-2">
-            <button 
+            <button
               onClick={prevSlide}
               className="w-10 h-10 rounded-full border border-white/10 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-900 transition-all"
               aria-label="Previous slide"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <button 
+            <button
               onClick={nextSlide}
               className="w-10 h-10 rounded-full border border-white/10 dark:border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-zinc-500 hover:bg-white/10 dark:hover:bg-zinc-900 transition-all"
               aria-label="Next slide"
@@ -802,22 +706,22 @@ function HeroSlider() {
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-          
+
           <div className="h-4 w-px bg-zinc-800"></div>
 
           <div className="flex gap-3">
             {HERO_SLIDES.map((_, idx) => (
-              <button 
+              <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 className="relative h-2 w-16 bg-white/20 dark:bg-zinc-800 rounded-full overflow-hidden group"
                 aria-label={`Go to slide ${idx + 1}`}
               >
                 {idx === currentIndex && (
-                  <motion.div 
+                  <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: isHovered ? 0 : 6, ease: "linear" }}
+                    transition={{ duration: isHovered || isPaused ? 0 : 6, ease: "linear" }}
                     className="absolute inset-y-0 left-0 bg-primary"
                   />
                 )}
@@ -826,19 +730,19 @@ function HeroSlider() {
               </button>
             ))}
           </div>
-          
+
           <span className="text-zinc-500 font-mono text-sm tracking-widest uppercase">
             0{currentIndex + 1} &mdash; 0{HERO_SLIDES.length}
           </span>
         </div>
       </div>
-      
+
       {/* Scroll Down Indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity hidden md:flex">
          <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-mono">Scroll</span>
          <div className="w-px h-12 bg-gradient-to-b from-zinc-500 to-transparent"></div>
       </div>
-      
+
     </section>
   );
 }
@@ -906,7 +810,7 @@ function MaterialPageLoader() {
           <div className="h-px w-8 bg-zinc-800"></div>
         </div>
         <div className="h-[1px] w-32 bg-zinc-900 overflow-hidden relative">
-          <motion.div 
+          <motion.div
             animate={{ x: [-128, 128] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             className="absolute inset-y-0 w-32 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
@@ -1014,6 +918,7 @@ function CredentialsSection() {
 }
 
 export default function App() {
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -1038,49 +943,14 @@ export default function App() {
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [calcMetal, setCalcMetal] = useState('copper');
-  const [calcWeight, setCalcWeight] = useState(5);
-  const [calcCurrency, setCalcCurrency] = useState<'SAR' | 'USD'>('SAR');
-
-  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
-
-  useEffect(() => {
-    const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
-    const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
-    
-    const log1 = `[${timestamp}] [SYS] CALIBRATING SCALE -> METAL: ${metalObj.name.toUpperCase()}`;
-    const log2 = `[${timestamp}] [SYS] CURRENT MASS LOAD -> ${calcWeight.toFixed(1)} TONS`;
-    const log3 = `[${timestamp}] [SYS] EXCHANGE SETTING -> CURRENCY: ${calcCurrency}`;
-    
-    setTerminalLogs(prev => {
-      const next = [...prev, log1, log2, log3];
-      return next.slice(-4); // Keep last 4 logs to fit console window height
-    });
-  }, [calcMetal, calcWeight, calcCurrency]);
-
-  const [activeTickerTooltip, setActiveTickerTooltip] = useState<{
-    item: typeof TICKER_ITEMS[0];
-    x: number;
-    y: number;
-  } | null>(null);
-
-  const [marketTab, setMarketTab] = useState<'live' | 'history' | 'calculator'>('history');
-  const [chartRendered, setChartRendered] = useState(false);
-
-  useEffect(() => {
-    // Defer chart rendering to ensure the parent container is fully mounted and has positive dimensions
-    const timer = setTimeout(() => {
-      setChartRendered(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const [currentHash, setCurrentHash] = useState(() => window.location.hash || '#home');
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle');
   const [formMessage, setFormMessage] = useState('');
   const [formData, setFormData] = useState({ name: '', company: '', email: '', phone: '', message: '' });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [hiddenSeries, setHiddenSeries] = useState<Record<string, boolean>>({});
+  const [consent, setConsent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const [serviceFilter, setServiceFilter] = useState('All');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
@@ -1090,18 +960,44 @@ export default function App() {
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
     else if (formData.name.trim().length < 2) errors.name = 'Name must be at least 2 characters';
-    
+
     if (!formData.email.trim()) errors.email = 'Email is required';
     else if (!/^\S+@\S+\.\S+$/.test(formData.email)) errors.email = 'Please enter a valid email address';
-    
+
     if (!formData.phone.trim()) errors.phone = 'Phone number is required';
     else if (!/^\+?[0-9\s-]{8,}$/.test(formData.phone)) errors.phone = 'Please enter a valid phone number';
-    
+
     if (!formData.message.trim()) errors.message = 'Message is required';
     else if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters';
+    if (!consent) errors.consent = 'Consent is required to process your quote request';
+    if (!turnstileToken) errors.turnstile = 'Please complete the spam protection challenge';
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
+  };
+
+  const submitQuote = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validateForm()) return;
+    setFormStatus('submitting');
+    setFormMessage('');
+    try {
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ...formData, consent, turnstileToken }),
+      });
+      const result = (await response.json().catch(() => null)) as { id?: string; status?: string } | null;
+      if (response.status !== 202 || result?.status !== 'received' || !result.id) throw new Error('submission unavailable');
+      setFormStatus('success');
+      setFormMessage(`Your spot quote request was received. Reference: ${result.id}`);
+      setFormData({ name: '', company: '', email: '', phone: '', message: '' });
+      setConsent(false);
+      setTurnstileToken('');
+    } catch {
+      setFormStatus('error');
+      setFormMessage('We could not store your request. Please try again or contact us directly at contact@aalkc.com.');
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -1113,17 +1009,10 @@ export default function App() {
     }
   };
 
-  const toggleSeries = (dataKey: string) => {
-    setHiddenSeries(prev => ({
-      ...prev,
-      [dataKey]: !prev[dataKey]
-    }));
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-      
+
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (totalScroll > 0) {
         setScrollProgress((window.scrollY / totalScroll) * 100);
@@ -1152,7 +1041,7 @@ export default function App() {
   const renderLegalPage = () => {
     const isPrivacy = currentHash === '#privacy';
     const isTerms = currentHash === '#terms';
-    
+
     if (!isPrivacy && !isTerms) return null;
 
     return (
@@ -1168,9 +1057,9 @@ export default function App() {
             <div className="space-y-6">
                <p className="text-lg">At Amanat Al-Kalima Company (AALKC), we are committed to protecting your privacy. This Privacy Policy outlines how we collect, use, and safeguard your information when you visit our website or use our services.</p>
                <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Information Collection</h3>
-               <p>We may collect personal information such as your name, email address, phone number, and company details when you utilize our "Request a Quote" form or contact us via email. We also collect anonymous usage data through cookies to analyze website traffic and improve our user experience.</p>
+               <p>With your explicit consent, we collect the name, email address, phone number, company, and message you provide in the “Request a Spot Quote” form. Cloudflare Turnstile processes limited technical data to prevent abuse. We do not store raw IP addresses with quote requests.</p>
                <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Use of Information</h3>
-               <p>The information we collect is used primarily to process your service requests, provide accurate pricing for materials, and communicate effectively with our industrial partners. We do not sell or share your personal data with third parties for marketing purposes.</p>
+               <p>We use quote details only to process and respond to your request and for necessary operational follow-up. Records are retained for no longer than 90 days, then removed through an automated retention process. We do not sell or share your personal data for third-party marketing.</p>
                <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Data Security</h3>
                <p>We implement a variety of security measures to maintain the safety of your personal information. Your data is stored on secure servers and access is restricted to authorized personnel who are required to keep the information confidential.</p>
                <h3 className="text-zinc-900 dark:text-white uppercase tracking-widest text-lg font-bold mt-12 border-b border-zinc-200 dark:border-zinc-800 pb-2">Contact Us</h3>
@@ -1195,9 +1084,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-300 transition-colors duration-300">
+    <div id="main-content" className="min-h-screen bg-white dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-300 transition-colors duration-300">
+      <a href="#home" className="skip-link">Skip to main content</a>
       {/* High-tech top scroll progress bar */}
-      <div 
+      <div
         className="fixed top-0 left-0 h-[3px] bg-primary z-[60] transition-all duration-100 ease-out origin-left pointer-events-none"
         style={{ width: `${scrollProgress}%` }}
       />
@@ -1205,17 +1095,17 @@ export default function App() {
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-300 flex flex-col ${isScrolled ? 'bg-white/90 dark:bg-zinc-950/85 backdrop-blur-lg border-b border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.3)]' : 'bg-transparent border-b border-transparent'}`}>
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent z-50 pointer-events-none"></div>
-        
+
         {/* Main Nav Row */}
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between">
-          
+
           {/* Logo Container */}
           <div className="flex items-center shrink-0 w-auto lg:w-[280px]">
             <a href="#" data-cursor-label="NAV: HOME" className="flex items-center relative group py-2 outline-none transition-all duration-300 opacity-100">
-              <img 
-                src={logoImg} 
-                alt="AALKC Logo" 
-                className={`w-auto object-contain transition-all duration-500 relative z-10 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] ${isScrolled ? 'h-10 sm:h-12 md:h-14' : 'h-12 sm:h-14 md:h-16'}`} 
+              <img
+                src={logoImg}
+                alt="AALKC Logo"
+                className={`w-auto object-contain transition-all duration-500 relative z-10 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] ${isScrolled ? 'h-10 sm:h-12 md:h-14' : 'h-12 sm:h-14 md:h-16'}`}
               />
             </a>
           </div>
@@ -1232,9 +1122,9 @@ export default function App() {
           {/* CTA & Search */}
           <div className="hidden lg:flex items-center justify-end shrink-0 w-auto gap-4">
              <SearchBar />
-             
+
              {/* Theme Toggle */}
-             <button 
+             <button
                onClick={toggleTheme}
                data-cursor-label="THEME: SWAP"
                className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors text-zinc-600 dark:text-zinc-400 hover:text-primary active:scale-95"
@@ -1247,65 +1137,23 @@ export default function App() {
                Get Quote <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </button>
           </div>
-          
+
           {/* Mobile Menu Icon */}
           <div className="md:hidden flex items-center justify-end gap-3">
-             <button 
+             <button
                onClick={toggleTheme}
                className="p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400"
                aria-label="Toggle theme"
              >
                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
              </button>
-             <button 
+             <button
                onClick={() => setIsMobileMenuOpen(true)}
                className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white p-2 border border-zinc-200 dark:border-zinc-800 rounded-sm"
                aria-label="Open mobile menu"
              >
                 <Menu className="w-6 h-6" />
              </button>
-          </div>
-        </div>
-
-        {/* LME Commodity Ticker Tape Row */}
-        <div className="w-full bg-zinc-900 dark:bg-black/90 border-t border-b border-zinc-200/10 dark:border-zinc-800/80 py-2.5 overflow-hidden">
-          <div className="ticker-wrap flex items-center">
-            <div className="ticker-content flex gap-12 select-none uppercase font-mono text-[10px] tracking-wider text-zinc-400">
-              {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-                <div 
-                  key={idx} 
-                  className="inline-flex items-center gap-2 cursor-crosshair relative py-0.5 px-2.5 rounded hover:bg-zinc-800/40 transition-colors"
-                  onMouseEnter={(e) => {
-                    setActiveTickerTooltip({
-                      item,
-                      x: e.clientX,
-                      y: e.clientY
-                    });
-                  }}
-                  onMouseMove={(e) => {
-                    setActiveTickerTooltip({
-                      item,
-                      x: e.clientX,
-                      y: e.clientY
-                    });
-                  }}
-                  onMouseLeave={() => {
-                    setActiveTickerTooltip(null);
-                  }}
-                  data-cursor-label="LME DATA"
-                >
-                  <span className="relative flex h-1.5 w-1.5 shrink-0">
-                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${item.up ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                    <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${item.up ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                  </span>
-                  <span className="font-bold text-white">{item.name}</span>
-                  <span className="text-zinc-300 font-semibold">{item.value}</span>
-                  <span className={`font-bold ${item.up ? 'text-green-400' : 'text-red-400'}`}>
-                    {item.up ? '↑' : '↓'} {item.change}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
@@ -1337,11 +1185,11 @@ export default function App() {
               <h2 className="font-display text-4xl md:text-6xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">Core Services</h2>
               <p className="text-zinc-600 dark:text-zinc-400 max-w-xl">Comprehensive scrap management tailored to industrial scale operations.</p>
             </div>
-            
+
             {/* Filter Buttons */}
              <div className="flex bg-white dark:bg-zinc-950 p-1 border border-zinc-200 dark:border-zinc-800 rounded-sm shadow-sm">
                 {['All', 'Collection', 'Processing', 'Trading'].map((cat) => (
-                  <button 
+                  <button
                    key={cat}
                    onClick={() => setServiceFilter(cat)}
                    className={`px-4 py-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all ${serviceFilter === cat ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-lg' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
@@ -1352,38 +1200,38 @@ export default function App() {
              </div>
           </div>
 
-          <motion.div 
+          <motion.div
             layout
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {ALL_SERVICES.filter(s => serviceFilter === 'All' || s.category === serviceFilter).map((service) => (
-              <motion.div 
+              <motion.div
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5 }}
-                key={service.title} 
+                key={service.title}
                 className="h-full"
               >
-                <TiltCard 
+                <TiltCard
                   className="tech-card group p-8 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm transition-all duration-300 relative overflow-hidden flex flex-col h-full shadow-sm hover:shadow-[0_0_35px_rgba(249,115,22,0.12)] hover:border-primary/40 rounded-sm text-zinc-300/30 dark:text-zinc-700/30 hover:text-primary"
                   data-cursor-label={`SERVICE: ${service.title}`}
                 >
                   <CardCrosshairs />
 
                   <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl rounded-full translate-x-12 -translate-y-12 group-hover:bg-primary/10 transition-colors"></div>
-                  
+
                   <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center mb-6 group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-300 shadow-inner">
                     <service.icon className="w-8 h-8 text-zinc-400 dark:text-zinc-500 group-hover:text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
                   </div>
-                  
+
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-[10px] text-orange-700 dark:text-primary font-mono uppercase tracking-widest border border-orange-700/20 dark:border-primary/20 px-2 py-0.5 rounded-full bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm">{service.category}</span>
                   </div>
                   <h3 className="font-display text-2xl uppercase tracking-wide text-zinc-900 dark:text-white mb-4">{service.title}</h3>
                   <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-sm flex-1">{service.desc}</p>
-                  
+
                   <div className="mt-8 h-[1px] w-full bg-zinc-200/80 dark:bg-zinc-800/80 group-hover:bg-primary/30 transition-colors relative">
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 group-hover:border-primary/50 group-hover:bg-primary transition-all duration-300 flex items-center justify-center shadow-sm">
                       <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-950 transition-colors" />
@@ -1415,23 +1263,23 @@ export default function App() {
               <p className="text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed max-w-lg">
                 We accept a wide variety of metals and alloys. Our state-of-the-art analyzing equipment ensures precise grading and honest pricing for every load.
               </p>
-              
+
               <div className="grid sm:grid-cols-2 gap-4 font-mono text-xs uppercase tracking-wider">
                 {MATERIALS_LIST.map((mat, index) => {
                   const Icon = mat.icon;
                   const Wrapper = mat.isLink ? 'a' : 'div';
                   const linkProps = mat.isLink ? { href: mat.href } : {};
-                  
+
                   return (
-                    <TiltCard 
+                    <TiltCard
                       key={index}
                       className="h-full"
                     >
-                      <Wrapper 
+                      <Wrapper
                         {...linkProps}
                         className={`tech-card flex flex-col p-4 border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/30 dark:bg-zinc-950/25 backdrop-blur-sm transition-all duration-300 rounded-sm relative group shadow-sm h-full ${
-                          mat.isLink 
-                            ? 'text-zinc-400/30 dark:text-zinc-700/30 hover:text-primary hover:border-primary/50 hover:bg-primary/[0.02] cursor-pointer hover:shadow-[0_8px_20px_rgba(249,115,22,0.08)]' 
+                          mat.isLink
+                            ? 'text-zinc-400/30 dark:text-zinc-700/30 hover:text-primary hover:border-primary/50 hover:bg-primary/[0.02] cursor-pointer hover:shadow-[0_8px_20px_rgba(249,115,22,0.08)]'
                             : 'text-zinc-400/20 dark:text-zinc-700/20 hover:text-zinc-600 dark:hover:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100/30 dark:hover:bg-zinc-900/30'
                         }`}
                         data-cursor-label={mat.isLink ? `SPEC SHEET: ${mat.name}` : `MATERIAL: ${mat.name}`}
@@ -1443,7 +1291,7 @@ export default function App() {
                           </div>
                           <span className="text-sm font-semibold tracking-widest text-zinc-900 dark:text-white transition-colors">{mat.name}</span>
                         </div>
-                        
+
                         <div className="space-y-1.5 border-t border-zinc-200/50 dark:border-zinc-800/40 pt-3 text-[10px] text-zinc-600 dark:text-zinc-400 font-sans tracking-wide">
                           <div className="flex justify-between">
                             <span className="font-mono text-[9px] tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">SPEC:</span>
@@ -1471,325 +1319,10 @@ export default function App() {
               </div>
 
             </div>
-            
-            <div className="border border-zinc-200/80 dark:border-zinc-800/60 bg-zinc-50/50 dark:bg-zinc-950/40 backdrop-blur-sm p-6 sm:p-8 pt-8 relative overflow-hidden flex flex-col h-full min-h-[420px] shadow-xl glow-border-hover rounded-sm">
-               {/* Abstract grid background */}
-               <div className="absolute inset-0 bg-grid-mesh opacity-10 pointer-events-none"></div>
-               
-               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 relative z-10">
-                 <div className="flex items-center gap-3">
-                   <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white m-0">
-                     Market Trends
-                   </h3>
-                   <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-500/10 dark:bg-zinc-500/20 border border-zinc-500/20 text-[9px] text-zinc-600 dark:text-zinc-400 font-mono tracking-widest uppercase font-semibold">
-                      Sample Rates
-                   </div>
-                 </div>
-                 
-                 <div className="flex bg-zinc-100 dark:bg-zinc-950 p-1 rounded border border-zinc-200 dark:border-zinc-800">
-                   <button 
-                     onClick={() => setMarketTab('live')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'live' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
-                   >
-                     Rates
-                   </button>
-                   <button 
-                     onClick={() => setMarketTab('history')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'history' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
-                   >
-                     History
-                   </button>
-                   <button 
-                     onClick={() => setMarketTab('calculator')}
-                     className={`px-3 py-1 text-[11px] font-semibold tracking-wider uppercase transition-colors rounded-sm cursor-pointer ${marketTab === 'calculator' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950' : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
-                   >
-                     Estimator
-                   </button>
-                 </div>
-               </div>
-               
-               <div className="flex-1 flex flex-col justify-center relative z-10">
-                  <AnimatePresence mode="wait">
-                    {marketTab === 'live' && (
-                      <motion.div 
-                        key="live"
-                        initial={{ opacity: 0, y: 10 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -10 }}
-                        className="space-y-4"
-                      >
-                        {[
-                          { name: "Copper #1 Bare Bright", trend: "+2.4%", up: true, link: "#material-copper" },
-                          { name: "Aluminum Extrusion", trend: "+0.8%", up: true, link: "#material-aluminum" },
-                          { name: "Stainless 304", trend: "-1.2%", up: false },
-                          { name: "Heavy Melt Steel", trend: "Steady", up: null, link: "#material-steel" }
-                        ].map((item, idx) => {
-                          const Wrapper = item.link ? 'a' : 'div';
-                          return (
-                            <Wrapper 
-                              key={idx} 
-                              href={item.link}
-                              className={`flex justify-between items-center py-4 border-b border-zinc-200 dark:border-zinc-800/80 ${item.link ? 'hover:bg-zinc-100 dark:hover:bg-zinc-900/50 -mx-4 px-4 cursor-pointer transition-colors group' : ''}`}
-                            >
-                              <span className={`font-mono text-xs uppercase tracking-wider text-zinc-700 dark:text-zinc-300 ${item.link ? 'group-hover:text-orange-700 dark:group-hover:text-primary transition-colors' : ''}`}>{item.name}</span>
-                              <span className={`text-[10px] font-mono font-bold tracking-wider px-2.5 py-1 rounded border flex items-center gap-2 ${item.up === true ? 'text-green-600 dark:text-green-400 border-green-500/20 bg-green-500/5' : item.up === false ? 'text-red-600 dark:text-red-400 border-red-500/20 bg-red-500/5' : 'text-zinc-500 dark:text-zinc-400 border-zinc-500/20 bg-zinc-500/5'}`}>
-                                <span className="relative flex h-1.5 w-1.5">
-                                   <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${item.up === true ? 'bg-green-500' : item.up === false ? 'bg-red-500' : 'bg-zinc-400'}`}></span>
-                                   <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${item.up === true ? 'bg-green-500' : item.up === false ? 'bg-red-500' : 'bg-zinc-500'}`}></span>
-                                </span>
-                                {item.up === true ? '↑' : item.up === false ? '↓' : '→'} {item.trend}
-                              </span>
-                            </Wrapper>
-                          );
-                        })}
-                        <div className="mt-8 text-[10px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest text-center">
-                          SAMPLE RATES FOR ILLUSTRATION ONLY. CONTACT FOR DIRECT SPOT QUOTES.
-                        </div>
-                      </motion.div>
-                    )}
-                    {marketTab === 'calculator' && (
-                      <motion.div 
-                        key="calculator"
-                        initial={{ opacity: 0, y: 10 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -10 }}
-                        className="border-beam-container border-beam-glow rounded-sm w-full"
-                      >
-                        <div className="border-beam-inner bg-white/95 dark:bg-zinc-950/95 p-5 md:p-6 rounded-sm text-zinc-700 dark:text-zinc-300">
-                          <div className="flex flex-col md:flex-row gap-6">
-                            {/* Left Side: LED Segmented Progress Gauge */}
-                            <div className="flex flex-row md:flex-col items-center justify-between md:justify-center gap-3 bg-zinc-100 dark:bg-zinc-900/60 p-3 rounded border border-zinc-200/50 dark:border-zinc-800/50 shrink-0">
-                              <span className="font-mono text-[8px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500 [writing-mode:vertical-lr] rotate-180 hidden md:block select-none">MASS LOAD LEVEL</span>
-                              <div className="flex flex-row md:flex-col-reverse gap-1.5 h-3 md:h-64 w-full md:w-3.5 items-center justify-between flex-1 md:flex-initial">
-                                {Array.from({ length: 20 }).map((_, i) => {
-                                  const threshold = (i + 1) * 2.5;
-                                  const isActive = calcWeight >= threshold;
-                                  return (
-                                    <div 
-                                      key={i} 
-                                      className={`h-2.5 md:h-2 w-full md:w-3.5 rounded-[1px] transition-all duration-300 ${
-                                        isActive 
-                                          ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]' 
-                                          : 'bg-zinc-250 dark:bg-zinc-800'
-                                      }`}
-                                      title={`${threshold} Tons`}
-                                    />
-                                  );
-                                })}
-                              </div>
-                              <span className="font-mono text-[9px] font-bold text-orange-600 dark:text-primary mt-0 md:mt-2 shrink-0">{calcWeight.toFixed(1)}T</span>
-                            </div>
 
-                            {/* Main Area */}
-                            <div className="flex-1 flex flex-col gap-4">
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
-                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase mb-1.5 font-bold">Select Material</label>
-                                  <select 
-                                    value={calcMetal} 
-                                    onChange={(e) => setCalcMetal(e.target.value)}
-                                    className="w-full bg-white dark:bg-zinc-950 border border-zinc-205 dark:border-zinc-800 text-zinc-900 dark:text-white px-2.5 py-2.5 rounded text-xs focus:border-primary outline-none transition-colors font-mono uppercase tracking-wider cursor-pointer"
-                                    data-cursor-label="SELECT METAL"
-                                  >
-                                    {CALCULATOR_METALS.map((m) => (
-                                      <option key={m.id} value={m.id}>{m.name.toUpperCase()}</option>
-                                    ))}
-                                  </select>
-                                </div>
-
-                                <div>
-                                  <label className="block text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase mb-1.5 font-bold">Currency</label>
-                                  <div className="flex bg-zinc-150 dark:bg-zinc-900 p-0.5 rounded border border-zinc-200 dark:border-zinc-800">
-                                    <button 
-                                      type="button"
-                                      onClick={() => setCalcCurrency('SAR')}
-                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'SAR' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
-                                      data-cursor-label="SET CURRENCY: SAR"
-                                    >
-                                      SAR (SR)
-                                    </button>
-                                    <button 
-                                      type="button"
-                                      onClick={() => setCalcCurrency('USD')}
-                                      className={`flex-1 py-2 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer ${calcCurrency === 'USD' ? 'bg-orange-700 dark:bg-primary text-white dark:text-zinc-950 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-250'}`}
-                                      data-cursor-label="SET CURRENCY: USD"
-                                    >
-                                      USD ($)
-                                    </button>
-                                  </div>
-                                </div>
-
-                                <div>
-                                  <div className="flex justify-between items-center mb-1.5">
-                                    <label className="text-[9px] font-mono tracking-widest text-zinc-500 dark:text-zinc-500 uppercase font-bold">Weight (Tons)</label>
-                                    <span className="text-xs font-mono font-bold text-orange-600 dark:text-primary">{calcWeight.toFixed(1)} Tons</span>
-                                  </div>
-                                  <input 
-                                    type="range" 
-                                    min="0.1" 
-                                    max="50" 
-                                    step="0.1"
-                                    value={calcWeight}
-                                    onChange={(e) => setCalcWeight(parseFloat(e.target.value))}
-                                    className="w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary mt-3"
-                                    data-cursor-label="ADJUST WEIGHT"
-                                  />
-                                  <div className="flex justify-between text-[8px] font-mono text-zinc-400 mt-1">
-                                    <span>MIN: 0.1T</span>
-                                    <span>MAX: 50.0T</span>
-                                  </div>
-                                </div>
-                              </div>
-
-
-
-                              {(() => {
-                                const metalObj = CALCULATOR_METALS.find(m => m.id === calcMetal) || CALCULATOR_METALS[0];
-                                const activeUSDRate = metalObj.usdPricePerTon;
-                                const exchangeRate = 3.75;
-                                const baseRate = calcCurrency === 'SAR' ? activeUSDRate * exchangeRate : activeUSDRate;
-                                
-                                let bonusPercent = 0;
-                                let bonusLabel = "No Bulk Bonus";
-                                if (calcWeight >= 25) {
-                                  bonusPercent = 0.08;
-                                  bonusLabel = "+8% Bulk Tier 3 (Premium)";
-                                } else if (calcWeight >= 10) {
-                                  bonusPercent = 0.05;
-                                  bonusLabel = "+5% Bulk Tier 2";
-                                } else if (calcWeight >= 5) {
-                                  bonusPercent = 0.03;
-                                  bonusLabel = "+3% Bulk Tier 1";
-                                }
-
-                                const rawTotal = baseRate * calcWeight;
-                                const bonusAmount = rawTotal * bonusPercent;
-                                const grandTotal = rawTotal + bonusAmount;
-
-                                const whatsAppMsg = `Hello AALKC Team, I used the calculator for ${metalObj.name} and estimated ${calcWeight.toFixed(1)} Tons at a payout of ${grandTotal.toLocaleString(undefined, {maximumFractionDigits:2})} ${calcCurrency}. I'd like to lock in this rate and book an inspection.`;
-
-                                return (
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-zinc-50 dark:bg-zinc-900/40 p-4 border border-zinc-200 dark:border-zinc-800/80 rounded-sm">
-                                    <div className="space-y-2.5 font-mono text-[10px]">
-                                      <div className="flex justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-1.5">
-                                        <span className="text-zinc-500 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Rate / Ton:</span>
-                                        <span className="font-semibold text-zinc-900 dark:text-zinc-200">
-                                          {baseRate.toLocaleString(undefined, {maximumFractionDigits: 2})} {calcCurrency}
-                                        </span>
-                                      </div>
-                                      <div className="flex justify-between pb-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50">
-                                        <span className="text-zinc-500 dark:text-zinc-400 uppercase tracking-widest text-[9px]">Discounts/Bonus:</span>
-                                        <span className={`font-bold ${bonusPercent > 0 ? 'text-green-600 dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
-                                          {bonusLabel}
-                                        </span>
-                                      </div>
-                                      <div className="flex justify-between text-[9px] text-zinc-500 dark:text-zinc-400">
-                                        <span>Note:</span>
-                                        <span>Illustrative estimate only</span>
-                                      </div>
-                                    </div>
-
-                                    <div className="text-center md:text-right border-t md:border-t-0 md:border-l border-zinc-200 dark:border-zinc-800/80 pt-3.5 md:pt-0 md:pl-4 flex flex-col items-center md:items-end justify-center">
-                                      <span className="text-[9px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">Estimated Grand Payout</span>
-                                      <span className="text-3xl font-mono font-extrabold text-orange-700 dark:text-primary tracking-wider mt-1.5 mb-3.5 flex items-baseline">
-                                        <AnimatedNumber to={grandTotal} formatter={(val) => val.toLocaleString(undefined, { maximumFractionDigits: 2 })} />
-                                        <span className="text-xs font-semibold ml-1.5 text-zinc-500 dark:text-zinc-400">{calcCurrency}</span>
-                                      </span>
-
-                                      <a 
-                                        href={`https://wa.me/966551811700?text=${encodeURIComponent(whatsAppMsg)}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-full bg-green-600 hover:bg-green-500 text-white font-bold tracking-widest text-[9px] uppercase px-4 py-2.5 rounded-sm transition-all hover:scale-105 flex items-center justify-center gap-2 shadow-sm cursor-pointer border border-green-700/20"
-                                        data-cursor-label="LOCK CONTRACT"
-                                      >
-                                        <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.455h.008c6.56 0 11.895-5.336 11.898-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                        </svg>
-                                        Lock Rate via WhatsApp
-                                      </a>
-                                    </div>
-                                  </div>
-                                );
-                              })()}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {marketTab === 'history' && (
-                      <motion.div 
-                        key="history"
-                        initial={{ opacity: 0, y: 10 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -10 }}
-                        className="h-[280px] w-full"
-                      >
-                        {chartRendered ? (
-                          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                            <AreaChart data={sampleChartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-                              <defs>
-                                <linearGradient id="colorCopper" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
-                                  <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                                </linearGradient>
-                                <linearGradient id="colorSteel" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#a1a1aa" stopOpacity={0.3}/>
-                                  <stop offset="95%" stopColor="#a1a1aa" stopOpacity={0}/>
-                                </linearGradient>
-                                <filter id="neonCopper" x="-10%" y="-10%" width="120%" height="120%">
-                                  <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#f97316" floodOpacity="0.4"/>
-                                </filter>
-                                <filter id="neonSteel" x="-10%" y="-10%" width="120%" height="120%">
-                                  <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#a1a1aa" floodOpacity="0.3"/>
-                                </filter>
-                              </defs>
-                              <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255, 255, 255, 0.05)" />
-                              <XAxis dataKey="month" stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} />
-                              <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                              <Tooltip content={<CustomTooltip />} />
-                              <Legend 
-                                payload={[
-                                  { value: 'Copper', type: 'rect', color: '#f97316', dataKey: 'copper' },
-                                  { value: 'Steel', type: 'rect', color: '#a1a1aa', dataKey: 'steel' }
-                                ]}
-                                content={(props: any) => {
-                                  const { payload } = props;
-                                  return (
-                                    <div className="flex justify-center gap-8 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800/50">
-                                      {payload?.map((entry: any, index: number) => {
-                                        const isHidden = hiddenSeries[entry.dataKey];
-                                        return (
-                                          <button 
-                                            key={`item-${index}`} 
-                                            onClick={() => toggleSeries(entry.dataKey)}
-                                            className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider transition-all duration-300 cursor-pointer ${isHidden ? 'opacity-40 grayscale' : 'opacity-100 hover:opacity-80'}`}
-                                          >
-                                            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }}></div>
-                                            <span className="text-zinc-700 dark:text-zinc-300 font-semibold">{entry.value}</span>
-                                          </button>
-                                        )
-                                      })}
-                                    </div>
-                                  );
-                                }}
-                              />
-                              {!hiddenSeries.copper && <Area type="monotone" dataKey="copper" name="Copper" stroke="#f97316" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCopper)" filter="url(#neonCopper)" />}
-                              {!hiddenSeries.steel && <Area type="monotone" dataKey="steel" name="Steel" stroke="#a1a1aa" strokeWidth={2.5} fillOpacity={1} fill="url(#colorSteel)" filter="url(#neonSteel)" />}
-                            </AreaChart>
-                          </ResponsiveContainer>
-                        ) : (
-                          <div className="w-full h-full bg-transparent" />
-                        )}
-                        <div className="mt-4 text-[10px] text-zinc-500 dark:text-zinc-400 font-mono tracking-widest text-center uppercase">
-                          Sample 12-Month Trend ($/LB) — For Illustration Only
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-               </div>
-            </div>
+            <Suspense fallback={<div role="status" className="min-h-[420px] border border-zinc-200 dark:border-zinc-800 p-8 text-sm text-zinc-500">Loading verified market data…</div>}>
+              <MarketPanel />
+            </Suspense>
           </div>
           <MaterialsGuide />
         </div>
@@ -1824,9 +1357,9 @@ export default function App() {
               ))}
             </ul>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
-            <TiltCard 
+            <TiltCard
               className="h-48 sm:h-56"
               data-cursor-label="STAT: EST. 2017"
             >
@@ -1835,7 +1368,7 @@ export default function App() {
                  <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Year Established</div>
               </div>
             </TiltCard>
-            <TiltCard 
+            <TiltCard
               className="h-48 sm:h-56 mt-[-20px]"
               data-cursor-label="STAT: DAMMAM"
             >
@@ -1844,7 +1377,7 @@ export default function App() {
                  <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">Dammam, KSA</div>
               </div>
             </TiltCard>
-            <TiltCard 
+            <TiltCard
               className="h-48 sm:h-56 mt-[-20px]"
               data-cursor-label="STAT: LICENSED"
             >
@@ -1853,7 +1386,7 @@ export default function App() {
                  <div className="relative z-10 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold mt-2">Licensed Dealer</div>
               </div>
             </TiltCard>
-            <TiltCard 
+            <TiltCard
               className="h-48 sm:h-56 mt-[-20px]"
               data-cursor-label="STAT: EASTERN PROVINCE"
             >
@@ -1883,7 +1416,7 @@ export default function App() {
             </h2>
             <div className="prose dark:prose-invert prose-zinc max-w-none text-zinc-600 dark:text-zinc-400">
               <p className="text-lg leading-relaxed mb-6">
-                Established in 2017, AMANAT AL-KALIMA COMPANY (ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ) is a premier licensed scrap metal dealer based in Dammam, Eastern Province, Kingdom Of Saudi Arabia. We specialize in providing comprehensive and professional metal recycling services tailored to industrial, commercial, and construction businesses. 
+                Established in 2017, AMANAT AL-KALIMA COMPANY (ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ) is a premier licensed scrap metal dealer based in Dammam, Eastern Province, Kingdom Of Saudi Arabia. We specialize in providing comprehensive and professional metal recycling services tailored to industrial, commercial, and construction businesses.
               </p>
               <p className="text-lg leading-relaxed mb-12">
                 Our commitment to integrity, efficiency, and environmental sustainability has made us a trusted partner in the region's expanding industrial sector. We manage the complete lifecycle of scrap metal trading—from reliable site collection to meticulous sorting and processing.
@@ -1923,17 +1456,17 @@ export default function App() {
                 ))}
               </div>
             </div>
-            
+
             {/* Official Contact Card */}
             <div className="mt-16 p-8 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col lg:flex-row gap-8 justify-between items-start lg:items-center relative overflow-hidden shadow-md transition-colors duration-300">
                <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none"></div>
                <div className="relative z-10 max-w-lg">
                  <h4 className="text-orange-700 dark:text-primary text-xs font-bold tracking-widest uppercase mb-4">Official Contact Details</h4>
                  <h3 className="text-zinc-900 dark:text-white text-xl md:text-2xl font-bold tracking-wider mb-1">AMANAT AL-KALIMA COMPANY</h3>
-                 <p className="text-zinc-600 dark:text-zinc-400 font-sans tracking-wide mb-6 text-lg" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</p>
+                 <p className="text-zinc-600 dark:text-zinc-400 font-sans tracking-wide mb-6 text-lg" lang="ar" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</p>
                  <address className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base not-italic leading-relaxed flex flex-col gap-3">
                    <span>3508 Al Qatif 1, Unit 7260, Dammam 32517, Eastern Province, Kingdom Of Saudi Arabia</span>
-                   <span className="font-sans text-zinc-600 dark:text-zinc-400" dir="rtl">اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠ ، اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ، اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ</span>
+                   <span className="font-sans text-zinc-600 dark:text-zinc-400" lang="ar" dir="rtl">اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠ ، اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ، اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ</span>
                  </address>
                </div>
                <div className="relative z-10 flex flex-col gap-4 text-sm md:text-base lg:text-right w-full lg:w-auto mt-2 lg:mt-0 border-t lg:border-t-0 border-zinc-100 dark:border-zinc-800 pt-6 lg:pt-0">
@@ -1951,7 +1484,7 @@ export default function App() {
                  </a>
                </div>
             </div>
-            
+
           </div>
         </div>
       </section>
@@ -1972,11 +1505,11 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               <span className="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400 font-medium">Currently Buying</span>
             </div>
-            
+
             <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tight text-zinc-900 dark:text-white mb-10">
               Start Maximizing <br/><span className="text-zinc-500 dark:text-zinc-400">Your Scrap Value</span>
             </h2>
-            
+
             <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
                <a href="tel:+966551811700" className="bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 px-8 py-4 uppercase tracking-widest font-bold text-sm transition-colors flex items-center justify-center gap-3 shadow-md">
                  <Phone className="w-5 h-5" /> Call Now: +966 55 181 1700
@@ -1988,13 +1521,13 @@ export default function App() {
 
             <div className="mt-20 w-full h-[400px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 overflow-hidden relative group shadow-inner transition-colors duration-300">
                <div className="absolute inset-0 bg-primary/5 pointer-events-none group-hover:bg-primary/0 transition-colors z-10"></div>
-               <iframe 
-                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114399.23126756627!2d49.9576435!3d26.360155!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e49fb02029c0a6b%3A0xe67de76652df6e5b!2sDammam%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1714850000000!5m2!1sen!2ssa" 
-                 width="100%" 
-                 height="100%" 
-                 style={{ border: 0, filter: theme === 'dark' ? 'grayscale(1) invert(0.9) contrast(1.2) brightness(0.8)' : 'grayscale(0.5)' }} 
-                 allowFullScreen={true} 
-                 loading="lazy" 
+               <iframe
+                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114399.23126756627!2d49.9576435!3d26.360155!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e49fb02029c0a6b%3A0xe67de76652df6e5b!2sDammam%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1714850000000!5m2!1sen!2ssa"
+                 width="100%"
+                 height="100%"
+                 style={{ border: 0, filter: theme === 'dark' ? 'grayscale(1) invert(0.9) contrast(1.2) brightness(0.8)' : 'grayscale(0.5)' }}
+                 allowFullScreen={true}
+                 loading="lazy"
                  referrerPolicy="no-referrer-when-downgrade"
                  className="opacity-60 group-hover:opacity-100 transition-opacity duration-700"
                  title="Google Maps showing AALKC location"
@@ -2023,7 +1556,7 @@ export default function App() {
                   <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3">
                     3508 Al Qatif 1, Unit 7260<br/>Dammam 32517, Eastern Province<br/>Kingdom Of Saudi Arabia
                   </p>
-                  <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans" dir="rtl">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans" lang="ar" dir="rtl">
                     اﻟﻘﻄﻴﻒ ٣٥٠٨ ١، وﺣﺪة ٧٢٦٠<br/>اﻟﺪﻣﺎم ٣٢٥١٧ ، اﻟﻤﻨﻄﻘﺔ اﻟﺸﺮﻗﻴﺔ<br/>اﻟﻤﻤﻠﻜﺔ اﻟﻌﺮﺑﻴﺔ اﻟﺴﻌﻮدﻳﺔ
                   </p>
                </div>
@@ -2048,33 +1581,21 @@ export default function App() {
             {/* Request a Quote Form */}
             <div className="mt-20 max-w-2xl mx-auto border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-8 text-left relative overflow-hidden shadow-xl transition-colors duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] pointer-events-none"></div>
-              <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white mb-2">Request a Quote</h3>
-              <p className="text-zinc-700 dark:text-zinc-400 mb-8 text-sm">Fill out the form below and our team will get back to you with competitive pricing for your materials.</p>
-              
-              <form 
-                className="space-y-5 relative z-10" 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!validateForm()) return;
-                  setFormStatus('submitting');
-                  setFormMessage('');
-                  // Send via mailto link
-                  const subject = encodeURIComponent(`Quote Request from ${formData.name} - ${formData.company}`);
-                  const body = encodeURIComponent(`Name: ${formData.name}\nCompany: ${formData.company}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`);
-                  window.open(`mailto:contact@aalkc.com?subject=${subject}&body=${body}`, '_self');
-                  setFormStatus('success');
-                  setFormMessage('Your email client has been opened with the quote request. Please send the email to complete your request.');
-                  setFormData({ name: '', company: '', email: '', phone: '', message: '' });
-                }}
-              >
+	              <h3 className="font-display text-2xl uppercase tracking-widest text-zinc-900 dark:text-white mb-2">Request a Spot Quote</h3>
+	              <p className="text-zinc-700 dark:text-zinc-400 mb-8 text-sm">Tell us about your materials. Any website values are indicative and non-binding; our team confirms final pricing after review.</p>
+
+	              <form
+	                className="space-y-5 relative z-10"
+	                onSubmit={submitQuote}
+	              >
                 {formStatus === 'error' && (
-                  <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-sm flex items-start gap-4 mb-6">
+	                  <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-4 rounded-sm flex items-start gap-4 mb-6">
                     <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                     <p className="text-sm leading-relaxed">{formMessage}</p>
                   </div>
                 )}
                 {formStatus === 'success' && (
-                  <div className="bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 p-4 rounded-sm flex items-start gap-4 mb-6">
+	                  <div role="status" aria-live="polite" className="bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 p-4 rounded-sm flex items-start gap-4 mb-6">
                     <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5" />
                     <p className="text-sm leading-relaxed">{formMessage}</p>
                   </div>
@@ -2082,43 +1603,60 @@ export default function App() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label htmlFor="name" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Name *</label>
-                    <input value={formData.name} onChange={handleInputChange} type="text" id="name" name="name" autoComplete="name" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="Enter your name" />
-                    {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
+	                    <input value={formData.name} onChange={handleInputChange} type="text" id="name" name="name" autoComplete="name" required maxLength={100} aria-invalid={Boolean(formErrors.name)} aria-describedby={formErrors.name ? 'name-error' : undefined} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="Enter your name" />
+	                    {formErrors.name && <p id="name-error" className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                   </div>
                   <div className="space-y-1.5">
                     <label htmlFor="company" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Company Name</label>
-                    <input value={formData.company} onChange={handleInputChange} type="text" id="company" name="company" autoComplete="organization" className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Enter your company" />
+	                    <input value={formData.company} onChange={handleInputChange} type="text" id="company" name="company" autoComplete="organization" maxLength={150} className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Enter your company" />
                   </div>
                 </div>
-                
+
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label htmlFor="email" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Email *</label>
-                    <input value={formData.email} onChange={handleInputChange} type="email" id="email" name="email" autoComplete="email" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="your@email.com" />
-                    {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+	                    <input value={formData.email} onChange={handleInputChange} type="email" id="email" name="email" autoComplete="email" required maxLength={254} aria-invalid={Boolean(formErrors.email)} aria-describedby={formErrors.email ? 'email-error' : undefined} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="your@email.com" />
+	                    {formErrors.email && <p id="email-error" className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
                   </div>
                   <div className="space-y-1.5">
                     <label htmlFor="phone" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Phone Number *</label>
-                    <input value={formData.phone} onChange={handleInputChange} type="tel" id="phone" name="phone" autoComplete="tel" className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="+966 5X XXX XXXX" />
-                    {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
+	                    <input value={formData.phone} onChange={handleInputChange} type="tel" id="phone" name="phone" autoComplete="tel" required maxLength={30} aria-invalid={Boolean(formErrors.phone)} aria-describedby={formErrors.phone ? 'phone-error' : undefined} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-primary focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all`} placeholder="+966 5X XXX XXXX" />
+	                    {formErrors.phone && <p id="phone-error" className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
                   </div>
                 </div>
-                
+
                 <div className="space-y-1.5">
                   <label htmlFor="message" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Message *</label>
-                  <textarea value={formData.message} onChange={handleInputChange} id="message" rows={4} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-orange-700 focus:ring-orange-700 dark:focus:border-primary dark:focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all resize-none`} placeholder="Please describe the materials, estimated quantity, and your location..."></textarea>
-                  {formErrors.message && <p className="text-red-500 text-xs mt-1">{formErrors.message}</p>}
-                </div>
-                
-                <button 
-                  type="submit" 
-                  disabled={formStatus === 'submitting'}
+	                  <textarea value={formData.message} onChange={handleInputChange} id="message" name="message" rows={4} required maxLength={2000} aria-invalid={Boolean(formErrors.message)} aria-describedby={formErrors.message ? 'message-error' : undefined} className={`w-full bg-zinc-50 dark:bg-zinc-950 border ${formErrors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : 'border-zinc-200 dark:border-zinc-800 focus:border-orange-700 focus:ring-orange-700 dark:focus:border-primary dark:focus:ring-primary shadow-sm'} rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:ring-1 transition-all resize-none`} placeholder="Please describe the materials, estimated quantity, and your location..."></textarea>
+	                  {formErrors.message && <p id="message-error" className="text-red-500 text-xs mt-1">{formErrors.message}</p>}
+	                </div>
+
+	                <div>
+	                  <label className="flex items-start gap-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+	                    <input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); setFormErrors((previous) => ({ ...previous, consent: '' })); }} aria-invalid={Boolean(formErrors.consent)} aria-describedby={formErrors.consent ? 'consent-error' : undefined} className="mt-1 accent-orange-700" />
+	                    <span>I consent to AALKC storing and using these details to respond to my quote request, as described in the <a className="underline hover:text-orange-700" href="#privacy">privacy policy</a>.</span>
+	                  </label>
+	                  {formErrors.consent && <p id="consent-error" className="text-red-500 text-xs mt-1">{formErrors.consent}</p>}
+	                </div>
+
+	                {turnstileSiteKey ? (
+	                  <Suspense fallback={<p className="text-xs text-zinc-500">Loading spam protection…</p>}>
+	                    <TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} />
+	                  </Suspense>
+	                ) : (
+	                  <p role="status" className="border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300">Online quote submission is awaiting secure spam-protection configuration. Please email contact@aalkc.com in the meantime.</p>
+	                )}
+	                {formErrors.turnstile && <p className="text-red-500 text-xs mt-1">{formErrors.turnstile}</p>}
+
+                <button
+                  type="submit"
+	                  disabled={formStatus === 'submitting' || !turnstileSiteKey}
                   className="w-full bg-orange-700 hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-500 disabled:opacity-70 disabled:hover:bg-orange-700 dark:disabled:hover:bg-primary text-white dark:text-zinc-950 font-bold tracking-widest text-sm uppercase py-4 rounded-sm transition-colors mt-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-950 focus:ring-orange-700 dark:focus:ring-primary flex items-center justify-center gap-2"
                 >
                   {formStatus === 'submitting' ? (
                     <><Loader2 className="w-4 h-4 animate-spin text-white" /> Submitting</>
                   ) : (
-                    'Submit Request'
+	                    'Request a Spot Quote'
                   )}
                 </button>
               </form>
@@ -2137,7 +1675,7 @@ export default function App() {
              </div>
              <div className="text-left leading-relaxed">
                <div className="text-zinc-800 dark:text-zinc-200 text-xs tracking-widest font-semibold">AMANAT AL-KALIMA COMPANY</div>
-               <div className="text-zinc-600 dark:text-zinc-400 text-xs tracking-wider mt-1 font-sans" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</div>
+               <div className="text-zinc-600 dark:text-zinc-400 text-xs tracking-wider mt-1 font-sans" lang="ar" dir="rtl">ﺷﺮﻛﺔ أﻣﺎﻧﺔ اﻟﻜﻠﻤﺔ</div>
              </div>
            </div>
            <div className="flex flex-col items-center gap-3">
@@ -2186,7 +1724,7 @@ export default function App() {
             >
               {/* Engineering accents inside drawer */}
               <CardCrosshairs />
-              
+
               {/* Upper Section */}
               <div className="p-6 relative z-10">
                 {/* Drawer Header */}
@@ -2247,16 +1785,16 @@ export default function App() {
 
                 {/* Quick contact buttons */}
                 <div className="flex flex-col gap-2.5 mb-6">
-                  <a 
-                    href="tel:+966551811700" 
+                  <a
+                    href="tel:+966551811700"
                     className="flex items-center justify-center gap-2.5 bg-zinc-900 border border-zinc-800 text-white py-3 rounded-sm font-semibold text-xs tracking-widest uppercase hover:bg-zinc-800 transition-colors"
                   >
                     <Phone className="w-3.5 h-3.5" /> Call Direct
                   </a>
-                  <a 
-                    href="https://wa.me/966551811700" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="https://wa.me/966551811700"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2.5 bg-green-700/20 border border-green-600/30 text-green-400 py-3 rounded-sm font-semibold text-xs tracking-widest uppercase hover:bg-green-700/30 transition-all shadow-[0_0_15px_rgba(34,197,94,0.05)]"
                   >
                     <Zap className="w-3.5 h-3.5" /> WhatsApp Rates
@@ -2266,7 +1804,7 @@ export default function App() {
                 {/* Theme Toggle row */}
                 <div className="flex items-center justify-between text-zinc-500 text-[10px] tracking-widest font-mono border-t border-zinc-900/50 pt-4">
                   <span>THEME SELECT</span>
-                  <button 
+                  <button
                     onClick={toggleTheme}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-sm border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-300 transition-colors active:scale-95 cursor-pointer"
                   >
@@ -2283,62 +1821,8 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {activeTickerTooltip && (
-        <div 
-          className="fixed bg-zinc-950/95 dark:bg-black/95 backdrop-blur-md border border-zinc-800 text-left p-3.5 rounded-md shadow-2xl z-[9999] pointer-events-none select-none transition-all duration-155 w-52"
-          style={{
-            left: `${activeTickerTooltip.x}px`,
-            top: `${activeTickerTooltip.y - 12}px`,
-            transform: 'translate(-50%, -100%)',
-          }}
-        >
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-[8px] font-mono text-zinc-500 tracking-wider">SYMBOL: {activeTickerTooltip.item.symbol}</span>
-            <span className="text-[8px] font-mono text-zinc-500 tracking-wider">{activeTickerTooltip.item.contract}</span>
-          </div>
-          <div className="font-display text-[11px] font-bold text-white uppercase mb-1">{activeTickerTooltip.item.name}</div>
-          <div className="flex items-baseline justify-between mb-2">
-            <span className="text-xs font-mono font-bold text-orange-400">{activeTickerTooltip.item.value}</span>
-            <span className={`text-[9px] font-mono font-bold ${activeTickerTooltip.item.up ? 'text-green-400' : 'text-red-400'}`}>
-              {activeTickerTooltip.item.up ? '↑' : '↓'} {activeTickerTooltip.item.change}
-            </span>
-          </div>
-          <div className="h-10 w-full bg-zinc-900/50 rounded-sm border border-zinc-800/40 p-1 flex items-center justify-center relative overflow-hidden mb-1.5">
-            <svg className="w-full h-full" viewBox="0 0 100 30" fill="none">
-              <path 
-                d={activeTickerTooltip.item.sparkline} 
-                stroke={activeTickerTooltip.item.up ? '#22c55e' : '#ef4444'} 
-                strokeWidth="1.5" 
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path 
-                d={`${activeTickerTooltip.item.sparkline} L 100 30 L 0 30 Z`} 
-                fill={activeTickerTooltip.item.up ? 'url(#tooltip-green-glow)' : 'url(#tooltip-red-glow)'}
-                className="opacity-15"
-              />
-              <defs>
-                <linearGradient id="tooltip-green-glow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="tooltip-red-glow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div className="flex justify-between text-[7.5px] font-mono text-zinc-500 uppercase tracking-widest">
-            <span>24H LOW: {activeTickerTooltip.item.low}</span>
-            <span>HIGH: {activeTickerTooltip.item.high}</span>
-          </div>
-        </div>
-      )}
-
       <ScrollToTop />
       <PrecisionCursor />
     </div>
   );
 }
-

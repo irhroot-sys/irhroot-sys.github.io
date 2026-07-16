@@ -1,0 +1,21 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "aalkc-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-16",
+  "routes": [{ "pattern": "aalkc.com/api/*", "zone_name": "aalkc.com" }],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "QUOTE_FROM_EMAIL": "quotes@aalkc.com",
+    "QUOTE_TO_EMAIL": "contact@aalkc.com"
+  },
+  "d1_databases": [{ "binding": "DB", "database_name": "aalkc-quotes", "database_id": "REPLACE_WITH_D1_DATABASE_ID" }],
+  "kv_namespaces": [{ "binding": "MARKET_CACHE", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+  "ratelimits": [{ "name": "QUOTE_RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
+  "queues": {
+    "producers": [{ "binding": "QUOTE_QUEUE", "queue": "aalkc-quote-notifications" }],
+    "consumers": [{ "queue": "aalkc-quote-notifications", "dead_letter_queue": "aalkc-quote-notifications-dlq", "max_retries": 5 }]
+  },
+  "send_email": [{ "name": "EMAIL", "remote": true }],
+  "triggers": { "crons": ["17 2 * * *"] }
+}
