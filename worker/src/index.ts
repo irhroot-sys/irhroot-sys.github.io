@@ -16,15 +16,17 @@ function allowedOrigin(request: Request, env: Env) {
   return origin === 'https://aalkc.com' || origin === 'https://www.aalkc.com';
 }
 
-async function verifyTurnstile(token: string, secret: string, remoteip?: string) {
+export async function verifyTurnstile(token: string, secret: string, remoteip?: string) {
   const body = new FormData();
   body.set('secret', secret);
   body.set('response', token);
   if (remoteip) body.set('remoteip', remoteip);
   const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
   if (!response.ok) return false;
-  const result = await response.json() as { success?: boolean };
-  return result.success === true;
+  const result = await response.json() as { success?: boolean; hostname?: string; action?: string };
+  return result.success === true &&
+    (result.hostname === 'aalkc.com' || result.hostname === 'www.aalkc.com') &&
+    result.action === 'quote_request';
 }
 
 async function createQuote(request: Request, env: Env) {
