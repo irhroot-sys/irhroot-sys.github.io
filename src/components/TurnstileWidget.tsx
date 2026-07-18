@@ -47,5 +47,5 @@ export default function TurnstileWidget({ siteKey, onToken }: { siteKey: string;
     };
   }, [onToken, siteKey]);
 
-  return <div ref={container} aria-label="Spam protection challenge" />;
+  return <div ref={container} role="group" aria-label="Spam protection challenge" />;
 }
