@@ -3,8 +3,9 @@ module.exports = {
     collect: {
       startServerCommand: 'npm run preview -- --host 127.0.0.1 --port 4176',
       startServerReadyPattern: 'Local:',
+      startServerReadyTimeout: 30000,
       url: ['http://127.0.0.1:4176/'],
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       settings: { chromeFlags: '--no-sandbox --headless' },
     },
     assert: {
