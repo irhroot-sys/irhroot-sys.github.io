@@ -6,8 +6,8 @@ const MaterialPage = lazy(() => import('./components/MaterialPage'));
 const MarketPanel = lazy(() => import('./components/MarketPanel'));
 const TurnstileWidget = lazy(() => import('./components/TurnstileWidget'));
 
-import logoImg from './assets/images/aalkkoo.webp';
-import footerLogoImg from './assets/images/regenerated_image_1778927709543.jpg';
+const logoImg = '/aalkc-logo.svg';
+const compactLogoImg = '/aalkc-mark.svg';
 
 
 function TiltCard({ children, className = "", ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLDivElement>) {
@@ -1102,11 +1102,14 @@ export default function App() {
           {/* Logo Container */}
           <div className="flex items-center shrink-0 w-auto lg:w-[280px]">
             <a href="#" data-cursor-label="NAV: HOME" className="flex items-center relative group py-2 outline-none transition-all duration-300 opacity-100">
-              <img
-                src={logoImg}
-                alt="AALKC Logo"
-                className={`w-auto object-contain transition-all duration-500 relative z-10 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] ${isScrolled ? 'h-10 sm:h-12 md:h-14' : 'h-12 sm:h-14 md:h-16'}`}
-              />
+              <picture className="relative z-10 block leading-none rounded-sm bg-white/95 px-2 py-1 shadow-sm ring-1 ring-black/5">
+                <source media="(max-width: 639px)" srcSet={compactLogoImg} />
+                <img
+                  src={logoImg}
+                  alt="AALKC Logo"
+                  className={`w-auto max-w-[132px] sm:max-w-[150px] object-contain transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] ${isScrolled ? 'h-10 sm:h-12 md:h-14' : 'h-12 sm:h-14 md:h-16'}`}
+                />
+              </picture>
             </a>
           </div>
 
@@ -1670,8 +1673,8 @@ export default function App() {
       <footer className="bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 py-12 text-center text-zinc-700 dark:text-zinc-400 text-sm uppercase tracking-widest font-medium transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4">
            <div className="flex flex-col items-center md:items-start gap-4">
-             <div className="flex items-center gap-2 text-zinc-900 dark:text-white opacity-80 hover:opacity-100 transition-opacity">
-               <img src={footerLogoImg} alt="AALKC" className="h-10 md:h-12 w-auto object-contain transition-all duration-300" />
+             <div className="flex items-center gap-2 rounded-sm bg-white/95 px-3 py-2 text-zinc-900 opacity-90 shadow-sm ring-1 ring-black/5 hover:opacity-100 transition-opacity">
+               <img src={logoImg} alt="AALKC" className="h-12 md:h-14 w-auto max-w-[180px] object-contain transition-all duration-300" />
              </div>
              <div className="text-left leading-relaxed">
                <div className="text-zinc-800 dark:text-zinc-200 text-xs tracking-widest font-semibold">AMANAT AL-KALIMA COMPANY</div>
@@ -1730,7 +1733,7 @@ export default function App() {
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800/80">
                   <div className="flex items-center gap-2">
-                    <img src={logoImg} alt="AALKC" className="h-8 w-auto object-contain" />
+                    <img src={compactLogoImg} alt="AALKC" className="h-10 w-auto rounded-sm bg-white/95 p-1 object-contain shadow-sm ring-1 ring-black/5" />
                     <span className="font-display font-semibold tracking-wider text-[10px] text-zinc-400 uppercase">MENU</span>
                   </div>
                   <button
