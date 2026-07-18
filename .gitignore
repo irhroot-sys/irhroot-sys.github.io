@@ -12,3 +12,4 @@ worker/.dev.vars
 .lighthouseci/
 test-results/
 playwright-report/
+public/sitemap.xml
