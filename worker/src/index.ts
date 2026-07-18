@@ -5,6 +5,7 @@ import { parseQuoteInput, ValidationError } from './validation';
 const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
 const MAX_BODY_BYTES = 16_384;
 const QUOTE_RETENTION_DAYS = 90;
+const MAX_NOTIFICATION_RETRIES = 5;
 
 function json(data: unknown, status = 200) {
   return Response.json(data, { status, headers: JSON_HEADERS });
@@ -96,7 +97,32 @@ async function sendQuoteNotification(message: QuoteNotification, env: Env) {
   const to = env.QUOTE_TO_EMAIL || 'contact@aalkc.com';
   const from = env.QUOTE_FROM_EMAIL || 'quotes@aalkc.com';
   await env.EMAIL.send(buildQuoteEmail(message, to, from));
-  await env.DB.prepare("UPDATE quote_requests SET notification_status = 'sent' WHERE id = ?").bind(message.id).run();
+  await env.DB.batch([
+    env.DB.prepare("UPDATE quote_requests SET notification_status = 'sent' WHERE id = ?").bind(message.id),
+    env.DB.prepare('DELETE FROM quote_notification_failures WHERE quote_id = ?').bind(message.id),
+  ]);
+}
+
+export function safeEmailErrorCode(error: unknown) {
+  const candidate = error && typeof error === 'object' && 'code' in error && typeof error.code === 'string'
+    ? error.code
+    : 'EMAIL_SEND_FAILED';
+  return candidate.toUpperCase().replace(/[^A-Z0-9_.-]/g, '_').slice(0, 64) || 'EMAIL_SEND_FAILED';
+}
+
+export function isFinalQueueAttempt(attempts: number, maxRetries = MAX_NOTIFICATION_RETRIES) {
+  return attempts > maxRetries;
+}
+
+async function recordFinalNotificationFailure(message: QuoteNotification, attempts: number, errorCode: string, env: Env) {
+  const failedAt = new Date().toISOString();
+  await env.DB.batch([
+    env.DB.prepare("UPDATE quote_requests SET notification_status = 'failed' WHERE id = ?").bind(message.id),
+    env.DB.prepare(`INSERT INTO quote_notification_failures (quote_id, error_code, attempts, failed_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(quote_id) DO UPDATE SET error_code = excluded.error_code, attempts = excluded.attempts, failed_at = excluded.failed_at`)
+      .bind(message.id, errorCode, attempts, failedAt),
+  ]);
 }
 
 export default {
@@ -119,7 +145,18 @@ export default {
       try {
         await sendQuoteNotification(message.body, env);
         message.ack();
-      } catch {
+      } catch (error) {
+        const errorCode = safeEmailErrorCode(error);
+        const finalAttempt = isFinalQueueAttempt(message.attempts);
+        console.error('Quote email notification failed', {
+          quoteId: message.body.id,
+          attempts: message.attempts,
+          finalAttempt,
+          errorCode,
+        });
+        if (finalAttempt) {
+          await recordFinalNotificationFailure(message.body, message.attempts, errorCode, env);
+        }
         message.retry();
       }
     }
