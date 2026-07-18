@@ -1,0 +1,10 @@
+# robots.txt for AMANAT AL-KALIMA COMPANY (aalkc.com)
+
+User-agent: *
+Allow: /
+Disallow: /.git/
+Disallow: /.vs/
+Disallow: /.vscode/
+
+# Sitemap location
+Sitemap: https://aalkc.com/sitemap.xml

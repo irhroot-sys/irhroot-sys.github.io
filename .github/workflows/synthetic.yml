@@ -1,0 +1,25 @@
+name: Production synthetic check
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check rendered production site
+        env:
+          SYNTHETIC_URL: https://aalkc.com
+        run: npx playwright test tests/e2e/synthetic.spec.ts --project=desktop-chromium
