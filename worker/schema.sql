@@ -17,3 +17,11 @@ CREATE TABLE IF NOT EXISTS quote_requests (
 
 CREATE INDEX IF NOT EXISTS idx_quote_requests_expires_at ON quote_requests(expires_at);
 CREATE INDEX IF NOT EXISTS idx_quote_requests_created_at ON quote_requests(created_at);
+
+CREATE TABLE IF NOT EXISTS quote_notification_failures (
+  quote_id TEXT PRIMARY KEY,
+  error_code TEXT NOT NULL,
+  attempts INTEGER NOT NULL,
+  failed_at TEXT NOT NULL,
+  FOREIGN KEY (quote_id) REFERENCES quote_requests(id) ON DELETE CASCADE
+);

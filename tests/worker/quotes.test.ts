@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildQuoteEmail, quoteExpiry, verifyTurnstile } from '../../worker/src/index';
+import { buildQuoteEmail, isFinalQueueAttempt, quoteExpiry, safeEmailErrorCode, verifyTurnstile } from '../../worker/src/index';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -27,5 +27,16 @@ describe('quote retention and notifications', () => {
   it('rejects otherwise valid Turnstile responses from another hostname', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ success: true, hostname: 'attacker.example', action: 'quote_request' })));
     await expect(verifyTurnstile('token', 'secret')).resolves.toBe(false);
+  });
+
+  it('recognizes the final attempt after the configured retry limit', () => {
+    expect(isFinalQueueAttempt(5)).toBe(false);
+    expect(isFinalQueueAttempt(6)).toBe(true);
+  });
+
+  it('records only a bounded provider error code', () => {
+    expect(safeEmailErrorCode({ code: 'E_SENDER_NOT_VERIFIED', message: 'sensitive provider detail' })).toBe('E_SENDER_NOT_VERIFIED');
+    expect(safeEmailErrorCode(new Error('sensitive provider detail'))).toBe('EMAIL_SEND_FAILED');
+    expect(safeEmailErrorCode({ code: 'bad code/value' })).toBe('BAD_CODE_VALUE');
   });
 });
