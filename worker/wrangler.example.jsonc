@@ -3,6 +3,7 @@
   "name": "aalkc-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-07-16",
+  "compatibility_flags": ["global_fetch_strictly_public"],
   "routes": [{ "pattern": "aalkc.com/api/*", "zone_name": "aalkc.com" }],
   "vars": {
     "ENVIRONMENT": "production",

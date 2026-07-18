@@ -19,6 +19,7 @@ export default function TurnstileWidget({ siteKey, onToken }: { siteKey: string;
       if (cancelled || !container.current || !window.turnstile || widgetId) return;
       widgetId = window.turnstile.render(container.current, {
         sitekey: siteKey,
+        action: 'quote_request',
         callback: (token: string) => onToken(token),
         'expired-callback': () => onToken(''),
         'error-callback': () => onToken(''),
@@ -46,5 +47,5 @@ export default function TurnstileWidget({ siteKey, onToken }: { siteKey: string;
     };
   }, [onToken, siteKey]);
 
-  return <div ref={container} aria-label="Spam protection challenge" />;
+  return <div ref={container} role="group" aria-label="Spam protection challenge" />;
 }
