@@ -1608,7 +1608,7 @@ export default function App() {
                   </div>
                   <div className="space-y-1.5">
                     <label htmlFor="company" className="text-xs font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400 block">Company Name</label>
-	                    <input value={formData.company} onChange={handleInputChange} type="text" id="company" name="company" autoComplete="organization" maxLength={150} className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Enter your company" />
+	                    <input value={formData.company} onChange={handleInputChange} type="text" id="company" name="company" autoComplete="organization" maxLength={120} className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-sm px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Enter your company" />
                   </div>
                 </div>
 
