@@ -1,0 +1,108 @@
+/* Homepage audit corrections: align the existing experience with AALKC's corporate identity,
+   reduce motion cost, and improve small-screen usability without changing application logic. */
+
+:root {
+  --aalkc-oxford-blue: #002147;
+  --aalkc-steel-gray: #708090;
+  --aalkc-blue-hover: #06366e;
+}
+
+/* Replace the orange system accent with AALKC Oxford Blue. */
+.bg-primary { background-color: var(--aalkc-oxford-blue) !important; }
+.text-primary { color: var(--aalkc-oxford-blue) !important; }
+.border-primary { border-color: var(--aalkc-oxford-blue) !important; }
+.dark .bg-primary { background-color: #2f7cc0 !important; }
+.dark .text-primary { color: #73b7ee !important; }
+.dark .border-primary { border-color: #4b96d2 !important; }
+
+/* Neutralize heat/rust gradients that conflict with the approved identity. */
+.text-liquid-copper,
+.text-gold-gradient,
+.text-copper-gold,
+.text-heated-steel {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 52%, #708090 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Corporate hero: stronger hierarchy, less decorative noise. */
+#home .bg-grid-mesh { opacity: 0.12 !important; }
+#home .animate-pulse-glow,
+#home .animate-float { opacity: 0.25 !important; animation: none !important; }
+#home h1 { max-width: 13ch; text-wrap: balance; }
+#home p { height: auto !important; max-width: 42rem !important; }
+
+/* The hero currently exposes three actions. Keep the two strongest actions visible. */
+#home a[href="#contact"]:last-child { display: none !important; }
+
+/* Reduce decorative card movement. Corporate procurement users benefit from stable surfaces. */
+.tech-card,
+.perspective-1000 {
+  transform: none !important;
+}
+.tech-card:hover,
+.perspective-1000:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Improve navigation legibility over the hero before scrolling. */
+nav:not(:has(+ *)) { isolation: isolate; }
+nav a,
+nav button { text-shadow: none; }
+
+/* Mobile: avoid downloading/decoding an autoplay video as the primary hero visual. */
+@media (max-width: 767px) {
+  #home {
+    min-height: auto !important;
+    padding-top: 7rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  #home video {
+    display: none !important;
+  }
+
+  #home > div:first-child {
+    background:
+      linear-gradient(90deg, rgba(0, 20, 45, 0.96), rgba(0, 33, 71, 0.78)),
+      url('/hero-poster.webp') center / cover no-repeat;
+  }
+
+  #home h1 {
+    font-size: clamp(2.6rem, 13vw, 4.3rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  #home .max-w-3xl {
+    border-left-width: 1px !important;
+    padding-left: 1.25rem !important;
+    background: rgba(0, 18, 38, 0.28) !important;
+    backdrop-filter: none !important;
+  }
+
+  #home .flex.items-center.gap-8 {
+    margin-top: 2.5rem !important;
+    gap: 1rem !important;
+    padding-left: 1.25rem !important;
+    flex-wrap: wrap;
+  }
+
+  #home button[aria-label^="Go to slide"] {
+    width: 2.5rem !important;
+  }
+
+  #home button[aria-label*="hero motion"] {
+    display: none !important;
+  }
+}
+
+/* Respect explicit reduced-motion preferences across the homepage. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
