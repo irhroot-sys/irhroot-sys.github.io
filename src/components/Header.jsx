@@ -3,6 +3,7 @@ import { FaBars, FaChevronRight, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaTimes
 import { navigation, contactDetails } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link, NavLink, useLocation } from "../lib/router.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,6 +11,7 @@ export function Header() {
   const menuButtonRef = useRef(null);
   const { pathname } = useLocation();
   const { openQuote } = useQuote();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => setMenuOpen(false), [pathname]);
   useEffect(() => {
@@ -48,16 +50,15 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header" aria-label="AALKC website header">
+    <header className="site-header" aria-label={t("AALKC website header")}>
       <div className="utility-bar">
         <a href={contactDetails.phoneHref}><FaPhoneAlt /> {contactDetails.phoneLabel}</a>
         <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
-        <span><FaMapMarkerAlt /> Dammam, Saudi Arabia</span>
-        <span className="language" aria-label="Website language: English">EN</span>
+        <span><FaMapMarkerAlt /> {t("Dammam, Saudi Arabia")}</span>
       </div>
 
       <div className="primary-header">
-        <Link className="brand" to="/" aria-label="AALKC home">
+        <Link className="brand" to="/" aria-label={t("AALKC home")}>
           <img
             src="/assets/aalkc-logo-official-9233f531.svg"
             width="160"
@@ -69,15 +70,20 @@ export function Header() {
         </Link>
 
         <div className="primary-nav-wrap">
-          <nav className={`primary-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation" ref={navRef}>
+          <nav className={`primary-nav ${menuOpen ? "is-open" : ""}`} aria-label={t("Primary navigation")} ref={navRef}>
             {navigation.map(({ label, to }) => (
               <NavLink key={to} to={to} end={to === "/"}>
-                {label}
+                {t(label)}
               </NavLink>
             ))}
           </nav>
+          <div className="language-toggle" role="group" aria-label={t("Website language")}>
+            <button type="button" lang="en" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
+            <span aria-hidden="true">/</span>
+            <button type="button" lang="ar" aria-pressed={language === "ar"} onClick={() => setLanguage("ar")}>AR</button>
+          </div>
           <button type="button" className="quote-button header-quote" onClick={() => openQuote()}>
-            Get a Quote <FaChevronRight />
+            {t("Get a Quote")} <FaChevronRight />
           </button>
           <button
             type="button"
@@ -85,7 +91,7 @@ export function Header() {
             ref={menuButtonRef}
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            aria-label={menuOpen ? t("Close navigation") : t("Open navigation")}
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>

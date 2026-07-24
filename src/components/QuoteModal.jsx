@@ -5,6 +5,7 @@ import { useQuote } from "../context/QuoteContext.jsx";
 import { submitEnquiry } from "../lib/enquiries.js";
 import { Link } from "../lib/router.jsx";
 import { TurnstileWidget } from "./TurnstileWidget.jsx";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function QuoteModal() {
   const { closeQuote, quoteContext } = useQuote();
@@ -13,6 +14,7 @@ export function QuoteModal() {
   const [turnstileToken, setTurnstileToken] = useState("");
   const modalRef = useRef(null);
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const { t } = useLanguage();
 
   useEffect(() => {
     const modal = modalRef.current;
@@ -72,49 +74,49 @@ export function QuoteModal() {
     }
   }
 
-  const title = quoteContext.title || "Get a Quote";
-  const prompt = quoteContext.prompt || "Tell us what you need and our Dammam team will respond with the next steps.";
+  const title = t(quoteContext.title || "Get a Quote");
+  const prompt = t(quoteContext.prompt || "Tell us what you need and our Dammam team will respond with the next steps.");
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget) closeQuote();
     }}>
       <section className="quote-modal" role="dialog" aria-modal="true" aria-labelledby="quote-title" ref={modalRef}>
-        <button type="button" className="modal-close" aria-label="Close enquiry form" onClick={closeQuote}>
+        <button type="button" className="modal-close" aria-label={t("Close enquiry form")} onClick={closeQuote}>
           <FaTimes />
         </button>
         {status === "success" ? (
           <div className="success-state" role="status">
             <FaCheckCircle />
-            <h2 id="quote-title">Request received</h2>
-            <p>Thank you. Your reference has been saved and our team will contact you shortly.</p>
-            <button type="button" className="primary-button" onClick={closeQuote}>Close</button>
+            <h2 id="quote-title">{t("Request received")}</h2>
+            <p>{t("Thank you. Your reference has been saved and our team will contact you shortly.")}</p>
+            <button type="button" className="primary-button" onClick={closeQuote}>{t("Close")}</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <span className="modal-kicker">AALKC Enquiry</span>
+            <span className="modal-kicker">{t("AALKC Enquiry")}</span>
             <h2 id="quote-title">{title}</h2>
             <p>{prompt}</p>
-            {quoteContext.service && <div className="selected-context">Regarding <strong>{quoteContext.service}</strong></div>}
+            {quoteContext.service && <div className="selected-context">{t("Regarding")} <strong>{t(quoteContext.service)}</strong></div>}
             <div className="form-row">
-              <label>Full name <span className="field-status">Required</span><input name="name" autoComplete="name" minLength="2" required autoFocus /></label>
-              <label>Company <span className="field-status">Optional</span><input name="company" autoComplete="organization" /></label>
+              <label>{t("Full name")} <span className="field-status">{t("Required")}</span><input name="name" autoComplete="name" minLength="2" required autoFocus /></label>
+              <label>{t("Company")} <span className="field-status">{t("Optional")}</span><input name="company" autoComplete="organization" /></label>
             </div>
             <div className="form-row">
-              <label>Email <span className="field-status">Required</span><input name="email" type="email" autoComplete="email" required /></label>
-              <label>Phone <span className="field-status">Required</span><input name="phone" type="tel" autoComplete="tel" required /></label>
+              <label>{t("Email")} <span className="field-status">{t("Required")}</span><input name="email" type="email" autoComplete="email" required /></label>
+              <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" autoComplete="tel" required /></label>
             </div>
             {!quoteContext.service && (
-              <label>Service
+              <label>{t("Service")}
                 <select name="service" defaultValue="Scrap Metal Trading">
-                  {services.map((service) => <option key={service.slug}>{service.title}</option>)}
+                  {services.map((service) => <option key={service.slug} value={service.title}>{t(service.title)}</option>)}
                 </select>
               </label>
             )}
-            <label>Material details <span className="field-status">Required</span><textarea name="message" rows="4" minLength="10" required placeholder="Material type, estimated quantity, condition, and site location" /></label>
+            <label>{t("Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" required placeholder={t("Material type, estimated quantity, condition, and site location")} /></label>
             <label className="consent-field">
               <input type="checkbox" name="consent" value="yes" required />
-              <span>I consent to AALKC storing and using these details to respond to my request, as described in the <Link to="/privacy" onClick={closeQuote}>Privacy Policy</Link>.</span>
+              <span>{t("I consent to AALKC storing and using these details to respond to my request, as described in the")} <Link to="/privacy" onClick={closeQuote}>{t("Privacy Policy")}</Link>.</span>
             </label>
             <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex="-1" autoComplete="off" /></label>
             {turnstileSiteKey ? (
@@ -122,11 +124,11 @@ export function QuoteModal() {
                 <TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} />
               </div>
             ) : (
-              <p className="form-notice">Online submission is temporarily unavailable. Please email contact@aalkc.com.</p>
+              <p className="form-notice">{t("Online submission is temporarily unavailable. Please email contact@aalkc.com.")}</p>
             )}
             {error && <div className="form-alert" role="alert">{error}</div>}
             <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-              {status === "loading" ? "Sending…" : "Send Request"} <FaChevronRight />
+              {status === "loading" ? t("Sending…") : t("Send Request")} <FaChevronRight />
             </button>
           </form>
         )}
