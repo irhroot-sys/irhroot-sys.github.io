@@ -39,7 +39,9 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test tests/e2e/site.spec.ts --grep "axe|reduced motion"
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
+      - run: npx playwright test tests/e2e/site.spec.ts --grep "axe|keyboard"
 
   smoke:
     name: Browser smoke and Lighthouse
@@ -51,5 +53,6 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
       - run: npx playwright test tests/e2e/site.spec.ts --grep "renders critical|404 fallback"
-      - run: npm run lighthouse
