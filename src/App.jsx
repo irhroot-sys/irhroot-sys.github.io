@@ -3,6 +3,7 @@ import { Header } from "./components/Header.jsx";
 import { Footer } from "./components/Footer.jsx";
 import { QuoteModal } from "./components/QuoteModal.jsx";
 import { QuoteContext } from "./context/QuoteContext.jsx";
+import { LanguageProvider, useLanguage } from "./context/LanguageContext.jsx";
 import { HomePage } from "./pages/HomePage.jsx";
 import { AboutPage } from "./pages/AboutPage.jsx";
 import { ServicesPage } from "./pages/ServicesPage.jsx";
@@ -33,6 +34,7 @@ function SiteApp() {
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quoteContext, setQuoteContext] = useState({ kind: "quote" });
   const returnFocusRef = useRef(null);
+  const { t } = useLanguage();
 
   const openQuote = (context = {}) => {
     returnFocusRef.current = document.activeElement;
@@ -54,7 +56,7 @@ function SiteApp() {
     <QuoteContext.Provider value={{ openQuote, closeQuote, quoteContext, quoteOpen }}>
       <ScrollManager />
       <div className="site-shell">
-        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <a href="#main-content" className="skip-link">{t("Skip to main content")}</a>
         <Header />
         <main id="main-content"><PageRoutes /></main>
         <Footer />
@@ -80,8 +82,10 @@ function PageRoutes() {
 
 export function App() {
   return (
-    <RouterProvider>
-      <SiteApp />
-    </RouterProvider>
+    <LanguageProvider>
+      <RouterProvider>
+        <SiteApp />
+      </RouterProvider>
+    </LanguageProvider>
   );
 }

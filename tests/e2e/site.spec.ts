@@ -17,6 +17,7 @@ test('renders critical content in the new industrial design', async ({ page }) =
 });
 
 test('has no serious or critical axe findings', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   const results = await new AxeBuilder({ page }).analyze();
@@ -32,6 +33,49 @@ test('supports keyboard navigation and the quote dialog focus trap', async ({ pa
   await expect(page.getByRole('dialog').locator('input[name="name"]')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toBeHidden();
+});
+
+test('keeps the stats bar content inside its responsive bounds', async ({ page }) => {
+  await page.goto('/');
+  const stats = page.getByRole('region', { name: 'Company statistics' });
+  await expect(stats.getByText('Eastern Province')).toBeVisible();
+  const containerBox = await stats.boundingBox();
+  const coverageBox = await stats.getByText('Eastern Province').boundingBox();
+  expect(containerBox).not.toBeNull();
+  expect(coverageBox).not.toBeNull();
+  expect(coverageBox!.x).toBeGreaterThanOrEqual(containerBox!.x);
+  expect(coverageBox!.x + coverageBox!.width).toBeLessThanOrEqual(containerBox!.x + containerBox!.width);
+  expect(await stats.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+});
+
+test('uses consistent service-card media ratios', async ({ page }) => {
+  await page.goto('/');
+  const media = page.locator('.service-card .service-media');
+  await expect(media).toHaveCount(6);
+  const ratios = await media.evaluateAll((elements) => elements.map((element) => {
+    const box = element.getBoundingClientRect();
+    return box.width / box.height;
+  }));
+  for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 1);
+});
+
+test('switches the full interface between English and Arabic', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'AR' }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.getByRole('heading', { level: 1, name: /نبني القيمة/ })).toBeVisible();
+  await expect(page.locator('.primary-nav a[href="/about"]')).toHaveText('من نحن');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await page.goto('/services');
+  await expect(page.getByRole('heading', { level: 1, name: /إدارة خردة مصممة للنطاق الصناعي/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'خدمة الحاويات' }).first()).toBeVisible();
+  await page.goto('/privacy');
+  await expect(page.getByRole('heading', { level: 1, name: 'سياسة الخصوصية' })).toBeVisible();
+  await page.getByRole('button', { name: 'EN' }).click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
 });
 
 test('filters and searches the material catalogue', async ({ page }) => {

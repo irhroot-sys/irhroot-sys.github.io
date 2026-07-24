@@ -6,6 +6,7 @@ import { CtaBand } from "../components/CtaBand.jsx";
 import { gradingStandards, materials } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { usePageMeta } from "../lib/usePageMeta.js";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const categories = ["All", ...new Set(materials.map((material) => material.category))];
 
@@ -13,6 +14,7 @@ export function MaterialsPage() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const { openQuote } = useQuote();
+  const { t } = useLanguage();
   usePageMeta({
     title: "Materials",
     description: "Review the ferrous and non-ferrous materials AALKC purchases, including copper, steel, aluminum, brass, cast iron, stainless steel, and structural plate.",
@@ -24,10 +26,10 @@ export function MaterialsPage() {
     const normalizedQuery = query.trim().toLowerCase();
     return materials.filter((product) => {
       const matchesCategory = category === "All" || product.category === category;
-      const haystack = `${product.name} ${product.category} ${product.summary} ${product.details.join(" ")}`.toLowerCase();
+      const haystack = `${product.name} ${t(product.name)} ${product.category} ${t(product.category)} ${product.summary} ${t(product.summary)} ${product.details.join(" ")} ${product.details.map(t).join(" ")}`.toLowerCase();
       return matchesCategory && (!normalizedQuery || haystack.includes(normalizedQuery));
     });
-  }, [category, query]);
+  }, [category, query, t]);
 
   return (
     <>
@@ -42,35 +44,35 @@ export function MaterialsPage() {
 
       <section className="content-section content-width">
         <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families represented on the existing AALKC website. Final acceptance and value are confirmed after inspection and weighing." />
-        <div className="catalog-tools" aria-label="Material filters">
-          <div className="filter-chips" role="group" aria-label="Filter materials by category">
+        <div className="catalog-tools" aria-label={t("Material filters")}>
+          <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (
-              <button type="button" className={category === item ? "active" : ""} onClick={() => setCategory(item)} key={item}>{item}</button>
+              <button type="button" className={category === item ? "active" : ""} onClick={() => setCategory(item)} key={item}>{t(item)}</button>
             ))}
           </div>
-          <label className="search-control"><FaSearch /><span className="sr-only">Search materials</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search materials" /></label>
+          <label className="search-control"><FaSearch /><span className="sr-only">{t("Search materials")}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search materials")} /></label>
         </div>
-        <p className="result-count" aria-live="polite">{filteredProducts.length} {filteredProducts.length === 1 ? "result" : "results"}</p>
+        <p className="result-count" aria-live="polite">{filteredProducts.length} {t(filteredProducts.length === 1 ? "result" : "results")}</p>
 
         {filteredProducts.length ? (
           <div className="product-grid">
             {filteredProducts.map(({ id, icon: Icon, name, category: productCategory, image, alt, summary, details }) => (
               <article className="product-card" key={id}>
-                <div className="product-media"><img src={image} alt={alt} loading="lazy" /><span>{productCategory}</span></div>
+                <div className="product-media"><img src={image} alt={t(alt)} loading="lazy" /><span>{t(productCategory)}</span></div>
                 <div className="product-copy">
                   <Icon />
-                  <h2>{name}</h2>
-                  <p>{summary}</p>
-                  <ul>{details.map((detail) => <li key={detail}>{detail}</li>)}</ul>
+                  <h2>{t(name)}</h2>
+                  <p>{t(summary)}</p>
+                  <ul>{details.map((detail) => <li key={detail}>{t(detail)}</li>)}</ul>
                   <button type="button" className="inline-action" onClick={() => openQuote({ kind: "material", contextId: id, service: name, title: "Request a spot quote", prompt: "Share the estimated quantity, condition, site location, and collection requirements." })}>
-                    Request a spot quote <FaChevronRight />
+                    {t("Request a spot quote")} <FaChevronRight />
                   </button>
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="empty-state"><FaSearch /><h2>No matching materials</h2><p>Try another search term or clear the category filter.</p><button type="button" onClick={() => { setQuery(""); setCategory("All"); }}>Clear filters</button></div>
+          <div className="empty-state"><FaSearch /><h2>{t("No matching materials")}</h2><p>{t("Try another search term or clear the category filter.")}</p><button type="button" onClick={() => { setQuery(""); setCategory("All"); }}>{t("Clear filters")}</button></div>
         )}
       </section>
       <section className="content-section soft-section">
@@ -79,9 +81,9 @@ export function MaterialsPage() {
           <div className="grading-grid">
             {gradingStandards.map((standard) => (
               <article className="grading-card" key={standard.material}>
-                <h2>{standard.material}</h2>
-                <div><h3>Acceptable conditions</h3><ul>{standard.acceptable.map((item) => <li key={item}>{item}</li>)}</ul></div>
-                <div className="downgrade-list"><h3>Common downgrades</h3><ul>{standard.downgrades.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                <h2>{t(standard.material)}</h2>
+                <div><h3>{t("Acceptable conditions")}</h3><ul>{standard.acceptable.map((item) => <li key={item}>{t(item)}</li>)}</ul></div>
+                <div className="downgrade-list"><h3>{t("Common downgrades")}</h3><ul>{standard.downgrades.map((item) => <li key={item}>{t(item)}</li>)}</ul></div>
               </article>
             ))}
           </div>

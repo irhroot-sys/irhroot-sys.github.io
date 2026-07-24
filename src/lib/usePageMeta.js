@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 const siteName = "AALKC";
 const baseUrl = "https://aalkc.com";
@@ -14,14 +15,17 @@ function setMeta(name, content, property = false) {
   element.setAttribute("content", content);
 }
 
-export function usePageMeta({ title, description, path = "/", image = "/assets/hero-recycling-yard.webp" }) {
+export function usePageMeta({ title, description, path = "/", image = "/assets/hero-dammam-scrap-yard-v2.webp" }) {
+  const { t } = useLanguage();
+  const localizedTitle = t(title);
+  const localizedDescription = t(description);
   useEffect(() => {
-    const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
+    const fullTitle = title === siteName ? siteName : `${localizedTitle} | ${siteName}`;
     const canonicalUrl = `${baseUrl}${path}`;
     document.title = fullTitle;
-    setMeta("description", description);
+    setMeta("description", localizedDescription);
     setMeta("og:title", fullTitle, true);
-    setMeta("og:description", description, true);
+    setMeta("og:description", localizedDescription, true);
     setMeta("og:url", canonicalUrl, true);
     setMeta("og:image", `${baseUrl}${image}`, true);
 
@@ -32,5 +36,5 @@ export function usePageMeta({ title, description, path = "/", image = "/assets/h
       document.head.appendChild(canonical);
     }
     canonical.href = canonicalUrl;
-  }, [description, image, path, title]);
+  }, [image, localizedDescription, localizedTitle, path, title]);
 }
