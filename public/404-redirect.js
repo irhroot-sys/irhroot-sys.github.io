@@ -1,5 +1,5 @@
 (function () {
-  var l = window.location;
-  var path = encodeURIComponent(l.pathname + l.search);
-  l.replace("/?p=" + path + l.hash);
+  var location = window.location;
+  var path = encodeURIComponent(location.pathname + location.search);
+  location.replace("/?p=" + path + location.hash);
 })();
