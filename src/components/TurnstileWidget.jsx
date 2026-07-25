@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function TurnstileWidget({ siteKey, onToken }) {
   const containerRef = useRef(null);
+  const { language } = useLanguage();
 
   useEffect(() => {
     let widgetId;
@@ -16,6 +18,9 @@ export function TurnstileWidget({ siteKey, onToken }) {
         "expired-callback": () => onToken(""),
         "error-callback": () => onToken(""),
         theme: "light",
+        appearance: "always",
+        size: "flexible",
+        language,
       });
     };
 
@@ -37,7 +42,7 @@ export function TurnstileWidget({ siteKey, onToken }) {
       cancelled = true;
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
     };
-  }, [onToken, siteKey]);
+  }, [language, onToken, siteKey]);
 
-  return <div ref={containerRef} role="group" aria-label="Spam protection challenge" />;
+  return <div className="turnstile-widget" ref={containerRef} role="group" aria-label="Spam protection challenge" />;
 }
