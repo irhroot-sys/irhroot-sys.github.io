@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "aalkc-spa-fallback",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-25",
+  "routes": [
+    { "pattern": "aalkc.com/*", "zone_name": "aalkc.com" },
+    { "pattern": "www.aalkc.com/*", "zone_name": "aalkc.com" }
+  ]
+}
