@@ -60,6 +60,42 @@ test('uses consistent service-card media ratios', async ({ page }) => {
 
   const sources = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => image.getAttribute('src')));
   expect(new Set(sources).size).toBe(6);
+
+  const treatments = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => ({
+    fit: getComputedStyle(image).objectFit,
+    filter: getComputedStyle(image).filter,
+  })));
+  expect(new Set(treatments.map(({ fit }) => fit))).toEqual(new Set(['cover']));
+  expect(new Set(treatments.map(({ filter }) => filter))).toEqual(new Set(['brightness(0.92) contrast(1.08) saturate(0.88)']));
+});
+
+test('uses the premium bilingual body fonts and interactive link states', async ({ page }) => {
+  await page.goto('/');
+
+  const englishFonts = await page.evaluate(() => ({
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+  }));
+  expect(englishFonts.body).toContain('Montserrat');
+  expect(englishFonts.heading).toContain('IBM Plex Sans Condensed');
+
+  const activeNav = page.locator('.primary-nav a.active');
+  await expect(activeNav).toHaveCSS('color', 'rgb(0, 79, 159)');
+
+  const footerLink = page.locator('.footer-links a').first();
+  await footerLink.hover();
+  await expect(footerLink).toHaveCSS('color', 'rgb(255, 255, 255)');
+  const underlineTransform = await footerLink.evaluate((link) => getComputedStyle(link, '::after').transform);
+  expect(underlineTransform).toBe('matrix(1, 0, 0, 1, 0, 0)');
+
+  await page.getByRole('button', { name: 'AR' }).click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  const arabicFonts = await page.evaluate(() => ({
+    body: getComputedStyle(document.body).fontFamily,
+    heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+  }));
+  expect(arabicFonts.body).toContain('Cairo');
+  expect(arabicFonts.heading).toContain('Cairo');
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
