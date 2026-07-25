@@ -16,7 +16,7 @@ export function LegalPage({ documentKey }) {
 
   return (
     <article className="legal-page content-width">
-      <Link className="back-link" to="/"><FaChevronLeft /> {t("Back to home")}</Link>
+      <Link className="back-link" to="/"><FaChevronLeft className="directional-icon" /> {t("Back to home")}</Link>
       <span className="page-kicker">{t("AALKC legal")}</span>
       <h1>{t(content.title)}</h1>
       <p className="legal-intro">{t(content.intro)}</p>

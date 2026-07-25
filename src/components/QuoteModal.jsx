@@ -104,7 +104,7 @@ export function QuoteModal() {
             </div>
             <div className="form-row">
               <label>{t("Email")} <span className="field-status">{t("Required")}</span><input name="email" type="email" autoComplete="email" required /></label>
-              <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" autoComplete="tel" required /></label>
+              <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" inputMode="tel" dir="ltr" autoComplete="tel" required /></label>
             </div>
             {!quoteContext.service && (
               <label>{t("Service")}
@@ -128,7 +128,7 @@ export function QuoteModal() {
             )}
             {error && <div className="form-alert" role="alert">{error}</div>}
             <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-              {status === "loading" ? t("Sending…") : t("Send Request")} <FaChevronRight />
+              {status === "loading" ? t("Sending…") : t("Send Request")} <FaChevronRight className="directional-icon" />
             </button>
           </form>
         )}

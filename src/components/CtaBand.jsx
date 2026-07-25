@@ -14,9 +14,9 @@ export function CtaBand({ title = "Have an industrial requirement to discuss?", 
         <p>{t(copy)}</p>
       </div>
       {action === "contact" ? (
-        <Link className="secondary-button" to="/contact">{t("Contact our team")} <FaChevronRight /></Link>
+        <Link className="secondary-button" to="/contact">{t("Contact our team")} <FaChevronRight className="directional-icon" /></Link>
       ) : (
-        <button type="button" className="secondary-button" onClick={() => openQuote()}>{t("Request a quote")} <FaChevronRight /></button>
+        <button type="button" className="secondary-button" onClick={() => openQuote()}>{t("Request a quote")} <FaChevronRight className="directional-icon" /></button>
       )}
     </section>
   );

@@ -21,8 +21,8 @@ export function AboutPage() {
         eyebrow="Built on integrity"
         title="A trusted industrial recycling partner since 2017."
         copy="Amanat Al-Kalima Company provides professional metal recycling services for industrial, commercial, and construction businesses."
-        image="/assets/hero-dammam-scrap-yard-v2.webp"
-        alt="Industrial recycling operation in the Eastern Province"
+        image="/assets/service-industrial-dismantling.webp"
+        alt="Excavator processing recovered metal at an industrial scrap yard"
         trail="About Us"
       />
 

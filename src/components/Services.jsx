@@ -12,15 +12,15 @@ export function Services({ services }) {
           <h2 id="services-title">{t("Our Core Services")}</h2>
           <p>{t("Comprehensive scrap management tailored to industrial-scale operations, from collection and sorting to purchasing and global trade.")}</p>
           <Link className="explore-button" to="/services">
-            {t("Explore All Services")} <FaChevronRight />
+            {t("Explore All Services")} <FaChevronRight className="directional-icon" />
           </Link>
         </div>
 
         <div className="service-cards" id="service-cards">
-          {services.map(({ slug, icon: Icon, title, copy, image, alt }) => (
+          {services.map(({ slug, icon: Icon, title, copy, image, alt, focalPosition }) => (
             <Link className="service-card" key={title} to={`/services#${slug}`}>
               <div className="service-media">
-                <img src={image} alt={t(alt)} loading="lazy" />
+                <img src={image} alt={t(alt)} loading="lazy" style={{ objectPosition: focalPosition || "center" }} />
                 <div className="service-icon"><Icon /></div>
               </div>
               <div className="service-copy">

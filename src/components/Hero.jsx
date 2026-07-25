@@ -18,10 +18,10 @@ export function Hero() {
         </p>
         <div className="hero-actions">
           <Link className="primary-button" to="/services">
-            {t("Our Services")} <FaChevronRight />
+            {t("Our Services")} <FaChevronRight className="directional-icon" />
           </Link>
           <Link className="secondary-button" to="/contact">
-            {t("Contact Us")} <FaChevronRight />
+            {t("Contact Us")} <FaChevronRight className="directional-icon" />
           </Link>
         </div>
       </div>

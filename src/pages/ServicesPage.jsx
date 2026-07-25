@@ -31,9 +31,9 @@ export function ServicesPage() {
       <section className="content-section content-width">
         <SectionHeading eyebrow="What we do" title="Six connected service lines" copy="Choose a service below or send the full requirement and our team will coordinate the right operational route." />
         <div className="service-detail-list">
-          {services.map(({ slug, icon: Icon, title, copy, image, alt, capabilities }, index) => (
+          {services.map(({ slug, icon: Icon, title, copy, image, alt, capabilities, focalPosition }, index) => (
             <article className={`service-detail ${index % 2 ? "is-reversed" : ""}`} id={slug} key={slug}>
-              <div className="service-detail-media"><img src={image} alt={t(alt)} loading="lazy" /></div>
+              <div className="service-detail-media"><img src={image} alt={t(alt)} loading="lazy" style={{ objectPosition: focalPosition || "center" }} /></div>
               <div className="service-detail-copy">
                 <span className="detail-number">0{index + 1}</span>
                 <Icon className="detail-icon" />
@@ -41,7 +41,7 @@ export function ServicesPage() {
                 <p>{t(copy)}</p>
                 <ul>{capabilities.map((capability) => <li key={capability}><FaCheck />{t(capability)}</li>)}</ul>
                 <button type="button" className="inline-action" onClick={() => openQuote({ service: title, title: `Enquire about ${title}` })}>
-                  {t("Discuss this service")} <FaChevronRight />
+                  {t("Discuss this service")} <FaChevronRight className="directional-icon" />
                 </button>
               </div>
             </article>
