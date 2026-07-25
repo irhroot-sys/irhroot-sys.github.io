@@ -65,7 +65,7 @@ export function MaterialsPage() {
                   <p>{t(summary)}</p>
                   <ul>{details.map((detail) => <li key={detail}>{t(detail)}</li>)}</ul>
                   <button type="button" className="inline-action" onClick={() => openQuote({ kind: "material", contextId: id, service: name, title: "Request a spot quote", prompt: "Share the estimated quantity, condition, site location, and collection requirements." })}>
-                    {t("Request a spot quote")} <FaChevronRight />
+                    {t("Request a spot quote")} <FaChevronRight className="directional-icon" />
                   </button>
                 </div>
               </article>

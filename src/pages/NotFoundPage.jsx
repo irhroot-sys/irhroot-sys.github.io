@@ -17,7 +17,7 @@ export function NotFoundPage({ compact = false }) {
       <span>404</span>
       <h1>{t("That page is not available.")}</h1>
       <p>{t("The address may have changed, or the page may no longer exist.")}</p>
-      <Link className="primary-button" to="/">{t("Return home")} <FaChevronRight /></Link>
+      <Link className="primary-button" to="/">{t("Return home")} <FaChevronRight className="directional-icon" /></Link>
     </section>
   );
 }

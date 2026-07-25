@@ -48,7 +48,7 @@ export function EnquiryForm() {
         <FaCheckCircle />
         <h2>{t("Message received")}</h2>
         <p>{t("Your enquiry has been saved. Our team will respond using the contact details you provided.")}</p>
-        <button type="button" className="inline-action" onClick={() => setStatus("idle")}>{t("Send another message")} <FaChevronRight /></button>
+        <button type="button" className="inline-action" onClick={() => setStatus("idle")}>{t("Send another message")} <FaChevronRight className="directional-icon" /></button>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export function EnquiryForm() {
       </div>
       <div className="form-row">
         <label>{t("Email")} <span className="field-status">{t("Required")}</span><input name="email" type="email" autoComplete="email" required /></label>
-        <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" autoComplete="tel" required /></label>
+        <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" inputMode="tel" dir="ltr" autoComplete="tel" required /></label>
       </div>
       <label>{t("Subject")}
         <select name="subject" defaultValue="General enquiry">
@@ -83,7 +83,7 @@ export function EnquiryForm() {
       )}
       {error && <div className="form-alert" role="alert">{error}</div>}
       <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-        {status === "loading" ? t("Sending…") : t("Send message")} <FaChevronRight />
+        {status === "loading" ? t("Sending…") : t("Send message")} <FaChevronRight className="directional-icon" />
       </button>
     </form>
   );

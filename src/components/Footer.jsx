@@ -3,6 +3,7 @@ import { contactDetails, navigation } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { PhoneNumber } from "./PhoneNumber.jsx";
 
 export function Footer() {
   const { openQuote } = useQuote();
@@ -27,7 +28,7 @@ export function Footer() {
         </div>
         <div className="footer-contact">
           <h2>{t("Contact")}</h2>
-          <a href={contactDetails.phoneHref}><FaPhoneAlt /> {contactDetails.phoneLabel}</a>
+          <a href={contactDetails.phoneHref}><FaPhoneAlt /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
           <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
           <span><FaMapMarkerAlt /> {isArabic ? contactDetails.addressArabic : contactDetails.address}</span>
           <button type="button" onClick={() => openQuote()}>{t("Request a quote")}</button>

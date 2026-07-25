@@ -4,6 +4,7 @@ import { navigation, contactDetails } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link, NavLink, useLocation } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { PhoneNumber } from "./PhoneNumber.jsx";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,7 +53,7 @@ export function Header() {
   return (
     <header className="site-header" aria-label={t("AALKC website header")}>
       <div className="utility-bar">
-        <a href={contactDetails.phoneHref}><FaPhoneAlt /> {contactDetails.phoneLabel}</a>
+        <a href={contactDetails.phoneHref}><FaPhoneAlt /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
         <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
         <span><FaMapMarkerAlt /> {t("Dammam, Saudi Arabia")}</span>
       </div>
@@ -63,10 +64,16 @@ export function Header() {
             src="/assets/aalkc-logo-official-9233f531.svg"
             width="160"
             height="160"
-            alt="AALKC — Amanat Al-Kalima Company"
+            alt=""
+            aria-hidden="true"
             decoding="async"
             fetchPriority="high"
           />
+          <span className="brand-wordmark" aria-hidden="true">
+            <strong dir="ltr">AALKC</strong>
+            <span>Amanat Al-Kalima Company</span>
+            <span lang="ar" dir="rtl">شركة أمانة الكلمة</span>
+          </span>
         </Link>
 
         <div className="primary-nav-wrap">
@@ -76,6 +83,9 @@ export function Header() {
                 {t(label)}
               </NavLink>
             ))}
+            <button type="button" className="mobile-nav-quote" onClick={() => openQuote()}>
+              {t("Get a Quote")} <FaChevronRight className="directional-icon" />
+            </button>
           </nav>
           <div className="language-toggle" role="group" aria-label={t("Website language")}>
             <button type="button" lang="en" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
@@ -83,7 +93,7 @@ export function Header() {
             <button type="button" lang="ar" aria-pressed={language === "ar"} onClick={() => setLanguage("ar")}>AR</button>
           </div>
           <button type="button" className="quote-button header-quote" onClick={() => openQuote()}>
-            {t("Get a Quote")} <FaChevronRight />
+            {t("Get a Quote")} <FaChevronRight className="directional-icon" />
           </button>
           <button
             type="button"

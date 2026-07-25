@@ -57,6 +57,9 @@ test('uses consistent service-card media ratios', async ({ page }) => {
     return box.width / box.height;
   }));
   for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 1);
+
+  const sources = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => image.getAttribute('src')));
+  expect(new Set(sources).size).toBe(6);
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -76,6 +79,73 @@ test('switches the full interface between English and Arabic', async ({ page }) 
   await page.getByRole('button', { name: 'EN' }).click();
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
   await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
+});
+
+test('keeps the premium bilingual layout contained at every supported breakpoint', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'The breakpoint matrix runs once in Chromium.');
+  const widths = [320, 375, 620, 768, 1024, 1440];
+
+  await page.goto('/');
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(page.locator('.brand img')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Company statistics' }).getByText('Eastern Province')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+    expect(await page.getByRole('region', { name: 'Company statistics' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    if (width <= 620) {
+      await expect(page.locator('.brand-wordmark')).toBeHidden();
+    } else {
+      await expect(page.locator('.brand-wordmark')).toBeVisible();
+    }
+  }
+
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.getByRole('button', { name: 'AR' }).click();
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(page.getByRole('region', { name: 'إحصاءات الشركة' }).getByText('المنطقة الشرقية')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+    expect(await page.getByRole('region', { name: 'إحصاءات الشركة' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+  }
+});
+
+test('isolates phone numerals and flips only directional icons in RTL', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/contact');
+
+  const phoneNumbers = page.locator('bdi.phone-number');
+  await expect(phoneNumbers).toHaveCount(3);
+  const phoneDirections = await phoneNumbers.evaluateAll((elements) => elements.map((element) => ({
+    dir: element.getAttribute('dir'),
+    direction: getComputedStyle(element).direction,
+    text: element.textContent?.trim(),
+  })));
+  for (const phone of phoneDirections) {
+    expect(phone.dir).toBe('ltr');
+    expect(phone.direction).toBe('ltr');
+    expect(phone.text).toBe('+966 55 181 1700');
+  }
+
+  const arabicAddress = 'القطيف ٣٥٠٨ ١، وحدة ٧٢٦٠، الدمام ٣٢٥١٧، المنطقة الشرقية، المملكة العربية السعودية';
+  await expect(page.getByText(arabicAddress, { exact: true })).toHaveCount(0);
+
+  const englishTransforms = await page.locator('.directional-icon').evaluateAll((elements) => elements
+    .filter((element) => element.getClientRects().length > 0)
+    .map((element) => getComputedStyle(element).transform));
+  expect(englishTransforms.length).toBeGreaterThan(0);
+  expect(englishTransforms.every((transform) => transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)')).toBe(true);
+
+  await page.getByRole('button', { name: 'AR' }).click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('.contact-methods').getByText(arabicAddress, { exact: true })).toHaveCount(1);
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+    .toBe(true);
+  const rtlTransforms = await page.locator('.directional-icon').evaluateAll((elements) => elements
+    .filter((element) => element.getClientRects().length > 0)
+    .map((element) => getComputedStyle(element).transform));
+  expect(rtlTransforms.length).toBeGreaterThan(0);
+  expect(rtlTransforms.every((transform) => transform === 'matrix(-1, 0, 0, 1, 0, 0)')).toBe(true);
 });
 
 test('filters and searches the material catalogue', async ({ page }) => {
