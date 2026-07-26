@@ -41,7 +41,9 @@
 // File extensions that should always be treated as real static assets and
 // passed straight through to the origin.
 const ASSET_EXTENSIONS = new Set([
-  'js', 'mjs', 'css', 'map', 'json', 'xml', 'txt',
+  // Include html so Google Search Console verification files
+  // (e.g. /google*.html) are served from origin, not rewritten to the SPA shell.
+  'js', 'mjs', 'css', 'map', 'json', 'xml', 'txt', 'html', 'htm',
   'png', 'jpg', 'jpeg', 'webp', 'gif', 'svg', 'ico', 'avif',
   'woff', 'woff2', 'ttf', 'otf', 'eot',
   'mp4', 'webm', 'pdf',
