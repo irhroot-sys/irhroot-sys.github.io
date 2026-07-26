@@ -10,6 +10,25 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 
 const categories = ["All", ...new Set(materials.map((material) => material.category))];
 
+// Materials data mixes real descriptive words ("aerospace", "plumbing") with
+// short alloy/spec shorthand ("Cu-Zn", "A36", bare percentages like "99.9%").
+// Splitting on word boundaries (instead of a raw substring match against one
+// giant blob) stops a fragment like "al" inside "Structural" from matching a
+// query for "Aluminum". Dropping tokens shorter than SEARCH_TOKEN_MIN_LENGTH
+// on top of that keeps a two-letter chemical symbol on ONE material (e.g.
+// "Cu-Zn" in Brass's spec line) from surfacing that unrelated card for a
+// query like "Cu" — it now yields no match instead of a wrong one, same as
+// any other search with zero results, rather than silently substituting a
+// different material.
+const SEARCH_TOKEN_MIN_LENGTH = 3;
+
+function tokenize(text, { minLength = 1 } = {}) {
+  return String(text)
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((token) => token.length >= minLength);
+}
+
 export function MaterialsPage() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
@@ -23,11 +42,20 @@ export function MaterialsPage() {
   });
 
   const filteredProducts = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const queryTokens = tokenize(query);
     return materials.filter((product) => {
-      const matchesCategory = category === "All" || product.category === category;
-      const haystack = `${product.name} ${t(product.name)} ${product.category} ${t(product.category)} ${product.summary} ${t(product.summary)} ${product.details.join(" ")} ${product.details.map(t).join(" ")}`.toLowerCase();
-      return matchesCategory && (!normalizedQuery || haystack.includes(normalizedQuery));
+      if (category !== "All" && product.category !== category) return false;
+      if (!queryTokens.length) return true;
+
+      const haystackText = [
+        product.name, t(product.name),
+        product.category, t(product.category),
+        product.summary, t(product.summary),
+        ...product.details, ...product.details.map(t),
+      ].join(" ");
+      const haystackTokens = tokenize(haystackText, { minLength: SEARCH_TOKEN_MIN_LENGTH });
+
+      return queryTokens.every((queryToken) => haystackTokens.some((token) => token.startsWith(queryToken)));
     });
   }, [category, query, t]);
 
