@@ -74,7 +74,19 @@ export function QuoteModal() {
     }
   }
 
-  const title = t(quoteContext.title || "Get a Quote");
+  // quoteContext.title is an explicit static heading (e.g. the Materials
+  // page's "Request a spot quote") and always wins when present. Otherwise,
+  // for a per-service enquiry (quoteContext.service, set by ServicesPage),
+  // compose the heading from two independently-translated pieces instead of
+  // translating a single pre-built English sentence — "Enquire about
+  // ${title}" never matched a dictionary key as a whole string, so it always
+  // fell back to English even though the service name itself translates
+  // correctly on its own everywhere else it's used.
+  const title = quoteContext.title
+    ? t(quoteContext.title)
+    : quoteContext.service
+      ? `${t("Enquire about")} ${t(quoteContext.service)}`
+      : t("Get a Quote");
   const prompt = t(quoteContext.prompt || "Tell us what you need and our Dammam team will respond with the next steps.");
 
   return (

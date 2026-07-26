@@ -40,7 +40,7 @@ export function ServicesPage() {
                 <h2>{t(title)}</h2>
                 <p>{t(copy)}</p>
                 <ul>{capabilities.map((capability) => <li key={capability}><FaCheck />{t(capability)}</li>)}</ul>
-                <button type="button" className="inline-action" onClick={() => openQuote({ service: title, title: `Enquire about ${title}` })}>
+                <button type="button" className="inline-action" onClick={() => openQuote({ service: title })}>
                   {t("Discuss this service")} <FaChevronRight className="directional-icon" />
                 </button>
               </div>
