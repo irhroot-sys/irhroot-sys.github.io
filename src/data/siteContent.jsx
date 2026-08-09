@@ -88,8 +88,8 @@ export const services = [
     category: "Collection",
     copy: "Fleet coordination for industrial relocations and bulk scrap transport across the Kingdom.",
     image: "/assets/service-heavy-logistics.webp",
-    focalPosition: "50% 52%",
-    alt: "Heavy industrial equipment prepared for coordinated transport",
+    focalPosition: "50% 45%",
+    alt: "Port cranes and city skyline silhouetted at dusk in Jeddah, Saudi Arabia",
     capabilities: ["Bulk scrap transport", "Industrial relocation support", "Fleet coordination", "Eastern Province coverage"],
   },
   {
