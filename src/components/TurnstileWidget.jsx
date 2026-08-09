@@ -3,7 +3,7 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function TurnstileWidget({ siteKey, onToken }) {
   const containerRef = useRef(null);
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     let widgetId;
@@ -44,5 +44,5 @@ export function TurnstileWidget({ siteKey, onToken }) {
     };
   }, [language, onToken, siteKey]);
 
-  return <div className="turnstile-widget" ref={containerRef} role="group" aria-label="Spam protection challenge" />;
+  return <div className="turnstile-widget" ref={containerRef} role="group" aria-label={t("Spam protection challenge")} />;
 }
