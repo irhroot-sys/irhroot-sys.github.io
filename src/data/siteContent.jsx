@@ -253,7 +253,7 @@ export const frequentlyAskedQuestions = [
   },
   {
     question: "Are your facilities environmentally compliant?",
-    answer: "Yes. AALKC operates with environmental and safety controls aligned with responsible recycling practice, including the ISO 14001 environmental-management standard represented on the existing company website.",
+    answer: "Yes. AALKC operates with environmental and safety controls aligned with responsible recycling practice, including the ISO 14001 environmental-management standard.",
   },
   {
     question: "What is your typical payment process for suppliers?",
