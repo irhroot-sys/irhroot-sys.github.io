@@ -303,7 +303,7 @@ a { color: inherit; text-decoration: none; }
 .hero-media {
   position: absolute;
   inset: 0 0 0 34.6%;
-  background: #6f7d86 url("/assets/hero-dammam-scrap-yard-v2.webp") center center / cover no-repeat;
+  background: #6f7d86 url("/assets/service-industrial-dismantling.webp") center center / cover no-repeat;
   clip-path: polygon(21% 0, 100% 0, 100% 100%, 0 100%);
 }
 .hero-copy {
