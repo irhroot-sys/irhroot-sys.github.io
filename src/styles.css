@@ -294,7 +294,7 @@ a { color: inherit; text-decoration: none; }
 .menu-button { display: none; }
 
 .hero {
-  height: 400px;
+  height: 500px;
   position: relative;
   overflow: hidden;
   background: var(--navy-deep);
@@ -303,29 +303,45 @@ a { color: inherit; text-decoration: none; }
 .hero-media {
   position: absolute;
   inset: 0 0 0 34.6%;
-  background: #6f7d86 url("/assets/service-industrial-dismantling.webp") center center / cover no-repeat;
+  overflow: hidden;
+  background: #6f7d86;
   clip-path: polygon(21% 0, 100% 0, 100% 100%, 0 100%);
+  animation: hero-media-in .9s ease-out both;
+}
+.hero-media-image {
+  position: absolute;
+  inset: 0;
+  background: url("/assets/service-industrial-dismantling.webp") center center / cover no-repeat;
+  animation: hero-media-zoom 16s cubic-bezier(.25,.7,.35,1) .9s both;
 }
 .hero-copy {
-  width: min(610px, 42%);
+  width: min(640px, 44%);
   position: relative;
   z-index: 2;
-  padding: 50px 0 0 clamp(40px, 3.8vw, 60px);
-  animation: hero-copy-in .65s cubic-bezier(.2,.8,.2,1) both;
+  padding: 54px 0 0 clamp(40px, 3.8vw, 60px);
 }
-.hero-media { animation: hero-media-in .9s ease-out both; }
-@keyframes hero-copy-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes hero-media-in { from { opacity: .65; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
+@keyframes hero-media-zoom { from { transform: scale(1); } to { transform: scale(1.055); } }
+@keyframes hero-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hero-mark-in { from { opacity: 0; transform: scale(.82); } to { opacity: 1; transform: scale(1); } }
+@keyframes hero-watermark-in { from { opacity: 0; transform: scale(.95); } to { opacity: .09; transform: scale(1); } }
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 17px;
+  gap: 14px;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: .01em;
   text-transform: uppercase;
 }
 .eyebrow::after { content: ""; width: 128px; height: 1px; background: currentColor; opacity: .72; }
+.hero-eyebrow { animation: hero-rise .6s cubic-bezier(.2,.8,.2,1) both; }
+.hero-badge {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  animation: hero-mark-in .55s cubic-bezier(.2,.8,.2,1) .08s both;
+}
 .hero h1 {
   margin: 22px 0 16px;
   color: #fff;
@@ -334,7 +350,9 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -.045em;
   font-weight: 800;
 }
-.hero h1 span { color: #b9c1cb; }
+.hero-line { display: block; }
+.hero-line-1 { animation: hero-rise .7s cubic-bezier(.2,.8,.2,1) .14s both; }
+.hero-line-2 { color: #b9c1cb; animation: hero-rise .7s cubic-bezier(.2,.8,.2,1) .26s both; }
 .hero-copy > p {
   width: 430px;
   max-width: 100%;
@@ -343,20 +361,36 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.62;
   font-weight: 500;
 }
-.hero-actions { display: flex; gap: 20px; margin-top: 15px; }
+.hero-lede { animation: hero-rise .7s cubic-bezier(.2,.8,.2,1) .38s both; }
+.hero-actions { display: flex; gap: 20px; margin-top: 15px; animation: hero-rise .7s cubic-bezier(.2,.8,.2,1) .5s both; }
 .primary-button { color: #fff; background: var(--navy-bright); min-width: 188px; }
 .secondary-button { color: #fff; background: transparent; border-color: rgba(255,255,255,.78); min-width: 188px; }
 .primary-button:hover, .primary-button:focus-visible { background: #0067c7; box-shadow: 0 9px 22px rgba(0,79,159,.28); }
 .hero-actions .secondary-button:hover, .hero-actions .secondary-button:focus-visible { color: var(--navy); background: #fff; border-color: #fff; box-shadow: 0 9px 22px rgba(0,0,0,.16); }
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 26px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid rgba(255,255,255,.14);
+  list-style: none;
+  animation: hero-rise .7s cubic-bezier(.2,.8,.2,1) .62s both;
+}
+.hero-trust li { font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.hero-trust li:not(:first-child)::before { content: "\2022"; margin: 0 12px; color: rgba(255,255,255,.32); }
 .hero-watermark {
   position: absolute;
   z-index: 1;
-  left: 425px;
-  bottom: -26px;
-  color: rgba(255,255,255,.035);
-  font-size: 125px;
-  transform: rotate(-3deg);
+  left: -20px;
+  bottom: -50px;
+  width: clamp(210px, 20vw, 300px);
+  height: auto;
+  opacity: .09;
+  pointer-events: none;
+  animation: hero-watermark-in 1.2s cubic-bezier(.2,.8,.2,1) .45s both;
 }
+.hero-watermark path { fill: #fff; }
 
 .feature-strip {
   min-height: 139px;
@@ -866,11 +900,12 @@ a { color: inherit; text-decoration: none; }
   .menu-button { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 5px; color: #fff; background: var(--navy); font-size: 19px; }
   .primary-nav-wrap { justify-content: flex-end; }
   .hero { height: auto; display: flex; flex-direction: column; }
-  .hero-media { position: relative; inset: auto; order: 1; height: 330px; width: 100%; clip-path: none; background-position: center; }
+  .hero-media { position: relative; inset: auto; order: 1; height: 330px; width: 100%; clip-path: none; }
+  .hero-media-image { background-position: center; }
   .hero-copy { order: 2; width: 100%; padding: 45px max(30px, 7vw) 48px; }
   .hero-copy > p { width: 560px; }
   .hero h1 { font-size: clamp(42px, 7vw, 58px); }
-  .hero-watermark { left: auto; right: 30px; bottom: 5px; }
+  .hero-watermark { left: auto; right: 30px; bottom: 5px; width: clamp(150px, 34vw, 220px); }
   .feature-grid { width: calc(100% - 60px); grid-template-columns: repeat(2, 1fr); padding: 12px 0; }
   .feature { padding: 18px; }
   .services-layout { grid-template-columns: minmax(0, 1fr); gap: 25px; padding-block: 38px; }
@@ -894,7 +929,8 @@ a { color: inherit; text-decoration: none; }
   .header-quote { min-width: 0; min-height: 40px; padding: 0 14px; gap: 8px; font-size: 10px; }
   .menu-button { width: 40px; height: 40px; }
   .primary-nav { top: 66px; right: -14px; }
-  .hero-media { height: 235px; background-position: 62% center; }
+  .hero-media { height: 235px; }
+  .hero-media-image { background-position: 62% center; }
   .hero-copy { padding: 34px 24px 38px; }
   .hero h1 { margin-top: 18px; font-size: 39px; line-height: 1.08; }
   .hero-copy > p { font-size: 14px; }
@@ -938,7 +974,7 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; }
-  .hero-copy, .hero-media { animation: none !important; }
+  .hero-media, .hero-media-image, .hero-eyebrow, .hero-badge, .hero-line-1, .hero-line-2, .hero-lede, .hero-actions, .hero-trust, .hero-watermark { animation: none !important; }
 }
 
 html[lang="ar"] body,
@@ -963,9 +999,9 @@ html[lang="ar"] .page-kicker,
 html[lang="ar"] .panel-kicker,
 html[lang="ar"] .section-heading > span,
 html[lang="ar"] .page-breadcrumb { letter-spacing: 0; text-transform: none; }
-html[dir="rtl"] .hero-copy { margin-left: auto; margin-right: 0; padding: 50px clamp(40px, 3.8vw, 60px) 0 0; }
+html[dir="rtl"] .hero-copy { margin-left: auto; margin-right: 0; padding: 54px clamp(40px, 3.8vw, 60px) 0 0; }
 html[dir="rtl"] .hero-media { inset: 0 34.6% 0 0; clip-path: polygon(0 0, 79% 0, 100% 100%, 0 100%); }
-html[dir="rtl"] .hero-watermark { left: auto; right: 425px; }
+html[dir="rtl"] .hero-watermark { left: auto; right: -20px; }
 html[dir="rtl"] .page-hero-media { inset: 0 43% 0 0; clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%); }
 html[dir="rtl"] .detail-number { right: auto; left: 35px; }
 html[dir="rtl"] .selected-context { border-left: 0; border-right: 3px solid var(--navy-bright); }
