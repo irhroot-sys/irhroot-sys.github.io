@@ -20,6 +20,7 @@ export const arabicTranslations = {
   "Premium, transparent, and efficient metal recycling services for industrial, commercial, and construction businesses across Saudi Arabia.": "خدمات متميزة وشفافة وفعّالة لإعادة تدوير المعادن للمنشآت الصناعية والتجارية وقطاع الإنشاءات في أنحاء المملكة.",
   "Our Services": "خدماتنا",
   "Contact Us": "تواصل معنا",
+  "Certifications and registrations": "الشهادات والتسجيلات",
   "Why choose AALKC": "لماذا أمانة الكلمة",
   "Licensed & Compliant": "مرخّصون وملتزمون",
   "A licensed dealer aligned with environmental regulations and responsible practice.": "تاجر مرخّص يلتزم بالأنظمة البيئية والممارسات المسؤولة.",
