@@ -323,7 +323,7 @@ export const arabicTranslations = {
   "Scrap metal collection and container service at an industrial yard": "جمع الخردة المعدنية وخدمة الحاويات في ساحة صناعية",
   "Industrial material recovery and dismantling operation": "عملية استرداد المواد الصناعية وتفكيكها",
   "Sorted ferrous and non-ferrous scrap metal": "خردة معدنية حديدية وغير حديدية مفروزة",
-  "Heavy industrial equipment prepared for coordinated transport": "معدات صناعية ثقيلة جاهزة للنقل المنسق",
+  "Port cranes and city skyline silhouetted at dusk in Jeddah, Saudi Arabia": "أوناش الميناء وأفق المدينة عند الغروب في جدة، المملكة العربية السعودية",
   "Industrial metal stock prepared for sorting and grading": "مخزون معدني صناعي جاهز للفرز والتصنيف",
   "Industrial recovery yard supporting regional and global trade": "ساحة استرداد صناعية تدعم التجارة الإقليمية والعالمية",
   "Copper and non-ferrous recyclable metal": "نحاس ومعادن غير حديدية قابلة لإعادة التدوير",
