@@ -23,12 +23,12 @@ export function ContactPage() {
         title="Maximize the value of your scrap."
         copy="Share the material, estimated quantity, site location, and collection needs. Our Dammam team will review the requirement and respond with the next step."
         image="/assets/service-container-handling.webp"
-        alt="Scrap-handling crane loading recovered metal at an industrial yard"
+        alt={t("Scrap-handling crane loading recovered metal at an industrial yard")}
         trail="Contact"
       />
       <section className="content-section content-width contact-layout">
         <div className="contact-details">
-          <SectionHeading eyebrow="Official contact details" title="Direct access to AALKC" copy="Use the official phone, email, and Dammam address carried over from the existing website." />
+          <SectionHeading eyebrow="Official contact details" title="Direct access to AALKC" copy="Reach our Dammam headquarters directly using the official phone, email, and address below." />
           <div className="contact-methods">
             <a href={contactDetails.phoneHref}><FaPhoneAlt /><div><span>{t("Phone")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
             <a href={`mailto:${contactDetails.email}`}><FaEnvelope /><div><span>{t("Email")}</span><strong>{contactDetails.email}</strong></div></a>
