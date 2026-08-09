@@ -66,7 +66,7 @@ export function MaterialsPage() {
         title="Ferrous and non-ferrous materials."
         copy="Our analysis and certified weighing process supports precise grading and transparent, market-aware quotations for every accepted load."
         image="/assets/service-construction-materials.webp"
-        alt="Steel construction materials ready for supply"
+        alt={t("Steel construction materials ready for supply")}
         trail="Materials"
       />
 
