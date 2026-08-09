@@ -15,7 +15,7 @@ function setMeta(name, content, property = false) {
   element.setAttribute("content", content);
 }
 
-export function usePageMeta({ title, description, path = "/", image = "/assets/hero-dammam-scrap-yard-v2.webp" }) {
+export function usePageMeta({ title, description, path = "/", image = "/assets/service-industrial-dismantling.webp" }) {
   const { t } = useLanguage();
   const localizedTitle = t(title);
   const localizedDescription = t(description);
