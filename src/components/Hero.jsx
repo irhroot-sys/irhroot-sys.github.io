@@ -9,7 +9,7 @@ export function Hero() {
   const { t } = useLanguage();
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-media" role="img" aria-label="Scrap handling excavator working in an industrial recycling yard" />
+      <div className="hero-media" role="img" aria-label={t("Industrial material recovery and dismantling operation")} />
       <div className="hero-copy">
         <div className="eyebrow light"><span>{t("Amanat Al-Kalima Company")}</span></div>
         <h1 id="hero-title">{t("Building Value,")}<br /><span>{t("Recycling the Future.")}</span></h1>
