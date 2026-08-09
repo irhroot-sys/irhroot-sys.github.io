@@ -71,7 +71,7 @@ export function MaterialsPage() {
       />
 
       <section className="content-section content-width">
-        <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families represented on the existing AALKC website. Final acceptance and value are confirmed after inspection and weighing." />
+        <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families AALKC purchases. Final acceptance and value are confirmed after inspection and weighing." />
         <div className="catalog-tools" aria-label={t("Material filters")}>
           <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (
