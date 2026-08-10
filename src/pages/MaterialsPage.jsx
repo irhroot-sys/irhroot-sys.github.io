@@ -66,12 +66,12 @@ export function MaterialsPage() {
         title="Ferrous and non-ferrous materials."
         copy="Our analysis and certified weighing process supports precise grading and transparent, market-aware quotations for every accepted load."
         image="/assets/service-construction-materials.webp"
-        alt="Steel construction materials ready for supply"
+        alt={t("Steel construction materials ready for supply")}
         trail="Materials"
       />
 
       <section className="content-section content-width">
-        <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families represented on the existing AALKC website. Final acceptance and value are confirmed after inspection and weighing." />
+        <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families AALKC purchases. Final acceptance and value are confirmed after inspection and weighing." />
         <div className="catalog-tools" aria-label={t("Material filters")}>
           <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (

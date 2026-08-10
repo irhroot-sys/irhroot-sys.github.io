@@ -24,7 +24,7 @@ export function ServicesPage() {
         title="Scrap management built for industrial scale."
         copy="From site collection and dismantling to grading, logistics, purchasing, and global trade, AALKC coordinates the complete material-recovery process."
         image="/assets/service-scrap-metal.webp"
-        alt="Industrial scrap metal ready for recovery"
+        alt={t("Industrial scrap metal ready for recovery")}
         trail="Services"
       />
 

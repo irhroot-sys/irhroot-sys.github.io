@@ -20,7 +20,7 @@ export function FaqPage() {
         title="Frequently asked questions."
         copy="Essential information about accepted materials, collection, grading, pricing, compliance, and supplier payments."
         image="/assets/service-scrap-metal.webp"
-        alt="Sorted scrap metal at an industrial recycling yard"
+        alt={t("Sorted scrap metal at an industrial recycling yard")}
         trail="FAQ"
       />
       <section className="content-section content-width faq-section">
