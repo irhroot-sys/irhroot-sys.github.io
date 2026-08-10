@@ -11,7 +11,6 @@ export function Hero() {
       <div className="hero-media">
         <div className="hero-media-image" role="img" aria-label={t("Industrial material recovery and dismantling operation")} />
       </div>
-      <BrandMark className="hero-watermark" />
       <div className="hero-copy">
         <div className="eyebrow light hero-eyebrow">
           <BrandMark className="hero-badge" />
