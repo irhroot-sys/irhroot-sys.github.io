@@ -323,6 +323,9 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   background: url("/assets/service-industrial-dismantling.webp") center 62% / cover no-repeat;
   animation: hero-media-zoom 16s cubic-bezier(.25,.7,.35,1) .9s both;
+  translate: var(--parallax-x, 0px) var(--parallax-y, 0px);
+  transition: translate .6s cubic-bezier(.2,.8,.2,1);
+  will-change: translate;
 }
 .hero-copy {
   width: min(640px, 44%);
@@ -330,10 +333,22 @@ a { color: inherit; text-decoration: none; }
   z-index: 2;
   padding: 54px 0 0 clamp(40px, 3.8vw, 60px);
 }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.09) 45%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.09) 55%, transparent 68%);
+  transform: translateX(-120%);
+  animation: hero-sheen 1.5s cubic-bezier(.2,.7,.2,1) 1s both;
+}
+@keyframes hero-sheen { to { transform: translateX(120%); } }
 @keyframes hero-media-in { from { opacity: .65; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
 @keyframes hero-media-zoom { from { transform: scale(1); } to { transform: scale(1.055); } }
-@keyframes hero-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hero-rise { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
 @keyframes hero-mark-in { from { opacity: 0; transform: scale(.82); } to { opacity: 1; transform: scale(1); } }
+@keyframes hero-badge-glow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(255,255,255,0)); } 50% { filter: drop-shadow(0 0 6px rgba(255,255,255,.5)); } }
 .eyebrow {
   display: flex;
   align-items: center;
@@ -345,11 +360,13 @@ a { color: inherit; text-decoration: none; }
 }
 .eyebrow::after { content: ""; width: 128px; height: 1px; background: currentColor; opacity: .72; }
 .hero-eyebrow { animation: hero-rise .6s cubic-bezier(.2,.8,.2,1) both; }
+.hero-eyebrow::after { animation: hero-line-grow .8s cubic-bezier(.2,.8,.2,1) .32s both; }
+@keyframes hero-line-grow { from { width: 0; opacity: 0; } to { width: 128px; opacity: .72; } }
 .hero-badge {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  animation: hero-mark-in .55s cubic-bezier(.2,.8,.2,1) .08s both;
+  animation: hero-mark-in .55s cubic-bezier(.2,.8,.2,1) .08s both, hero-badge-glow 3.4s ease-in-out 1.4s infinite;
 }
 .hero h1 {
   margin: 22px 0 16px;
@@ -970,7 +987,8 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; }
-  .hero-media, .hero-media-image, .hero-eyebrow, .hero-badge, .hero-line-1, .hero-line-2, .hero-lede, .hero-actions, .hero-trust { animation: none !important; }
+  .hero-media, .hero-media-image, .hero-eyebrow, .hero-badge, .hero-line-1, .hero-line-2, .hero-lede, .hero-actions, .hero-trust, .hero::before, .hero-eyebrow::after { animation: none !important; }
+  .hero-media-image { translate: none !important; }
 }
 
 html[lang="ar"] body,
