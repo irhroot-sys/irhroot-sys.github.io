@@ -3,17 +3,92 @@ import AxeBuilder from '@axe-core/playwright';
 
 test('renders critical content in the new industrial design', async ({ page }) => {
   const failedAssets: string[] = [];
+  const runtimeErrors: string[] = [];
   page.on('response', (response) => {
     if (response.url().includes('/assets/') && response.status() >= 400) {
       failedAssets.push(`${response.status()} ${response.url()}`);
     }
   });
+  page.on('console', (message) => {
+    if (message.type() === 'error') runtimeErrors.push(message.text());
+  });
+  page.on('pageerror', (error) => runtimeErrors.push(error.message));
 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1, name: /Building Value, Recycling the Future/i })).toBeVisible();
   await expect(page.locator('nav[aria-label="Primary navigation"]')).toHaveCount(1);
   await expect(page.getByText(/Premium, transparent, and efficient metal recycling services/i)).toBeVisible();
   expect(failedAssets).toEqual([]);
+  expect(runtimeErrors).toEqual([]);
+});
+
+test('loads the cinematic hero as high-priority media without hiding conversion content', async ({ page }) => {
+  await page.goto('/');
+
+  const hero = page.locator('.hero');
+  const image = hero.locator('img.hero-media-image');
+  const heading = hero.getByRole('heading', { level: 1 });
+  const actions = hero.locator('.hero-actions');
+
+  await expect(image).toHaveAttribute('src', '/assets/service-industrial-dismantling.webp');
+  await expect(image).toHaveAttribute('fetchpriority', 'high');
+  await expect(image).toHaveJSProperty('complete', true);
+  await expect(page.locator('link[rel="preload"][href="/assets/service-industrial-dismantling.webp"]')).toHaveCount(1);
+  await expect(heading).toBeVisible();
+  await expect(actions).toBeVisible();
+
+  const heroResourceCount = await page.evaluate(() => performance.getEntriesByType('resource')
+    .filter((entry) => entry.name.endsWith('/assets/service-industrial-dismantling.webp')).length);
+  expect(heroResourceCount).toBe(1);
+
+  const entranceState = await heading.evaluate((element) => {
+    const style = getComputedStyle(element.firstElementChild ?? element);
+    return { filter: style.filter, opacity: Number(style.opacity) };
+  });
+  expect(entranceState.filter).toBe('none');
+  expect(entranceState.opacity).toBeGreaterThanOrEqual(0.8);
+
+  const heroAnimations = await hero.evaluate((element) => element.getAnimations({ subtree: true }).map((animation) => ({
+    iterations: animation.effect?.getTiming().iterations,
+  })));
+  expect(heroAnimations.every(({ iterations }) => iterations === 1)).toBe(true);
+});
+
+test('scopes cinematic depth to the desktop hero and resets it on exit', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Fine-pointer depth is validated once in desktop Chromium.');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const hero = page.locator('.hero');
+  const bounds = await hero.boundingBox();
+  expect(bounds).not.toBeNull();
+
+  await page.mouse.move(bounds!.x + bounds!.width * 0.88, bounds!.y + bounds!.height * 0.72);
+  await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-x').trim())).not.toBe('0px');
+
+  await page.mouse.move(8, 8);
+  await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-x').trim())).toBe('0px');
+  await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-y').trim())).toBe('0px');
+});
+
+test('responds immediately to reduced motion and keeps touch depth static', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const hero = page.locator('.hero');
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const bounds = await hero.boundingBox();
+    expect(bounds).not.toBeNull();
+    await page.mouse.move(bounds!.x + bounds!.width * 0.82, bounds!.y + bounds!.height * 0.68);
+    await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-x').trim())).not.toBe('0px');
+  } else {
+    await hero.dispatchEvent('pointermove', { clientX: 330, clientY: 240, pointerType: 'touch' });
+  }
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-x').trim())).toBe('0px');
+  await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-y').trim())).toBe('0px');
+  await expect(hero.locator('.hero-media-image')).toHaveCSS('animation-name', 'none');
 });
 
 test('has no serious or critical axe findings', async ({ page }) => {
@@ -119,7 +194,7 @@ test('switches the full interface between English and Arabic', async ({ page }) 
 
 test('keeps the premium bilingual layout contained at every supported breakpoint', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'The breakpoint matrix runs once in Chromium.');
-  const widths = [320, 375, 620, 768, 1024, 1440];
+  const widths = [320, 375, 390, 620, 768, 1024, 1440];
 
   await page.goto('/');
   for (const width of widths) {
@@ -199,3 +274,4 @@ test('serves a useful 404 fallback', async ({ page }) => {
   expect(response?.status()).toBeLessThan(500);
   await expect(page.getByRole('heading', { name: /That page is not available/i })).toBeVisible();
 });
+

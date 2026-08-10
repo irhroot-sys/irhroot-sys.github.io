@@ -5,65 +5,85 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 import { certifications } from "../data/siteContent.jsx";
 import { BrandMark } from "./BrandMark.jsx";
 
-// Subtle cursor-driven parallax on the hero image. Kept intentionally small
-// (a few px of travel) so it reads as depth rather than motion, and it's
-// fully opt-out for touch devices and prefers-reduced-motion so it never
-// fights the entrance choreography defined in styles.css.
-function useHeroParallax(targetRef) {
+const HERO_IMAGE = "/assets/service-industrial-dismantling.webp";
+
+// Keep the depth effect local to the hero so pointer movement elsewhere on
+// the page cannot keep the image in motion. Media-query listeners also make
+// the effect respond immediately when reduced motion is changed at runtime.
+function useHeroDepthMotion(heroRef) {
   useEffect(() => {
-    const target = targetRef.current;
-    if (!target) return undefined;
+    const hero = heroRef.current;
+    if (!hero) return undefined;
     if (typeof window === "undefined" || !window.matchMedia) return undefined;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    if (reduceMotion || !finePointer) return undefined;
-
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const finePointer = window.matchMedia("(pointer: fine)");
     let frame = null;
-    const maxOffset = 10;
+    let depthEnabled = finePointer.matches && !reduceMotion.matches;
+
+    const resetDepth = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      hero.style.setProperty("--hero-depth-x", "0px");
+      hero.style.setProperty("--hero-depth-y", "0px");
+    };
+
+    const syncMotionPreference = () => {
+      depthEnabled = finePointer.matches && !reduceMotion.matches;
+      hero.dataset.depth = depthEnabled ? "active" : "static";
+      if (!depthEnabled) resetDepth();
+    };
 
     const handlePointerMove = (event) => {
-      const x = (event.clientX / window.innerWidth - 0.5) * 2;
-      const y = (event.clientY / window.innerHeight - 0.5) * 2;
+      if (!depthEnabled) return;
+      const bounds = hero.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+
+      const x = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2));
+      const y = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2));
       if (frame !== null) cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        target.style.setProperty("--parallax-x", `${(x * -maxOffset).toFixed(2)}px`);
-        target.style.setProperty("--parallax-y", `${(y * -maxOffset * 0.6).toFixed(2)}px`);
+        frame = null;
+        hero.style.setProperty("--hero-depth-x", `${(x * -8).toFixed(2)}px`);
+        hero.style.setProperty("--hero-depth-y", `${(y * -5).toFixed(2)}px`);
       });
     };
 
-    const handlePointerLeave = () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      target.style.setProperty("--parallax-x", "0px");
-      target.style.setProperty("--parallax-y", "0px");
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("pointerleave", handlePointerLeave);
-    window.addEventListener("blur", handlePointerLeave);
+    syncMotionPreference();
+    hero.addEventListener("pointermove", handlePointerMove, { passive: true });
+    hero.addEventListener("pointerleave", resetDepth);
+    window.addEventListener("blur", resetDepth);
+    reduceMotion.addEventListener("change", syncMotionPreference);
+    finePointer.addEventListener("change", syncMotionPreference);
 
     return () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handlePointerLeave);
-      window.removeEventListener("blur", handlePointerLeave);
+      resetDepth();
+      hero.removeEventListener("pointermove", handlePointerMove);
+      hero.removeEventListener("pointerleave", resetDepth);
+      window.removeEventListener("blur", resetDepth);
+      reduceMotion.removeEventListener("change", syncMotionPreference);
+      finePointer.removeEventListener("change", syncMotionPreference);
     };
-  }, [targetRef]);
+  }, [heroRef]);
 }
 
 export function Hero() {
   const { t } = useLanguage();
-  const mediaImageRef = useRef(null);
-  useHeroParallax(mediaImageRef);
+  const heroRef = useRef(null);
+  useHeroDepthMotion(heroRef);
 
   return (
-    <section className="hero" aria-labelledby="hero-title">
+    <section ref={heroRef} className="hero" aria-labelledby="hero-title">
       <div className="hero-media">
-        <div
-          ref={mediaImageRef}
+        <img
           className="hero-media-image"
-          role="img"
-          aria-label={t("Industrial material recovery and dismantling operation")}
+          src={HERO_IMAGE}
+          alt={t("Industrial material recovery and dismantling operation")}
+          width="1600"
+          height="900"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
       </div>
       <div className="hero-copy">
@@ -95,3 +115,4 @@ export function Hero() {
     </section>
   );
 }
+
