@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Header } from "./components/Header.jsx";
 import { Footer } from "./components/Footer.jsx";
+import { MotionManager } from "./components/MotionManager.jsx";
 import { QuoteModal } from "./components/QuoteModal.jsx";
 import { QuoteContext } from "./context/QuoteContext.jsx";
 import { LanguageProvider, useLanguage } from "./context/LanguageContext.jsx";
@@ -55,6 +56,7 @@ function SiteApp() {
   return (
     <QuoteContext.Provider value={{ openQuote, closeQuote, quoteContext, quoteOpen }}>
       <ScrollManager />
+      <MotionManager />
       <div className="site-shell">
         <a href="#main-content" className="skip-link">{t("Skip to main content")}</a>
         <Header />
@@ -68,16 +70,20 @@ function SiteApp() {
 
 function PageRoutes() {
   const { pathname } = useLocation();
-  if (pathname === "/") return <HomePage />;
-  if (pathname === "/about") return <AboutPage />;
-  if (pathname === "/services") return <ServicesPage />;
-  if (pathname === "/materials") return <MaterialsPage />;
-  if (pathname === "/products") return <Redirect to="/materials" />;
-  if (pathname === "/faq") return <FaqPage />;
-  if (pathname === "/contact") return <ContactPage />;
-  if (pathname === "/privacy") return <LegalPage documentKey="privacy" />;
-  if (pathname === "/terms") return <LegalPage documentKey="terms" />;
-  return <NotFoundPage />;
+  let page;
+
+  if (pathname === "/") page = <HomePage />;
+  else if (pathname === "/about") page = <AboutPage />;
+  else if (pathname === "/services") page = <ServicesPage />;
+  else if (pathname === "/materials") page = <MaterialsPage />;
+  else if (pathname === "/products") page = <Redirect to="/materials" />;
+  else if (pathname === "/faq") page = <FaqPage />;
+  else if (pathname === "/contact") page = <ContactPage />;
+  else if (pathname === "/privacy") page = <LegalPage documentKey="privacy" />;
+  else if (pathname === "/terms") page = <LegalPage documentKey="terms" />;
+  else page = <NotFoundPage />;
+
+  return <div className={`page-stage ${pathname === "/" ? "is-home" : ""}`} key={pathname}>{page}</div>;
 }
 
 export function App() {
