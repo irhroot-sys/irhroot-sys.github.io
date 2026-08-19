@@ -161,17 +161,45 @@ export function MotionManager() {
     };
   }, [pathname]);
 
+  // Scroll progress, the header's scrolled state and parallax all read the
+  // same scroll position, so they share one rAF pass. Splitting them would
+  // mean three separate reads of layout per frame.
   useEffect(() => {
     const progress = progressRef.current;
     const header = document.querySelector(".site-header");
+    const allowMotion = !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    let parallaxTargets = [];
     let frame = null;
+
+    const collectParallax = () => {
+      parallaxTargets = allowMotion ? Array.from(document.querySelectorAll("[data-parallax]")) : [];
+    };
+
+    // Offset is expressed as a share of the element's own height and capped,
+    // so the image never travels far enough to expose its own edge — the
+    // overscan scale in CSS is what buys the room.
+    const updateParallax = (viewportHeight) => {
+      for (const element of parallaxTargets) {
+        const frameEl = element.parentElement ?? element;
+        const rect = frameEl.getBoundingClientRect();
+        if (rect.bottom < -160 || rect.top > viewportHeight + 160) continue;
+
+        const strength = Number.parseFloat(element.dataset.parallax) || 0.06;
+        const span = viewportHeight / 2 + rect.height / 2;
+        const centreOffset = rect.top + rect.height / 2 - viewportHeight / 2;
+        const ratio = Math.max(-1, Math.min(1, centreOffset / span));
+        element.style.setProperty("--parallax-y", `${(ratio * strength * rect.height).toFixed(2)}px`);
+      }
+    };
 
     const updateScrollState = () => {
       frame = null;
-      const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
+      const viewportHeight = window.innerHeight;
+      const scrollRange = document.documentElement.scrollHeight - viewportHeight;
       const ratio = scrollRange > 0 ? Math.min(Math.max(window.scrollY / scrollRange, 0), 1) : 0;
       progress?.style.setProperty("--scroll-progress", ratio.toFixed(4));
       header?.classList.toggle("is-scrolled", window.scrollY > 12);
+      if (parallaxTargets.length) updateParallax(viewportHeight);
     };
 
     const requestUpdate = () => {
@@ -179,14 +207,26 @@ export function MotionManager() {
       frame = window.requestAnimationFrame(updateScrollState);
     };
 
+    const handleResize = () => {
+      collectParallax();
+      requestUpdate();
+    };
+
+    collectParallax();
     updateScrollState();
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+
+    // Parallax hosts arrive with each route, so re-collect as the DOM changes.
+    const contentObserver = new MutationObserver(handleResize);
+    contentObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       if (frame !== null) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("resize", handleResize);
+      contentObserver.disconnect();
+      parallaxTargets.forEach((element) => element.style.removeProperty("--parallax-y"));
       header?.classList.remove("is-scrolled");
     };
   }, []);

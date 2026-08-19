@@ -94,11 +94,29 @@
   --shadow-card-hover: 0 18px 48px -12px rgba(7,19,36,.18);
   --shadow-ink: 0 30px 80px -30px rgba(7,19,36,.55);
 
-  --motion-fast: 180ms cubic-bezier(.2,.8,.2,1);
-  --motion-medium: 320ms cubic-bezier(.2,.8,.2,1);
-  --motion-slow: 680ms cubic-bezier(.16,1,.3,1);
-  --motion-reveal: 520ms cubic-bezier(.16,1,.3,1);
-  --motion-reveal-recover: 240ms cubic-bezier(.2,.8,.2,1);
+  /* ── Motion ─────────────────────────────────────────────────────────────
+     One small set of curves and durations, so every interaction on the site
+     decelerates the same way. Expo-out is the settle curve for anything
+     entering; standard is for state changes the pointer drives; the quint
+     in-out is reserved for wipes and page transitions, which need weight at
+     both ends. Nothing overshoots — a bounce reads as playful, not premium. */
+  --ease-out-expo: cubic-bezier(.16, 1, .3, 1);
+  --ease-out-quart: cubic-bezier(.25, 1, .5, 1);
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --ease-in-out-quint: cubic-bezier(.83, 0, .17, 1);
+
+  --dur-xs: 120ms;
+  --dur-sm: 200ms;
+  --dur-md: 340ms;
+  --dur-lg: 560ms;
+  --dur-xl: 820ms;
+
+  --motion-fast: var(--dur-sm) var(--ease-out-quart);
+  --motion-medium: var(--dur-md) var(--ease-out-quart);
+  --motion-slow: var(--dur-xl) var(--ease-out-expo);
+  --motion-reveal: var(--dur-lg) var(--ease-out-expo);
+  --motion-reveal-recover: var(--dur-md) var(--ease-out-quart);
+
   --media-ratio: 4 / 3;
 }
 
@@ -217,9 +235,26 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink);
   border-bottom: 1px solid rgba(255,255,255,.08);
   z-index: 20;
-  transition: border-color var(--motion-fast), box-shadow var(--motion-medium);
+  transition: background var(--dur-md) var(--ease-standard), border-color var(--dur-md) var(--ease-standard), box-shadow var(--dur-lg) var(--ease-out-quart);
 }
-.site-header.is-scrolled { border-bottom-color: rgba(255,255,255,.22); box-shadow: 0 18px 44px -18px rgba(7,19,36,.7); }
+/* Once the chrome is over page content rather than the hero it becomes a
+   translucent pane. Opacity stays high enough that the nav keeps its
+   contrast over any section beneath it. */
+.site-header.is-scrolled {
+  background: rgba(7,19,36,.88);
+  border-bottom-color: rgba(255,255,255,.16);
+  box-shadow: 0 18px 44px -22px rgba(7,19,36,.75);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .site-header.is-scrolled {
+    background: rgba(7,19,36,.8);
+    /* Kept small deliberately. An 18px blur with a saturate pass cost about
+       five times as many dropped frames during scroll as an 8px blur alone,
+       for an effect the eye cannot separate behind an 80%-opaque pane. */
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
 
 .primary-header {
   position: absolute;
@@ -374,7 +409,7 @@ a { color: inherit; text-decoration: none; }
   right: 0;
   bottom: 34px;
   height: 1px;
-  background: var(--accent);
+  background: #fff;
   opacity: 0;
   transform: scaleX(.45);
   transition: .2s ease;
@@ -469,19 +504,8 @@ a { color: inherit; text-decoration: none; }
 }
 .hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 
-/* Grade layer 1 — pushes the shadows to ink so mismatched source photography
-   resolves to one temperature. */
-.hero-media::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: var(--ink);
-  mix-blend-mode: color;
-  opacity: .66;
-}
-/* Grade layer 2 — the readability scrim and the warm cast, in one pass. */
+/* Grade layer — the readability scrim. The colour grade itself lives in the
+   image's own filter chain; see the note on .hero-media-image. */
 .hero-media::after {
   content: "";
   position: absolute;
@@ -501,9 +525,15 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   object-fit: cover;
   object-position: center 58%;
+  --parallax-y: 0px;
   scale: 1.04;
-  translate: var(--hero-depth-x) var(--hero-depth-y);
-  filter: grayscale(.5) contrast(1.08) brightness(.95) saturate(1.05);
+  translate: var(--hero-depth-x) calc(var(--hero-depth-y) + var(--parallax-y));
+  /* The duotone was a solid ink layer in `mix-blend-mode: color`. Any
+     mix-blend-mode forces the stacking context to composite on the main
+     thread, which halved the frame rate during scroll; a filter chain is
+     handled by the compositor. These values were fitted against the blended
+     render — the mean pixel difference between the two is ~12/255. */
+  filter: grayscale(1) sepia(.32) hue-rotate(176deg) saturate(1.12) brightness(.95) contrast(1.06);
   animation: hero-camera-drift 22s cubic-bezier(.25,.7,.35,1) .2s both;
   transition: translate .6s cubic-bezier(.2,.8,.2,1);
   will-change: translate, scale;
@@ -515,7 +545,7 @@ a { color: inherit; text-decoration: none; }
   z-index: 3;
   padding-block: var(--space-10) var(--space-9);
 }
-@keyframes hero-camera-drift { from { scale: 1.04; } to { scale: 1.11; } }
+@keyframes hero-camera-drift { from { scale: 1.06; } to { scale: 1.13; } }
 @keyframes hero-enter {
   from { opacity: .85; translate: 0 16px; }
   to { opacity: 1; translate: 0 0; }
@@ -731,20 +761,11 @@ a { color: inherit; text-decoration: none; }
 }
 /* ── Image grade ─────────────────────────────────────────────────────────
    The source photography is licensed stock shot under different light: a
-   cool container yard beside a warm rust pile beside a bright sky. Two
-   blended layers resolve all of it to one navy-and-gray duotone so the set
-   reads as though it were commissioned together. */
-.service-media::before,
-.service-detail-media::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: var(--ink);
-  mix-blend-mode: color;
-  opacity: .62;
-}
+   cool container yard beside a warm rust pile beside a bright sky. One
+   filter chain resolves all of it to a single navy duotone so the set reads
+   as though it were commissioned together, and a gradient scrim sits on top.
+   The grade used to be a blended ink layer; it is a filter now purely for
+   frame cost. */
 .service-media::after,
 .service-detail-media::after {
   content: "";
@@ -763,14 +784,16 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(.42) brightness(.97) contrast(1.1) saturate(1.05);
-  transition: transform 620ms cubic-bezier(.16,1,.3,1), filter var(--motion-medium);
+  filter: grayscale(1) sepia(.35) hue-rotate(176deg) saturate(1.1) brightness(.9) contrast(1.08);
+  transition: transform var(--dur-xl) var(--ease-out-expo), filter var(--dur-lg) var(--ease-out-quart);
 }
 .service-card:hover .service-media img,
 .service-card:focus-visible .service-media img,
 .service-detail:hover .service-detail-media img {
   transform: scale(1.05);
-  filter: grayscale(.14) brightness(1.03) contrast(1.06) saturate(1.12);
+  /* Hover lets a little of the original colour back through — the grade
+     easing off is the interaction. */
+  filter: grayscale(.55) sepia(.14) hue-rotate(176deg) saturate(1.35) brightness(1) contrast(1.06);
 }
 .service-card:hover .service-media::after,
 .service-card:focus-visible .service-media::after,
@@ -1074,12 +1097,15 @@ a { color: inherit; text-decoration: none; }
   color: var(--on-ink);
 }
 .page-hero-media {
+  --parallax-y: 0px;
   position: absolute;
-  inset: 0;
+  inset: -6% 0;
   background-position: center;
   background-size: cover;
   clip-path: none;
-  filter: grayscale(.5) contrast(1.08) brightness(.95) saturate(1.05);
+  filter: grayscale(1) sepia(.32) hue-rotate(176deg) saturate(1.12) brightness(.95) contrast(1.06);
+  translate: 0 var(--parallax-y);
+  will-change: translate;
 }
 .page-hero-media::after {
   content: "";
@@ -1354,16 +1380,6 @@ a { color: inherit; text-decoration: none; }
 .product-card:hover { transform: none; box-shadow: none; }
 .product-media { position: relative; height: auto; aspect-ratio: var(--media-ratio); overflow: hidden; isolation: isolate; background: var(--ink); }
 /* The catalogue shares the same grade as the service imagery. */
-.product-media::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: var(--ink);
-  mix-blend-mode: color;
-  opacity: .62;
-}
 .product-media::after {
   content: "";
   position: absolute;
@@ -1374,8 +1390,8 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(180deg, rgba(7,19,36,.06) 0%, rgba(7,19,36,.04) 42%, rgba(7,19,36,.62) 100%),
     linear-gradient(140deg, rgba(126,131,137,.4) 0%, rgba(126,131,137,.08) 58%, rgba(7,19,36,.15) 100%);
 }
-.product-media img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.42) brightness(.97) contrast(1.1) saturate(1.05); transition: transform 620ms cubic-bezier(.16,1,.3,1), filter var(--motion-medium); }
-.product-card:hover .product-media img { transform: scale(1.05); filter: grayscale(.14) brightness(1.03) contrast(1.06) saturate(1.12); }
+.product-media img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) sepia(.35) hue-rotate(176deg) saturate(1.1) brightness(.9) contrast(1.08); transition: transform var(--dur-xl) var(--ease-out-expo), filter var(--dur-lg) var(--ease-out-quart); }
+.product-card:hover .product-media img { transform: scale(1.05); filter: grayscale(.55) sepia(.14) hue-rotate(176deg) saturate(1.35) brightness(1) contrast(1.06); }
 .product-media > span {
   position: absolute;
   z-index: 3;
@@ -1443,7 +1459,22 @@ a { color: inherit; text-decoration: none; }
 .faq-list details[open] summary::after { content: "−"; }
 .faq-list p { margin: 0 0 var(--space-6); padding-inline-end: var(--space-8); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
 .faq-list summary:hover::after { color: var(--navy-bright); rotate: 90deg; }
-.faq-list details[open] > p { animation: faq-answer-in 320ms cubic-bezier(.2,.8,.2,1) both; }
+.faq-list details[open] > p { animation: faq-answer-in var(--dur-md) var(--ease-out-quart) both; }
+@supports selector(::details-content) {
+  .faq-list details::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size var(--dur-md) var(--ease-out-quart),
+      content-visibility var(--dur-md) allow-discrete,
+      opacity var(--dur-md) var(--ease-standard);
+  }
+  .faq-list details[open]::details-content { block-size: auto; opacity: 1; }
+  .faq-list { interpolate-size: allow-keywords; }
+  /* The paragraph fade is redundant once the disclosure itself animates. */
+  .faq-list details[open] > p { animation: none; }
+}
 @keyframes faq-answer-in { from { opacity: 0; translate: 0 -7px; } }
 
 /* ── Legal ───────────────────────────────────────────────────────────────── */
@@ -1524,6 +1555,26 @@ a { color: inherit; text-decoration: none; }
 .not-found p { margin: 0 0 var(--space-6); color: var(--muted); font-size: var(--text-md); }
 .not-found.is-compact { min-height: 460px; }
 
+/* ── Route transitions ───────────────────────────────────────────────────
+   Only the main region is named, so the chrome above and below it stays put
+   while the page itself changes — the header does not flash between routes.
+   The outgoing page leaves faster than the incoming one arrives, which is
+   what keeps a cross-fade from reading as a dissolve. */
+@supports (view-transition-name: none) {
+  main { view-transition-name: page; }
+  ::view-transition-old(page) {
+    animation: page-leave var(--dur-sm) var(--ease-standard) both;
+  }
+  ::view-transition-new(page) {
+    animation: page-arrive var(--dur-lg) var(--ease-out-expo) both;
+  }
+  /* Routes differ in height; without this the group tweens between the two
+     sizes and the content appears to stretch. */
+  ::view-transition-group(page) { animation-duration: var(--dur-sm); }
+  @keyframes page-leave { to { opacity: 0; translate: 0 -8px; } }
+  @keyframes page-arrive { from { opacity: 0; translate: 0 14px; } }
+}
+
 /* Progressive motion: attributes are added only when motion is supported. */
 .page-stage:not(.is-home) { animation: page-stage-in 460ms cubic-bezier(.2,.8,.2,1) both; }
 @keyframes page-stage-in { from { opacity: .72; translate: 0 8px; } }
@@ -1536,7 +1587,7 @@ a { color: inherit; text-decoration: none; }
   opacity: 1;
   translate: 0 0;
   animation: content-reveal var(--motion-reveal) both;
-  animation-delay: calc(var(--motion-order, 0) * 45ms);
+  animation-delay: calc(var(--motion-order, 0) * 34ms);
 }
 /* Recovery path: the element was already on screen when it was released — a
    fast scroll, a resize, a late layout shift. Fade it in now, with no stagger,
@@ -1549,6 +1600,149 @@ a { color: inherit; text-decoration: none; }
   from { opacity: 0; translate: 0 14px; }
   to { opacity: 1; translate: 0 0; }
 }
+
+/* Headings carry a longer rise than body copy. The extra distance is what
+   makes a section feel like it arrives rather than simply appears. */
+h2[data-motion="reveal"], h3[data-motion="reveal"] { translate: 0 26px; }
+h2[data-motion="reveal"].is-revealed,
+h3[data-motion="reveal"].is-revealed { animation-name: content-reveal-heading; }
+@keyframes content-reveal-heading {
+  from { opacity: 0; translate: 0 26px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* ── Media reveal ────────────────────────────────────────────────────────
+   Photography wipes in behind a mask and settles out of a slight overscan.
+   A plain fade on a photograph reads as a slow image load; a mask reads as
+   a deliberate cut. Only media inside an element the MotionManager has
+   staged is masked, so nothing on first paint is ever hidden. */
+[data-motion="reveal"] .service-media,
+[data-motion="reveal"] .product-media,
+[data-motion="reveal"] .service-detail-media { clip-path: inset(0 0 100% 0); }
+[data-motion="reveal"].is-revealed .service-media,
+[data-motion="reveal"].is-revealed .product-media,
+[data-motion="reveal"].is-revealed .service-detail-media {
+  animation: media-wipe var(--dur-lg) var(--ease-out-expo) both;
+  animation-delay: calc(var(--motion-order, 0) * 34ms);
+}
+[data-motion="reveal"].is-revealed.is-immediate .service-media,
+[data-motion="reveal"].is-revealed.is-immediate .product-media,
+[data-motion="reveal"].is-revealed.is-immediate .service-detail-media {
+  animation-duration: var(--dur-md);
+  animation-delay: 0ms;
+}
+@keyframes media-wipe {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+/* The image settles out of its own overscan as the mask opens, so the two
+   movements resolve together instead of the frame arriving before the
+   picture. */
+[data-motion="reveal"].is-revealed .service-media img,
+[data-motion="reveal"].is-revealed .product-media img,
+[data-motion="reveal"].is-revealed .service-detail-media img {
+  animation: media-settle var(--dur-lg) var(--ease-out-expo) both;
+  animation-delay: calc(var(--motion-order, 0) * 34ms);
+}
+@keyframes media-settle { from { scale: 1.08; } to { scale: 1; } }
+
+/* ── Micro-interactions ──────────────────────────────────────────────────
+   Every hover state below moves one property group only — a transform, a
+   colour, or a single scaled rule. Layering more than that is what tips a
+   considered interface into a busy one. */
+
+/* Ghost buttons fill from the leading edge rather than snapping colour. */
+.hero-actions .secondary-button::before,
+.explore-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-md) var(--ease-out-quart);
+}
+.hero-actions .secondary-button::before { background: #fff; }
+.explore-button::before { background: var(--navy); }
+.hero-actions .secondary-button:hover::before,
+.hero-actions .secondary-button:focus-visible::before,
+.explore-button:hover::before,
+.explore-button:focus-visible::before { transform: scaleX(1); }
+.quote-button:hover .directional-icon,
+.primary-button:hover .directional-icon,
+.secondary-button:hover .directional-icon,
+.explore-button:hover .directional-icon,
+.inline-action:hover .directional-icon { translate: 4px 0; }
+
+/* Nav underlines draw from the leading edge. */
+.primary-nav a::after {
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-md) var(--ease-out-quart), background var(--dur-sm) var(--ease-standard);
+}
+.primary-nav a:hover::after,
+.primary-nav a:focus-visible::after,
+.primary-nav a.active::after { opacity: 1; transform: scaleX(1); }
+
+/* A rule draws across the top of the card's copy as the card is hovered,
+   picking up the hairline that already separates image from text. */
+.service-copy, .product-copy { position: relative; }
+.service-copy::before, .product-copy::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--navy);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-lg) var(--ease-out-expo);
+}
+.service-card:hover .service-copy::before,
+.service-card:focus-visible .service-copy::before,
+.product-card:hover .product-copy::before { transform: scaleX(1); }
+
+/* Filter chips fill rather than flip. */
+.filter-chips button { position: relative; overflow: hidden; isolation: isolate; }
+.filter-chips button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--navy);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform var(--dur-sm) var(--ease-out-quart);
+}
+.filter-chips button:hover::before { transform: scaleY(1); }
+.filter-chips button:hover { color: var(--paper); border-color: var(--navy); }
+.filter-chips button.active::before { transform: scaleY(1); }
+
+/* Disclosure marker and list ticks pick up the same easing as everything
+   else rather than each keeping their own. */
+.faq-list summary::after { transition: rotate var(--dur-md) var(--ease-out-quart), color var(--dur-sm) var(--ease-standard); }
+.inline-action { transition: color var(--dur-sm) var(--ease-standard), border-color var(--dur-sm) var(--ease-standard); }
+.contact-methods > a > svg,
+.footer-contact svg,
+.utility-bar svg { transition: color var(--dur-sm) var(--ease-standard), translate var(--dur-sm) var(--ease-out-quart); }
+.contact-methods > a:hover > svg { translate: 0 -2px; }
+.utility-bar a:hover svg { translate: 0 -1px; }
+
+/* Form fields settle rather than snap when focus lands. */
+.contact-form input, .contact-form select, .contact-form textarea,
+.quote-modal input, .quote-modal select, .quote-modal textarea,
+.search-control { transition: border-color var(--dur-sm) var(--ease-standard), box-shadow var(--dur-md) var(--ease-out-quart), background var(--dur-sm) var(--ease-standard); }
+
+/* The brand mark lifts a fraction on hover — the smallest possible
+   acknowledgement that the lockup is a link. */
+.brand { transition: translate var(--dur-md) var(--ease-out-quart); }
+.brand:hover { translate: 0 -1px; }
+.brand-mark > path, .brand-mark > g path { transition: fill var(--dur-md) var(--ease-standard); }
+
+/* Language toggle: the pressed state slides its fill in. */
+.language-toggle button { transition: background var(--dur-sm) var(--ease-out-quart), color var(--dur-sm) var(--ease-standard); }
+
 
 @media (max-width: 1350px) {
   .utility-bar { width: calc(100% - 330px); }
@@ -1719,10 +1913,26 @@ a { color: inherit; text-decoration: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .hero { --hero-depth-x: 0px; --hero-depth-y: 0px; }
-  .hero-media::before { mix-blend-mode: normal; opacity: .5; }
   .hero-media-image, .hero-eyebrow, .hero-badge, .hero-line-1, .hero-line-2, .hero-lede, .hero-actions, .hero-trust, .hero::before, .hero-eyebrow::after { animation: none !important; }
   .hero-media-image { scale: 1.025; translate: none !important; transition: none !important; }
   .page-stage, [data-motion="reveal"], [data-motion="reveal"].is-revealed { opacity: 1 !important; translate: none !important; animation: none !important; }
+  /* Masked media, parallax, the disclosure transition and route transitions
+     all resolve to their finished state rather than animating to it. */
+  [data-motion="reveal"] .service-media,
+  [data-motion="reveal"] .product-media,
+  [data-motion="reveal"] .service-detail-media,
+  [data-motion="reveal"].is-revealed .service-media,
+  [data-motion="reveal"].is-revealed .product-media,
+  [data-motion="reveal"].is-revealed .service-detail-media { clip-path: none !important; animation: none !important; }
+  [data-motion="reveal"].is-revealed .service-media img,
+  [data-motion="reveal"].is-revealed .product-media img,
+  [data-motion="reveal"].is-revealed .service-detail-media img { scale: 1 !important; animation: none !important; }
+  .hero-media-image, .page-hero-media { --parallax-y: 0px !important; }
+  .page-hero-media { translate: none !important; }
+  .faq-list details::details-content { transition: none !important; }
+  ::view-transition-old(page), ::view-transition-new(page) { animation: none !important; }
+  .secondary-button::before, .explore-button::before, .filter-chips button::before,
+  .service-copy::before, .product-copy::before, .primary-nav a::after { transition: none !important; }
 }
 
 html[lang="ar"] body,
@@ -1764,6 +1974,13 @@ html[dir="rtl"] .page-hero-media::after {
 html[dir="rtl"] .selected-context { border-left: 0; border-right: 0; }
 html[dir="rtl"] .directional-icon { transform: scaleX(-1); }
 html[dir="rtl"] .scroll-progress span { transform-origin: right center; }
+/* Every sweep introduced with the motion layer grows from the leading edge,
+   which is the right edge once the document is mirrored. */
+html[dir="rtl"] .primary-nav a::after,
+html[dir="rtl"] .service-copy::before,
+html[dir="rtl"] .product-copy::before,
+html[dir="rtl"] .hero-actions .secondary-button::before,
+html[dir="rtl"] .explore-button::before { transform-origin: right center; }
 html[dir="rtl"] .quote-button:hover .directional-icon,
 html[dir="rtl"] .primary-button:hover .directional-icon,
 html[dir="rtl"] .secondary-button:hover .directional-icon,

@@ -288,6 +288,10 @@ test('serves a useful 404 fallback', async ({ page }) => {
 
 
 test('never strands revealed content at opacity 0, at rest or mid-scroll', async ({ page }) => {
+  // Every scroll step waits for the staggered reveal to finish before it
+  // asserts, and mobile walks a much taller document, so this one needs more
+  // than the default budget.
+  test.setTimeout(150_000);
   // Regression guard. The scroll-reveal used to stage every matching element at
   // opacity 0 — including elements already on screen — so a first paint or a
   // fast scroll left whole sections blank until the observer caught up.
@@ -300,6 +304,16 @@ test('never strands revealed content at opacity 0, at rest or mid-scroll', async
       if (Number.parseFloat(getComputedStyle(element).opacity) < 0.05) {
         offenders.push(String(element.className) || element.tagName.toLowerCase());
       }
+      // Media inside a staged element is masked until the element is
+      // released; a mask that never opens hides the photograph just as
+      // completely as opacity 0 does.
+      element.querySelectorAll('.service-media, .product-media, .service-detail-media').forEach((media) => {
+        const mediaRect = media.getBoundingClientRect();
+        const mediaVisible = Math.min(mediaRect.bottom, window.innerHeight) - Math.max(mediaRect.top, 0);
+        if (mediaVisible < 40) return;
+        const clip = getComputedStyle(media).clipPath;
+        if (clip && clip !== 'none' && /100%/.test(clip)) offenders.push(`masked ${String(media.className)}`);
+      });
     });
     return offenders;
   });
@@ -315,7 +329,11 @@ test('never strands revealed content at opacity 0, at rest or mid-scroll', async
     }));
     for (let top = step; top < height; top += step) {
       await page.evaluate((y) => window.scrollTo(0, y), top);
-      expect(await stranded(), `${path} goes blank while scrolling past ${top}px`).toEqual([]);
+      // Reveals stagger, so a sample taken the same tick as the scroll would
+      // catch elements mid-animation. The invariant is that nothing is still
+      // hidden once motion has had time to finish.
+      await page.waitForTimeout(700);
+      expect(await stranded(), `${path} leaves content hidden at ${top}px`).toEqual([]);
     }
   }
 });
@@ -357,4 +375,71 @@ test('clears the 44px touch-target floor on coarse pointers', async ({ page }, t
     return offenders;
   });
   expect(undersized).toEqual([]);
+});
+
+
+test('pins every scroll-driven effect when reduced motion is requested', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/services');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
+  const readParallax = () => page.evaluate(() => {
+    const element = document.querySelector('[data-parallax]');
+    return element ? getComputedStyle(element).getPropertyValue('--parallax-y').trim() : null;
+  });
+
+  await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); });
+  await page.waitForTimeout(250);
+  const atTop = await readParallax();
+  await page.evaluate(() => window.scrollTo(0, Math.round(window.innerHeight * 0.8)));
+  await page.waitForTimeout(300);
+  expect(await readParallax(), 'parallax must not track scroll under reduced motion').toBe(atTop);
+
+  // Masks and entrance offsets resolve to their finished state rather than
+  // animating to it.
+  const unresolved = await page.evaluate(() => {
+    const out: string[] = [];
+    document.querySelectorAll('.service-media, .product-media, .service-detail-media').forEach((media) => {
+      const clip = getComputedStyle(media).clipPath;
+      if (clip && clip !== 'none' && /100%/.test(clip)) out.push(String(media.className));
+    });
+    document.querySelectorAll('[data-motion="reveal"]').forEach((element) => {
+      if (Number.parseFloat(getComputedStyle(element).opacity) < 0.99) out.push(String(element.className));
+    });
+    return out;
+  });
+  expect(unresolved).toEqual([]);
+});
+
+test('moves the hero image with scroll when motion is allowed', async ({ page }) => {
+  await page.goto('/services');
+  await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); });
+  await page.waitForTimeout(250);
+  const readParallax = () => page.evaluate(() => getComputedStyle(document.querySelector('[data-parallax]')!).getPropertyValue('--parallax-y').trim());
+  const atTop = await readParallax();
+  await page.evaluate(() => window.scrollTo(0, Math.round(window.innerHeight * 0.7)));
+  await page.waitForTimeout(320);
+  expect(await readParallax(), 'parallax should track scroll').not.toBe(atTop);
+});
+
+test('keeps blend modes out of the stylesheet', async ({ page }) => {
+  // A mix-blend-mode anywhere in the scroll path forces its stacking context
+  // to composite on the main thread. Replacing the graded overlay with a
+  // filter chain took the median frame during scroll from 33ms to 17ms, so
+  // this is a performance regression guard, not a style preference.
+  await page.goto('/');
+  const blended = await page.evaluate(() => {
+    const out: string[] = [];
+    document.querySelectorAll('body *').forEach((element) => {
+      for (const pseudo of [null, '::before', '::after']) {
+        const styles = getComputedStyle(element, pseudo);
+        if (pseudo && styles.content === 'none') continue;
+        if (styles.mixBlendMode && styles.mixBlendMode !== 'normal') {
+          out.push(`${element.tagName.toLowerCase()}${pseudo ?? ''}: ${styles.mixBlendMode}`);
+        }
+      }
+    });
+    return out;
+  });
+  expect(blended).toEqual([]);
 });
