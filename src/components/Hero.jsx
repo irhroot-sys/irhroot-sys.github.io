@@ -77,6 +77,7 @@ export function Hero() {
       <div className="hero-media">
         <img
           className="hero-media-image"
+          data-parallax="0.07"
           src={HERO_IMAGE}
           alt={t("Industrial material recovery and dismantling operation")}
           width="1600"

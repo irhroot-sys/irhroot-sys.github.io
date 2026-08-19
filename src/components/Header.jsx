@@ -5,6 +5,7 @@ import { useQuote } from "../context/QuoteContext.jsx";
 import { Link, NavLink, useLocation } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { PhoneNumber } from "./PhoneNumber.jsx";
+import { BrandMark } from "./BrandMark.jsx";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,15 +61,7 @@ export function Header() {
 
       <div className="primary-header">
         <Link className="brand" to="/" aria-label={t("AALKC home")}>
-          <img
-            src="/assets/aalkc-logo-official-9233f531.svg"
-            width="160"
-            height="160"
-            alt=""
-            aria-hidden="true"
-            decoding="async"
-            fetchPriority="high"
-          />
+          <BrandMark className="brand-mark" />
           <span className="brand-wordmark" aria-hidden="true">
             <strong dir="ltr">AALKC</strong>
             <span>Amanat Al-Kalima Company</span>

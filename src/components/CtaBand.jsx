@@ -7,7 +7,7 @@ export function CtaBand({ title = "Have an industrial requirement to discuss?", 
   const { openQuote } = useQuote();
   const { t } = useLanguage();
   return (
-    <section className="cta-band content-width">
+    <section className="cta-band">
       <div>
         <span>{t("Talk to AALKC")}</span>
         <h2>{t(title)}</h2>

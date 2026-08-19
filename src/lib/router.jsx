@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 
 const RouterContext = createContext(null);
 
@@ -26,7 +27,21 @@ export function RouterProvider({ children }) {
       return;
     }
     window.history[replace ? "replaceState" : "pushState"]({}, "", `${destination.pathname}${destination.search}${destination.hash}`);
-    setLocation(readLocation());
+
+    // View Transitions need the DOM to be updated synchronously inside the
+    // callback, hence flushSync. Where the API is missing — or the visitor
+    // has asked for less motion — the route swaps as it always did and the
+    // page-stage animation covers the change.
+    const commit = () => setLocation(readLocation());
+    const allowTransition =
+      typeof document.startViewTransition === "function"
+      && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    if (allowTransition) {
+      document.startViewTransition(() => flushSync(commit));
+    } else {
+      commit();
+    }
   }, []);
 
   const value = useMemo(() => ({ ...location, navigate }), [location, navigate]);
