@@ -131,7 +131,13 @@ test('uses consistent service-card media ratios', async ({ page }) => {
     const box = element.getBoundingClientRect();
     return box.width / box.height;
   }));
-  for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 1);
+  // Assert against the design token rather than a hard-coded number so the
+  // ratio can change with the system while consistency stays enforced.
+  const expectedRatio = await page.evaluate(() => {
+    const [w, h] = getComputedStyle(document.documentElement).getPropertyValue('--media-ratio').split('/').map((part) => Number(part.trim()));
+    return w / h;
+  });
+  for (const ratio of ratios) expect(ratio).toBeCloseTo(expectedRatio, 1);
 
   const sources = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => image.getAttribute('src')));
   expect(new Set(sources).size).toBe(6);
@@ -141,7 +147,12 @@ test('uses consistent service-card media ratios', async ({ page }) => {
     filter: getComputedStyle(image).filter,
   })));
   expect(new Set(treatments.map(({ fit }) => fit))).toEqual(new Set(['cover']));
-  expect(new Set(treatments.map(({ filter }) => filter))).toEqual(new Set(['brightness(0.92) contrast(1.08) saturate(0.88)']));
+  // Every card shares one grade — that shared treatment is what makes a set of
+  // separately-licensed photographs read as a commissioned set. Assert the
+  // consistency and the presence of the grade, not a literal filter string.
+  const filters = new Set(treatments.map(({ filter }) => filter));
+  expect(filters.size).toBe(1);
+  expect([...filters][0]).toMatch(/grayscale\(/);
 });
 
 test('uses the premium bilingual body fonts and interactive link states', async ({ page }) => {
@@ -151,11 +162,11 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     body: getComputedStyle(document.body).fontFamily,
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
-  expect(englishFonts.body).toContain('Montserrat');
-  expect(englishFonts.heading).toContain('IBM Plex Sans Condensed');
+  expect(englishFonts.body).toContain('Manrope');
+  expect(englishFonts.heading).toContain('Archivo');
 
   const activeNav = page.locator('.primary-nav a.active');
-  await expect(activeNav).toHaveCSS('color', 'rgb(0, 79, 159)');
+  await expect(activeNav).toHaveCSS('color', 'rgb(255, 255, 255)');
 
   const footerLink = page.locator('.footer-links a').first();
   await footerLink.hover();
@@ -169,8 +180,8 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     body: getComputedStyle(document.body).fontFamily,
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
-  expect(arabicFonts.body).toContain('Cairo');
-  expect(arabicFonts.heading).toContain('Cairo');
+  expect(arabicFonts.body).toContain('IBM Plex Sans Arabic');
+  expect(arabicFonts.heading).toContain('IBM Plex Sans Arabic');
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -199,7 +210,7 @@ test('keeps the premium bilingual layout contained at every supported breakpoint
   await page.goto('/');
   for (const width of widths) {
     await page.setViewportSize({ width, height: 900 });
-    await expect(page.locator('.brand img')).toBeVisible();
+    await expect(page.locator('.brand .brand-mark')).toBeVisible();
     await expect(page.getByRole('region', { name: 'Company statistics' }).getByText('Eastern Province')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     expect(await page.getByRole('region', { name: 'Company statistics' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
