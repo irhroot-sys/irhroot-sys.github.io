@@ -20,6 +20,8 @@
   --motion-fast: 180ms cubic-bezier(.2,.8,.2,1);
   --motion-medium: 320ms cubic-bezier(.2,.8,.2,1);
   --motion-slow: 680ms cubic-bezier(.16,1,.3,1);
+  --motion-reveal: 520ms cubic-bezier(.16,1,.3,1);
+  --motion-reveal-recover: 240ms cubic-bezier(.2,.8,.2,1);
   --media-ratio: 16 / 9;
 }
 
@@ -72,6 +74,9 @@ a { color: inherit; text-decoration: none; }
   top: -100%;
   left: 16px;
   z-index: 999;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   padding: 12px 24px;
   background: var(--navy);
   color: #fff;
@@ -646,18 +651,54 @@ a { color: inherit; text-decoration: none; }
 
 .site-footer { color: #d8e0ea; background: #00152f; font-size: 12px; }
 .footer-main { min-height: 245px; padding-block: 48px 38px; display: grid; grid-template-columns: minmax(280px, 1.8fr) 1fr 1.4fr; gap: 80px; }
-.footer-brand img {
-  display: block;
-  width: min(100%, 320px);
-  height: auto;
-  padding: 16px 18px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 6px;
+/* The footer identity is the real mark plus real text, tinted for the dark
+   surface — the same lockup the header uses. It replaced a flattened raster
+   export that had to sit on its own white panel to stay legible. */
+.footer-lockup { display: flex; align-items: center; gap: 14px; }
+.footer-brandmark { flex: 0 0 auto; width: 66px; height: 66px; }
+/* Presentation-attribute fills inside the mark are overridden here so the same
+   component can render on light and dark surfaces without a second asset. */
+.footer-brandmark > path { fill: #fff; }
+.footer-brandmark > g path { fill: #8ea3bb; }
+.footer-wordmark {
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  color: #fff;
+  line-height: 1.05;
 }
-.footer-brand p { max-width: 430px; margin: 18px 0 0; color: #aeb9c7; font-size: 12px; line-height: 1.75; }
+.footer-wordmark strong {
+  font-family: var(--font-heading);
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+.footer-wordmark span {
+  overflow: hidden;
+  color: #b9c6d6;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .025em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.footer-wordmark span[lang="ar"] {
+  margin-top: 2px;
+  font-family: var(--font-arabic);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.footer-brand > p { max-width: 430px; margin: 18px 0 0; color: #aeb9c7; font-size: 12px; line-height: 1.75; }
 .footer-main h2 { margin: 0 0 17px; color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
-.footer-links, .footer-contact { display: flex; align-items: flex-start; flex-direction: column; gap: 10px; }
+/* The gap between these stacked links used to be dead space: each anchor was
+   only as tall as its 15px text, leaving a 25px pitch with a 15px target.
+   Moving that spacing into the anchors' own padding keeps the rhythm identical
+   while making the whole row tappable. */
+.footer-links, .footer-contact { display: flex; align-items: flex-start; flex-direction: column; gap: 0; }
+.footer-links a, .footer-legal a { padding-block: 5px; }
+.footer-contact a, .footer-contact span { padding-block: 4px; }
 .footer-links a,
 .footer-contact a,
 .footer-legal a {
@@ -950,15 +991,25 @@ a { color: inherit; text-decoration: none; }
 .page-stage:not(.is-home) { animation: page-stage-in 460ms cubic-bezier(.2,.8,.2,1) both; }
 @keyframes page-stage-in { from { opacity: .72; translate: 0 8px; } }
 
-[data-motion="reveal"] { opacity: 0; translate: 0 22px; }
+/* Only elements the MotionManager has measured as sitting below the fold ever
+   receive data-motion="reveal", so nothing on screen is hidden at first paint.
+   Every other element keeps the document's default, visible resting state. */
+[data-motion="reveal"] { opacity: 0; translate: 0 14px; }
 [data-motion="reveal"].is-revealed {
   opacity: 1;
   translate: 0 0;
-  animation: content-reveal var(--motion-slow) both;
-  animation-delay: calc(var(--motion-order, 0) * 55ms);
+  animation: content-reveal var(--motion-reveal) both;
+  animation-delay: calc(var(--motion-order, 0) * 45ms);
+}
+/* Recovery path: the element was already on screen when it was released — a
+   fast scroll, a resize, a late layout shift. Fade it in now, with no stagger,
+   rather than holding a blank gap for the length of the staged animation. */
+[data-motion="reveal"].is-revealed.is-immediate {
+  animation-duration: var(--motion-reveal-recover);
+  animation-delay: 0ms;
 }
 @keyframes content-reveal {
-  from { opacity: 0; translate: 0 22px; }
+  from { opacity: 0; translate: 0 14px; }
   to { opacity: 1; translate: 0 0; }
 }
 
@@ -1041,10 +1092,10 @@ a { color: inherit; text-decoration: none; }
   .brand img { height: 62px; max-width: 62px; max-height: 62px; }
   .brand-wordmark { display: none; }
   .primary-nav-wrap { height: 72px; }
-  .language-toggle { min-height: 36px; padding: 2px 4px; }
-  .language-toggle button { min-width: 26px; min-height: 28px; padding-inline: 3px; font-size: 10px; }
-  .header-quote { min-width: 0; min-height: 40px; padding: 0 14px; gap: 8px; font-size: 10px; }
-  .menu-button { width: 40px; height: 40px; }
+  .language-toggle { min-height: 44px; padding: 2px 4px; }
+  .language-toggle button { min-width: 34px; min-height: 40px; padding-inline: 3px; font-size: 10px; }
+  .header-quote { min-width: 0; min-height: 44px; padding: 0 14px; gap: 8px; font-size: 10px; }
+  .menu-button { width: 44px; height: 44px; }
   .primary-nav { top: 66px; right: -14px; }
   .hero-media { height: 235px; }
   .hero-media-image { object-position: 62% center; }
@@ -1222,7 +1273,8 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
   .cta-band .secondary-button { width: 100%; }
   .footer-main { width: calc(100% - 40px); grid-template-columns: 1fr; gap: 34px; }
   .footer-brand { grid-column: auto; }
-  .footer-brand img { width: min(100%, 300px); margin-inline: auto; }
+  .footer-lockup { justify-content: center; }
+  .footer-brand > p { margin-inline: auto; }
   .footer-bottom { width: calc(100% - 40px); padding-block: 18px; align-items: flex-start; flex-direction: column; gap: 7px; }
   .footer-legal { align-items: flex-start; flex-wrap: wrap; gap: 8px 16px; }
   .not-found h1 { font-size: 29px; }
@@ -1242,4 +1294,25 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
   html[dir="rtl"] .hero-copy { padding: 34px 24px 38px; }
   html[dir="rtl"] .detail-number { right: auto; left: 23px; }
   html[dir="rtl"] .primary-nav { right: auto; left: -14px; }
+}
+
+/* Touch input: every control clears 44x44 CSS px (WCAG 2.5.5). These are
+   scoped to coarse pointers so the desktop layout keeps its intended density,
+   and they rely on padding/min-height rather than extra gaps so no target
+   grows into its neighbour. */
+@media (pointer: coarse) {
+  .skip-link { min-height: 48px; }
+  .language-toggle { min-height: 48px; padding: 2px 5px; }
+  .language-toggle button { min-width: 44px; min-height: 44px; }
+  .menu-button { width: 44px; height: 44px; }
+  .header-quote, .mobile-nav-quote { min-height: 44px; }
+  .footer-links a, .footer-legal a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0;
+  }
+  .footer-contact a { min-height: 44px; align-items: center; padding-block: 0; }
+  .footer-contact button { min-height: 44px; padding-block: 0; }
+  .faq-list summary { min-height: 48px; }
 }

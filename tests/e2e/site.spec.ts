@@ -275,3 +275,75 @@ test('serves a useful 404 fallback', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /That page is not available/i })).toBeVisible();
 });
 
+
+test('never strands revealed content at opacity 0, at rest or mid-scroll', async ({ page }) => {
+  // Regression guard. The scroll-reveal used to stage every matching element at
+  // opacity 0 — including elements already on screen — so a first paint or a
+  // fast scroll left whole sections blank until the observer caught up.
+  const stranded = async () => page.evaluate(() => {
+    const offenders: string[] = [];
+    document.querySelectorAll('[data-motion="reveal"]').forEach((element) => {
+      const rect = element.getBoundingClientRect();
+      const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+      if (visible < 40) return;
+      if (Number.parseFloat(getComputedStyle(element).opacity) < 0.05) {
+        offenders.push(String(element.className) || element.tagName.toLowerCase());
+      }
+    });
+    return offenders;
+  });
+
+  for (const path of ['/', '/about', '/services', '/materials', '/faq', '/contact']) {
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    expect(await stranded(), `${path} hides on-screen content at first paint`).toEqual([]);
+
+    const { height, step } = await page.evaluate(() => ({
+      height: document.documentElement.scrollHeight,
+      step: Math.round(window.innerHeight * 0.9),
+    }));
+    for (let top = step; top < height; top += step) {
+      await page.evaluate((y) => window.scrollTo(0, y), top);
+      expect(await stranded(), `${path} goes blank while scrolling past ${top}px`).toEqual([]);
+    }
+  }
+});
+
+test('renders the footer identity as live text tinted for the dark surface', async ({ page }) => {
+  // The footer used to show a flattened raster lockup that needed its own white
+  // panel to stay legible on the navy background.
+  await page.goto('/');
+  const brand = page.locator('.footer-brand');
+  await expect(brand.locator('img')).toHaveCount(0);
+
+  const mark = page.locator('.footer-brandmark');
+  await expect(mark).toBeVisible();
+  expect(await mark.evaluate((svg) => getComputedStyle(svg.querySelector('path')!).fill)).toBe('rgb(255, 255, 255)');
+  expect(await mark.evaluate((svg) => getComputedStyle(svg).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
+
+  const wordmark = page.locator('.footer-wordmark');
+  await expect(wordmark.locator('strong')).toHaveText('AALKC');
+  await expect(wordmark).toContainText('Amanat Al-Kalima Company');
+  await expect(wordmark.locator('[lang="ar"]')).toHaveText('شركة أمانة الكلمة');
+});
+
+test('clears the 44px touch-target floor on coarse pointers', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Touch sizing only applies to coarse pointers.');
+  await page.goto('/');
+  expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+  const undersized = await page.evaluate(() => {
+    const offenders: string[] = [];
+    document.querySelectorAll('a, button, input, select, textarea, summary').forEach((element) => {
+      const rect = element.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const styles = getComputedStyle(element);
+      if (styles.visibility === 'hidden' || styles.display === 'none') return;
+      if (rect.height < 44) {
+        offenders.push(`${String(element.className) || element.tagName.toLowerCase()} ${Math.round(rect.width)}x${Math.round(rect.height)}`);
+      }
+    });
+    return offenders;
+  });
+  expect(undersized).toEqual([]);
+});

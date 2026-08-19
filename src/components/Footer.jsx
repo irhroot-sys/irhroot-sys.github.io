@@ -4,6 +4,7 @@ import { useQuote } from "../context/QuoteContext.jsx";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { PhoneNumber } from "./PhoneNumber.jsx";
+import { BrandMark } from "./BrandMark.jsx";
 
 export function Footer() {
   const { openQuote } = useQuote();
@@ -12,14 +13,14 @@ export function Footer() {
     <footer className="site-footer">
       <div className="footer-main content-width">
         <div className="footer-brand">
-          <img
-            src="/assets/aalkc-footer-lockup-3ecaf288.png"
-            width="1363"
-            height="655"
-            alt="Amanat Al-Kalima Company — AALKC"
-            loading="lazy"
-            decoding="async"
-          />
+          <div className="footer-lockup">
+            <BrandMark className="footer-brandmark" />
+            <p className="footer-wordmark">
+              <strong dir="ltr">AALKC</strong>
+              <span dir="ltr">Amanat Al-Kalima Company</span>
+              <span lang="ar" dir="rtl">شركة أمانة الكلمة</span>
+            </p>
+          </div>
           <p>{t("Licensed scrap metal purchasing, collection, sorting, industrial logistics, and recycling services from Dammam across Saudi Arabia's Eastern Province.")}</p>
         </div>
         <div className="footer-links">
