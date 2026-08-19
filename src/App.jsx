@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Header } from "./components/Header.jsx";
 import { Footer } from "./components/Footer.jsx";
 import { MotionManager } from "./components/MotionManager.jsx";
@@ -18,7 +18,12 @@ import { Redirect, RouterProvider, useLocation } from "./lib/router.jsx";
 function ScrollManager() {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
+  // Deliberately a layout effect, and deliberately rendered before
+  // MotionManager: the scroll position has to be reset before the browser
+  // paints the new route and before MotionManager measures which elements are
+  // below the fold. Running this after paint made a new page flash at the
+  // previous page's scroll offset and skewed every reveal measurement.
+  useLayoutEffect(() => {
     if (hash) {
       window.requestAnimationFrame(() => {
         document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });

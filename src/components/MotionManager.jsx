@@ -34,11 +34,35 @@ const revealSelectors = [
   ".not-found > *",
 ].join(",");
 
+// An element is only ever hidden if its top edge starts below this multiple of
+// the viewport height. Staging something that is already on screen is what
+// produces a blank first paint, so those elements are left completely alone.
+const IMMEDIATE_ZONE = 1;
+
+// The observer root is grown past the bottom of the viewport so a reveal begins
+// before the element is actually visible. Without the head start a fast scroll
+// outruns the animation and the visitor sees empty space.
+const PRELOAD_MARGIN = "0px 0px 22% 0px";
+
+// Late-arriving fonts and images move the layout; re-check once they settle.
+const SETTLE_DELAY = 600;
+
+const MAX_STAGGER_STEPS = 3;
+
 function getSiblingOrder(element) {
   const parent = element.parentElement;
   if (!parent) return 0;
   const siblings = Array.from(parent.children).filter((child) => child.matches(revealSelectors));
-  return Math.min(Math.max(siblings.indexOf(element), 0), 4);
+  return Math.min(Math.max(siblings.indexOf(element), 0), MAX_STAGGER_STEPS);
+}
+
+function viewportHeight() {
+  return window.innerHeight || document.documentElement.clientHeight || 0;
+}
+
+function isOnScreen(element) {
+  const rect = element.getBoundingClientRect();
+  return rect.height > 0 && rect.top < viewportHeight() && rect.bottom > 0;
 }
 
 export function MotionManager() {
@@ -46,37 +70,95 @@ export function MotionManager() {
   const { pathname } = useLocation();
 
   useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return undefined;
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const targets = Array.from(document.querySelectorAll(revealSelectors));
-    targets.forEach((target) => {
-      target.dataset.motion = "reveal";
-      target.style.setProperty("--motion-order", getSiblingOrder(target));
-    });
+    // Without an observer — or when the visitor has asked for less motion —
+    // nothing is staged at all. The CSS resting state is visible, so content
+    // can never be stranded at opacity 0.
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) return undefined;
 
-    if (!("IntersectionObserver" in window)) {
-      targets.forEach((target) => target.classList.add("is-revealed"));
-      return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0, rootMargin: PRELOAD_MARGIN },
+    );
+
+    function stageNewTargets() {
+      const foldLine = viewportHeight() * IMMEDIATE_ZONE;
+
+      document.querySelectorAll(revealSelectors).forEach((element) => {
+        if (element.dataset.motionStaged) return;
+        element.dataset.motionStaged = "1";
+
+        // Already on screen: never hide it, just let it paint.
+        if (element.getBoundingClientRect().top < foldLine) return;
+
+        element.dataset.motion = "reveal";
+        element.style.setProperty("--motion-order", getSiblingOrder(element));
+        observer.observe(element);
+      });
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-revealed");
-        observer.unobserve(entry.target);
+    // Safety net. The observer is the primary path, but a fast scroll, a resize
+    // or a late layout shift can leave a staged element sitting on screen and
+    // still hidden. Anything caught here is faded in at once, without a stagger.
+    function revealStrandedTargets() {
+      document.querySelectorAll('[data-motion="reveal"]:not(.is-revealed)').forEach((element) => {
+        if (!isOnScreen(element)) return;
+        element.classList.add("is-revealed", "is-immediate");
+        observer.unobserve(element);
       });
-    }, {
-      threshold: 0.12,
-      rootMargin: "0px 0px -7% 0px",
-    });
+    }
 
-    targets.forEach((target) => {
-      if (target.classList.contains("is-revealed")) return;
-      observer.observe(target);
-    });
+    let frame = null;
+    let stagingQueued = false;
 
-    return () => observer.disconnect();
+    function runScheduledWork() {
+      frame = null;
+      if (stagingQueued) {
+        stagingQueued = false;
+        stageNewTargets();
+      }
+      revealStrandedTargets();
+    }
+
+    function scheduleSweep({ withStaging = false } = {}) {
+      if (withStaging) stagingQueued = true;
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(runScheduledWork);
+    }
+
+    const handleScroll = () => scheduleSweep();
+    const handleResize = () => scheduleSweep({ withStaging: true });
+    const handleLoad = () => scheduleSweep({ withStaging: true });
+
+    stageNewTargets();
+
+    // Content can appear after mount — filtered catalogues, expanded panels, a
+    // language swap — so keep staging as the DOM changes. Only childList is
+    // observed, so the attribute writes above cannot re-trigger this.
+    const mutationObserver = new MutationObserver(() => scheduleSweep({ withStaging: true }));
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("load", handleLoad);
+    const settleTimer = window.setTimeout(() => scheduleSweep({ withStaging: true }), SETTLE_DELAY);
+
+    return () => {
+      if (frame !== null) window.cancelAnimationFrame(frame);
+      window.clearTimeout(settleTimer);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("load", handleLoad);
+      mutationObserver.disconnect();
+      observer.disconnect();
+    };
   }, [pathname]);
 
   useEffect(() => {
