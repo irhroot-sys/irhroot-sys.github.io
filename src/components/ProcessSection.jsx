@@ -10,7 +10,7 @@ export function ProcessSection({
   eyebrow = "Our process",
   title = "A clear route from requirement to completion",
   copy,
-  surface = "surface-paper",
+  surface = "surface-mist",
 }) {
   const { t } = useLanguage();
   return (

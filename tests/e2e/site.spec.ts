@@ -173,8 +173,11 @@ test('uses the premium bilingual body fonts and interactive link states', async 
   expect(englishFonts.body).toContain('IBM Plex Sans');
   expect(englishFonts.heading).toContain('Archivo');
 
+  // The bar is white, so the active page is set in brand navy (#0E335C); in
+  // the compact menu the links sit on a navy sheet and the active one is white.
   const activeNav = page.locator('.primary-nav a.active');
-  await expect(activeNav).toHaveCSS('color', 'rgb(255, 255, 255)');
+  const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1240px)').matches);
+  await expect(activeNav).toHaveCSS('color', compactMenu ? 'rgb(255, 255, 255)' : 'rgb(14, 51, 92)');
 
   const footerLink = page.locator('.footer-links a').first();
   await footerLink.hover();
@@ -368,6 +371,21 @@ test('renders the footer identity as live text tinted for the dark surface', asy
   await expect(wordmark.locator('strong')).toHaveText('AALKC');
   await expect(wordmark).toContainText('Amanat Al-Kalima Company');
   await expect(wordmark.locator('[lang="ar"]')).toHaveText('شركة أمانة الكلمة');
+});
+
+test('shows the official mark in its own navy and steel on the white header', async ({ page }) => {
+  // The header is white so the approved logo is never recoloured there: the A
+  // keeps the logo navy and the skyline bars keep the logo steel.
+  await page.goto('/');
+  const mark = page.locator('.brand .brand-mark');
+  await expect(mark).toBeVisible();
+  const fills = await mark.evaluate((svg) => ({
+    a: getComputedStyle(svg.querySelector(':scope > path')!).fill,
+    bars: getComputedStyle(svg.querySelector(':scope > g path')!).fill,
+  }));
+  expect(fills).toEqual({ a: 'rgb(14, 51, 92)', bars: 'rgb(125, 131, 137)' });
+  const headerSurface = await page.evaluate(() => getComputedStyle(document.querySelector('.site-header')!, '::before').backgroundColor);
+  expect(headerSurface).toBe('rgb(255, 255, 255)');
 });
 
 test('clears the 44px touch-target floor on coarse pointers', async ({ page }, testInfo) => {

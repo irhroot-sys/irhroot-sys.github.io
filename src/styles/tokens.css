@@ -9,56 +9,98 @@
    shown, so the system borrows the vocabulary of technical documents:
    registers, plates, scale rules and monospaced data.
 
-   Every colour below is derived from the two logo inks (#0E335C, #7D8389)
-   plus one signal metal. Contrast is noted where a token carries text.
+   Colour: Navy · Steel · Platinum
+   The palette is the logo, extended — nothing is imported from outside it.
+   Both scales are built on the mark's own hue (≈211°), so every surface,
+   line and state reads as one material family:
+     · Navy  #0E335C — the A. The voice of the company: dark surfaces,
+       headings, primary actions.
+     · Steel #7D8389 — the skyline bars. Neutrals, hairlines, quiet text.
+     · White — the ground the mark was drawn on, with cool mists for rhythm.
+   Two refinements of the same inks carry interaction:
+     · Cobalt  — navy lifted in lightness, the single signal on light
+       surfaces (indices, active states, focus).
+     · Platinum / Ice — a cool metallic highlight, the signal on navy.
+   No gold, copper or orange: a metal recycler's photographs already carry
+   those colours, so the interface stays in the logo's cool register and
+   lets the material be the warmth.
+
+   Contrast (WCAG 2.x) is noted on every token that carries text.
    ══════════════════════════════════════════════════════════════════════════ */
 :root {
-  /* ── Ink & navy (from logo #0E335C) ────────────────────────────────────── */
-  --ink-950: #050D1A;
-  --ink-900: #08162B;          /* primary dark surface */
-  --ink-800: #0C2140;          /* raised dark surface */
-  --navy-700: #0E335C;         /* brand navy — 11.5:1 on paper */
-  --navy-600: #16457A;
-  --navy-200: #9DB3CF;         /* navy tint for text on ink — 8.4:1 */
+  /* ── Navy scale (hue of logo #0E335C) ──────────────────────────────────
+     Dark surfaces are true navy, never near-black: the deepest step used
+     for a surface is still unmistakably the brand colour. */
+  --navy-950: #081F3A;         /* utility strip, footer base */
+  --navy-900: #0A2848;         /* footer — 14.9:1 with white */
+  --navy-800: #0E335C;         /* BRAND NAVY — 12.8:1 on white */
+  --navy-700: #123E6E;         /* raised navy, panels on navy */
+  --navy-600: #1A4E86;         /* primary action hover — 8.5:1 with white */
+  --navy-500: #2D63A0;         /* cobalt: signal on light — 6.2:1 on white, 5.7:1 on mist */
+  --navy-300: #9FC2EA;         /* ice: signal on navy — 6.9:1 on navy-800 */
+  --navy-200: #C9DAEE;
+  --navy-100: #E2EAF3;         /* hover tint behind navy text — 10.5:1 */
+  --navy-50: #F1F5FA;
 
-  /* ── Steel (from logo #7D8389) ─────────────────────────────────────────── */
-  --steel-900: #1E2329;
-  --steel-700: #474D54;
-  --steel-600: #5B636C;        /* muted text on paper — 5.5:1 */
-  --steel-500: #7D8389;        /* brand steel — large or decorative only on light */
-  --steel-400: #9AA6B4;        /* muted text on ink — 7.3:1 */
-  --steel-300: #B6BABF;
-  --steel-200: #D7DADD;
-  --steel-100: #E9EBED;
+  /* ── Steel scale (hue of logo #7D8389) ─────────────────────────────── */
+  --steel-900: #16212E;        /* graphite — strongest text, 16.3:1 */
+  --steel-800: #334050;        /* body text — 10.6:1 on white */
+  --steel-700: #46515E;
+  --steel-600: #58626E;        /* muted text — 6.2:1 on white, 5.3:1 on frost */
+  --steel-500: #7D8389;        /* BRAND STEEL — graphics, large type only (3.8:1) */
+  --steel-400: #A3A9B0;
+  --steel-300: #C6CCD3;        /* strong hairline on light */
+  --steel-200: #DCE1E7;        /* hairline on light */
+  --steel-100: #EBEFF3;
 
-  /* ── Paper ─────────────────────────────────────────────────────────────────
-     A limestone white rather than pure white: the architecture of the
-     Eastern Province, and a ground that lets the navy read as ink. */
-  --paper: #F4F3EF;
-  --paper-2: #EBE9E3;
+  /* ── Whites and metals ───────────────────────────────────────────────── */
   --white: #FFFFFF;
+  --mist: #F3F6F9;             /* alternate section ground: cool, not grey */
+  --frost: #E8EDF2;            /* recessed ground */
+  --platinum: #D3DCE6;         /* metallic highlight on navy — 9.2:1 */
 
-  /* ── Signal: copper ────────────────────────────────────────────────────────
-     The most valuable metal in the yard is the one accent. It marks what to
-     act on and what is measured — never decoration, never a gradient. */
-  --copper: #B87742;           /* rules, ticks, icons; 3.6:1 on white */
-  --copper-text: #8A5124;      /* small text on paper — 5.8:1 */
-  --copper-on-ink: #D49A66;    /* small text on ink — 7.4:1 */
-  --copper-fill: #C8874F;      /* button fill, always with ink type — 6.1:1 */
-  --copper-fill-hover: #D69A62;
+  /* ── Roles: surfaces ─────────────────────────────────────────────────── */
+  --surface: var(--white);
+  --surface-alt: var(--mist);
+  --surface-sunk: var(--frost);
+  --surface-ink: var(--navy-800);
+  --surface-ink-raised: var(--navy-700);
+  --surface-ink-deep: var(--navy-900);
 
-  /* ── Roles ─────────────────────────────────────────────────────────────── */
-  --text-strong: #0B1A2E;
-  --text: #2A3440;
+  /* ── Roles: text ─────────────────────────────────────────────────────── */
+  --heading: var(--navy-800);
+  --text-strong: var(--steel-900);
+  --text: var(--steel-800);
   --text-muted: var(--steel-600);
-  --on-ink: #F1F3F5;
-  --on-ink-muted: var(--steel-400);
-  --rule: #DAD7CF;             /* hairline on paper */
-  --rule-strong: #BDB8AE;
-  --rule-ink: rgba(255, 255, 255, .12);
-  --rule-ink-strong: rgba(255, 255, 255, .24);
-  --focus: var(--copper-text);
-  --focus-on-ink: var(--copper-on-ink);
+  --on-ink: #FFFFFF;
+  --on-ink-body: #C5D2E0;      /* 8.3:1 on navy-800 */
+  --on-ink-muted: #A9BBCF;     /* 6.5:1 on navy-800, 7.6:1 on navy-900 */
+
+  /* ── Roles: signal ───────────────────────────────────────────────────── */
+  --signal: var(--navy-500);
+  --signal-on-ink: var(--navy-300);
+  --metal: var(--steel-500);   /* the logo's steel, for marks that are not text */
+
+  /* ── Roles: lines ────────────────────────────────────────────────────── */
+  --rule: var(--steel-200);
+  --rule-strong: var(--steel-300);
+  --rule-ink: rgba(201, 218, 238, .14);
+  --rule-ink-strong: rgba(201, 218, 238, .3);
+
+  /* ── Roles: actions ──────────────────────────────────────────────────────
+     On light ground the primary action is solid brand navy with white type;
+     on navy it inverts to white with navy type. Both stay above 8:1 in
+     every state. */
+  --action: var(--navy-800);
+  --action-hover: var(--navy-600);
+  --action-text: var(--white);
+  --action-ink: var(--white);
+  --action-ink-hover: var(--navy-100);
+  --action-ink-text: var(--navy-800);
+
+  --focus: var(--navy-500);
+  --focus-on-ink: var(--navy-300);
+  --ring: 0 0 0 3px rgba(45, 99, 160, .2);
 
   /* ── Typography ──────────────────────────────────────────────────────────
      Display: Archivo at an expanded width — broad, stable letterforms with
@@ -120,10 +162,11 @@
 
   /* ── Surface ─────────────────────────────────────────────────────────────
      Square corners throughout: steel is cut, not moulded. Depth comes from
-     hairlines and the ink/paper contrast, so shadows are rare and soft. */
+     hairlines and the navy/white contrast, so shadows are rare and soft. */
   --radius: 0px;
-  --shadow-float: 0 28px 64px -28px rgba(5, 13, 26, .55);
-  --shadow-panel: 0 40px 90px -36px rgba(5, 13, 26, .6), 0 2px 6px rgba(5, 13, 26, .06);
+  --shadow-float: 0 24px 56px -24px rgba(8, 31, 58, .5);
+  --shadow-panel: 0 40px 90px -36px rgba(8, 31, 58, .55), 0 2px 6px rgba(8, 31, 58, .06);
+  --shadow-header: 0 1px 0 var(--rule), 0 12px 32px -24px rgba(14, 51, 92, .35);
 
   /* ── Motion ────────────────────────────────────────────────────────────── */
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -134,12 +177,13 @@
   --t-slow: 620ms;
 
   /* ── Photography ─────────────────────────────────────────────────────────
-     One grade for every licensed photograph: the image keeps its own colour
-     — rust, copper, painted steel — with a little less saturation and a
-     little more density, so separate shoots read as one commissioned set. */
-  --photo-grade: saturate(.8) contrast(1.06) brightness(.96);
-  --photo-grade-hover: saturate(.96) contrast(1.06) brightness(1);
-  --photo-grade-dark: saturate(.72) contrast(1.1) brightness(.8);
+     One grade for every licensed photograph. The image keeps its own colour
+     — rust, painted steel, aluminium — but held back, with a little more
+     density, so separate shoots read as one commissioned set and the yard's
+     warm tones sit quietly inside the cool navy-and-steel interface. */
+  --photo-grade: saturate(.66) contrast(1.07) brightness(.97);
+  --photo-grade-hover: saturate(.84) contrast(1.06) brightness(1);
+  --photo-grade-dark: saturate(.6) contrast(1.1) brightness(.84);
 
   /* Aspect tokens shared by components and their tests. */
   --media-ratio: 4 / 3;

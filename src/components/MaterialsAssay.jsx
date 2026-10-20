@@ -10,7 +10,7 @@ import { SectionHeading } from "./SectionHeading.jsx";
 export function MaterialsAssay() {
   const { t } = useLanguage();
   return (
-    <section className="assay content-section surface-paper" aria-labelledby="assay-title">
+    <section className="assay content-section surface-mist" aria-labelledby="assay-title">
       <div className="container">
         <SectionHeading
           id="assay-title"
