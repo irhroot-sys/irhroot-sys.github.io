@@ -2,16 +2,10 @@ import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { frequentlyAskedQuestions } from "../data/siteContent.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function FaqPage() {
   const { t } = useLanguage();
-  usePageMeta({
-    title: "Frequently Asked Questions",
-    description: "Answers about AALKC accepted scrap materials, industrial collection, grading, pricing, environmental controls, and supplier payments.",
-    path: "/faq",
-  });
 
   return (
     <>

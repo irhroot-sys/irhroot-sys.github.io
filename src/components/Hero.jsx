@@ -4,6 +4,7 @@ import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { certifications } from "../data/siteContent.jsx";
 import { BrandMark } from "./BrandMark.jsx";
+import { ResponsiveImage } from "./ResponsiveImage.jsx";
 
 const HERO_IMAGE = "/assets/service-industrial-dismantling.webp";
 
@@ -75,13 +76,12 @@ export function Hero() {
   return (
     <section ref={heroRef} className="hero" aria-labelledby="hero-title">
       <div className="hero-media">
-        <img
+        <ResponsiveImage
           className="hero-media-image"
           data-parallax="0.07"
           src={HERO_IMAGE}
+          sizes="100vw"
           alt={t("Industrial material recovery and dismantling operation")}
-          width="1600"
-          height="900"
           loading="eager"
           fetchPriority="high"
           decoding="async"
@@ -93,7 +93,7 @@ export function Hero() {
           <span>{t("Amanat Al-Kalima Company")}</span>
         </div>
         <h1 id="hero-title">
-          <span className="hero-line hero-line-1">{t("Building Value,")}</span>
+          <span className="hero-line hero-line-1">{t("Building Value,")}</span>{" "}
           <span className="hero-line hero-line-2">{t("Recycling the Future.")}</span>
         </h1>
         <p className="hero-lede">

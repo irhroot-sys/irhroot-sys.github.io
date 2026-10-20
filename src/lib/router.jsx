@@ -1,18 +1,23 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
+import { localizePath, splitLocalePath } from "./i18n.js";
 
 const RouterContext = createContext(null);
 
-function readLocation() {
-  return {
-    pathname: window.location.pathname,
-    search: window.location.search,
-    hash: window.location.hash,
-  };
+function describeLocation({ pathname, search = "", hash = "" }) {
+  // `route` is the language-neutral page path ("/services" for both
+  // /services and /ar/services); `pathname` is the real URL path.
+  return { pathname, search, hash, ...splitLocalePath(pathname) };
 }
 
-export function RouterProvider({ children }) {
-  const [location, setLocation] = useState(readLocation);
+function readLocation() {
+  return describeLocation(window.location);
+}
+
+// `url` is only passed during the build-time prerender, where there is no
+// window. In the browser the router always reads the live location.
+export function RouterProvider({ url, children }) {
+  const [location, setLocation] = useState(() => (url ? describeLocation(url) : readLocation()));
 
   useEffect(() => {
     const handlePopState = () => setLocation(readLocation());
@@ -54,8 +59,11 @@ export function useLocation() {
   return router;
 }
 
+// `to` is written as the language-neutral path ("/contact"); the link points
+// at that page in the language currently being viewed.
 export function Link({ to, replace = false, onClick, target, children, ...props }) {
-  const { navigate } = useLocation();
+  const { navigate, language } = useLocation();
+  const href = localizePath(to, language);
 
   function handleClick(event) {
     onClick?.(event);
@@ -69,15 +77,15 @@ export function Link({ to, replace = false, onClick, target, children, ...props 
       || target === "_blank"
     ) return;
     event.preventDefault();
-    navigate(to, { replace });
+    navigate(href, { replace });
   }
 
-  return <a href={to} target={target} onClick={handleClick} {...props}>{children}</a>;
+  return <a href={href} target={target} onClick={handleClick} {...props}>{children}</a>;
 }
 
 export function NavLink({ to, className = "", children, ...props }) {
-  const { pathname } = useLocation();
-  const active = to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+  const { route } = useLocation();
+  const active = to === "/" ? route === "/" : route === to || route.startsWith(`${to}/`);
   const resolvedClassName = typeof className === "function"
     ? className({ isActive: active })
     : [className, active ? "active" : ""].filter(Boolean).join(" ");
@@ -90,7 +98,7 @@ export function NavLink({ to, className = "", children, ...props }) {
 }
 
 export function Redirect({ to }) {
-  const { navigate } = useLocation();
-  useEffect(() => navigate(to, { replace: true }), [navigate, to]);
+  const { navigate, language } = useLocation();
+  useEffect(() => navigate(localizePath(to, language), { replace: true }), [language, navigate, to]);
   return null;
 }

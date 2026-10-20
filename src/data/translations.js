@@ -337,4 +337,13 @@ export const arabicTranslations = {
   "Structural carbon steel plate and sections": "صفائح ومقاطع فولاذ كربوني إنشائي",
   "Excavator processing recovered metal at an industrial scrap yard": "حفارة تعالج المعادن المستردة في ساحة خردة صناعية",
   "Scrap-handling crane loading recovered metal at an industrial yard": "رافعة مناولة خردة تُحمّل معادن مستردة في ساحة صناعية",
+  "Scrap Metal Buyer & Recycling in Dammam": "شراء الخردة المعدنية وإعادة تدويرها في الدمام",
+  "Hello AALKC, I would like a quote for scrap metal.": "مرحباً أمانة الكلمة، أرغب في الحصول على عرض سعر للخردة المعدنية.",
+  "Quick contact": "تواصل سريع",
+  "Call AALKC": "اتصل بأمانة الكلمة",
+  "Chat with AALKC on WhatsApp": "تحدث مع أمانة الكلمة عبر واتساب",
+  "WhatsApp": "واتساب",
+  "Open in Google Maps": "افتح في خرائط Google",
+  "Have photos of the material? Send them on": "لديك صور للمواد؟ أرسلها عبر",
+  "for a faster assessment.": "لتقييم أسرع.",
 };

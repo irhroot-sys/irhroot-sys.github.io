@@ -67,7 +67,9 @@ function isOnScreen(element) {
 
 export function MotionManager() {
   const progressRef = useRef(null);
-  const { pathname } = useLocation();
+  // The language-neutral route: a language switch swaps text in place and is
+  // picked up by the mutation observer, so it must not restage the page.
+  const { route } = useLocation();
 
   useLayoutEffect(() => {
     const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -159,7 +161,7 @@ export function MotionManager() {
       mutationObserver.disconnect();
       observer.disconnect();
     };
-  }, [pathname]);
+  }, [route]);
 
   // Scroll progress, the header's scrolled state and parallax all read the
   // same scroll position, so they share one rAF pass. Splitting them would

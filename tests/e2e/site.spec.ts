@@ -33,13 +33,20 @@ test('loads the cinematic hero as high-priority media without hiding conversion 
   await expect(image).toHaveAttribute('src', '/assets/service-industrial-dismantling.webp');
   await expect(image).toHaveAttribute('fetchpriority', 'high');
   await expect(image).toHaveJSProperty('complete', true);
-  await expect(page.locator('link[rel="preload"][href="/assets/service-industrial-dismantling.webp"]')).toHaveCount(1);
   await expect(heading).toBeVisible();
   await expect(actions).toBeVisible();
 
-  const heroResourceCount = await page.evaluate(() => performance.getEntriesByType('resource')
-    .filter((entry) => entry.name.endsWith('/assets/service-industrial-dismantling.webp')).length);
-  expect(heroResourceCount).toBe(1);
+  // The preload must offer exactly the candidates the <picture> chooses from,
+  // so the browser downloads the hero once — never the preload plus a second,
+  // different file.
+  const preload = page.locator('link[rel="preload"][as="image"]');
+  await expect(preload).toHaveCount(1);
+  const preloadCandidates = (await preload.getAttribute('imagesrcset'))!.split(',').map((candidate) => candidate.trim().split(' ')[0]);
+  const chosen = new URL(await image.evaluate((element: HTMLImageElement) => element.currentSrc)).pathname;
+  expect(preloadCandidates).toContain(chosen);
+  const chosenDownloads = await page.evaluate((path) => performance.getEntriesByType('resource')
+    .filter((entry) => new URL(entry.name).pathname === path).length, chosen);
+  expect(chosenDownloads).toBe(1);
 
   const entranceState = await heading.evaluate((element) => {
     const style = getComputedStyle(element.firstElementChild ?? element);
@@ -63,7 +70,9 @@ test('scopes cinematic depth to the desktop hero and resets it on exit', async (
   const bounds = await hero.boundingBox();
   expect(bounds).not.toBeNull();
 
-  await page.mouse.move(bounds!.x + bounds!.width * 0.88, bounds!.y + bounds!.height * 0.72);
+  // Clear of the floating contact dock, which sits over the hero's lower
+  // trailing corner on short viewports.
+  await page.mouse.move(bounds!.x + bounds!.width * 0.8, bounds!.y + bounds!.height * 0.55);
   await expect.poll(() => hero.evaluate((element) => getComputedStyle(element).getPropertyValue('--hero-depth-x').trim())).not.toBe('0px');
 
   await page.mouse.move(8, 8);
@@ -174,7 +183,7 @@ test('uses the premium bilingual body fonts and interactive link states', async 
   const underlineTransform = await footerLink.evaluate((link) => getComputedStyle(link, '::after').transform);
   expect(underlineTransform).toBe('matrix(1, 0, 0, 1, 0, 0)');
 
-  await page.getByRole('button', { name: 'AR' }).click();
+  await page.getByRole('link', { name: 'AR', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   const arabicFonts = await page.evaluate(() => ({
     body: getComputedStyle(document.body).fontFamily,
@@ -186,19 +195,24 @@ test('uses the premium bilingual body fonts and interactive link states', async 
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'AR' }).click();
+  await page.getByRole('link', { name: 'AR', exact: true }).click();
+  await expect(page).toHaveURL(/\/ar$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.getByRole('heading', { level: 1, name: /نبني القيمة/ })).toBeVisible();
-  await expect(page.locator('.primary-nav a[href="/about"]')).toHaveText('من نحن');
+  await expect(page.locator('.primary-nav a[href="/ar/about"]')).toHaveText('من نحن');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  // The remembered choice carries a returning visitor from an English URL to
+  // the same page in Arabic.
   await page.goto('/services');
+  await expect(page).toHaveURL(/\/ar\/services$/);
   await expect(page.getByRole('heading', { level: 1, name: /إدارة خردة مصممة للنطاق الصناعي/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'خدمة الحاويات' }).first()).toBeVisible();
   await page.goto('/privacy');
   await expect(page.getByRole('heading', { level: 1, name: 'سياسة الخصوصية' })).toBeVisible();
-  await page.getByRole('button', { name: 'EN' }).click();
+  await page.getByRole('link', { name: 'EN', exact: true }).click();
+  await expect(page).toHaveURL(/\/privacy$/);
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
   await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
 });
@@ -222,7 +236,7 @@ test('keeps the premium bilingual layout contained at every supported breakpoint
   }
 
   await page.setViewportSize({ width: 375, height: 900 });
-  await page.getByRole('button', { name: 'AR' }).click();
+  await page.getByRole('link', { name: 'AR', exact: true }).click();
   for (const width of widths) {
     await page.setViewportSize({ width, height: 900 });
     await expect(page.getByRole('region', { name: 'إحصاءات الشركة' }).getByText('المنطقة الشرقية')).toBeVisible();
@@ -235,8 +249,9 @@ test('isolates phone numerals and flips only directional icons in RTL', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/contact');
 
+  // Utility bar, contact-page phone and WhatsApp cards, footer.
   const phoneNumbers = page.locator('bdi.phone-number');
-  await expect(phoneNumbers).toHaveCount(3);
+  await expect(phoneNumbers).toHaveCount(4);
   const phoneDirections = await phoneNumbers.evaluateAll((elements) => elements.map((element) => ({
     dir: element.getAttribute('dir'),
     direction: getComputedStyle(element).direction,
@@ -257,7 +272,7 @@ test('isolates phone numerals and flips only directional icons in RTL', async ({
   expect(englishTransforms.length).toBeGreaterThan(0);
   expect(englishTransforms.every((transform) => transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)')).toBe(true);
 
-  await page.getByRole('button', { name: 'AR' }).click();
+  await page.getByRole('link', { name: 'AR', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.locator('.contact-methods').getByText(arabicAddress, { exact: true })).toHaveCount(1);
   await expect
@@ -442,4 +457,107 @@ test('keeps blend modes out of the stylesheet', async ({ page }) => {
     return out;
   });
   expect(blended).toEqual([]);
+});
+
+test('ships every page as prerendered HTML with its own head in both languages', async ({ request }) => {
+  // What a crawler or link-preview bot sees before any JavaScript runs.
+  for (const [path, lang, title, heading] of [
+    ['/services', 'en', 'Services | AALKC', 'Scrap management built for industrial scale.'],
+    ['/ar/services', 'ar', 'الخدمات | أمانة الكلمة', 'إدارة خردة مصممة للنطاق الصناعي.'],
+    ['/', 'en', 'Scrap Metal Buyer &amp; Recycling in Dammam | AALKC', 'Building Value,'],
+    ['/ar', 'ar', 'شراء الخردة المعدنية وإعادة تدويرها في الدمام | أمانة الكلمة', 'نبني القيمة،'],
+  ]) {
+    const html = await (await request.get(path)).text();
+    const canonical = `https://aalkc.com${path === '/' ? '/' : path}`;
+    expect(html, path).toContain(`<html lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}">`);
+    expect(html, path).toContain(`<title>${title}</title>`);
+    expect(html, path).toContain(`<link rel="canonical" href="${canonical}" />`);
+    expect(html, path).toContain(`<meta property="og:url" content="${canonical}" />`);
+    expect(html, path).toMatch(/<link rel="alternate" hreflang="en" href="https:\/\/aalkc\.com\/[^"]*" \/>/);
+    expect(html, path).toMatch(/<link rel="alternate" hreflang="ar" href="https:\/\/aalkc\.com\/ar[^"]*" \/>/);
+    expect(html, path).toContain('hreflang="x-default"');
+    expect(html, path).toContain(heading);
+    expect(html, path).toContain('<meta name="robots" content="index, follow');
+    const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json" data-page-jsonld>(.*?)<\/script>/)![1]);
+    expect(jsonLd['@graph'][0]['@type']).toContain('RecyclingCenter');
+  }
+
+  const faq = await (await request.get('/faq')).text();
+  expect(faq).toContain('"@type":"FAQPage"');
+  expect(faq).toContain('"@type":"BreadcrumbList"');
+});
+
+test('ships a noindex 404 document per language with no canonical address', async ({ request }) => {
+  for (const [path, heading] of [['/404.html', 'That page is not available.'], ['/ar/404.html', 'هذه الصفحة غير متاحة.']]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toContain('<meta name="robots" content="noindex, follow" />');
+    expect(html, path).not.toContain('rel="canonical"');
+    expect(html, path).toContain(heading);
+  }
+});
+
+test('keeps the language in the URL and hydrates prerendered pages cleanly', async ({ page }) => {
+  const problems: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error' || message.type() === 'warning') problems.push(message.text()); });
+  page.on('pageerror', (error) => problems.push(error.message));
+
+  await page.goto('/ar/materials');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await expect(page.getByRole('heading', { level: 1, name: 'مواد حديدية وغير حديدية.' })).toBeVisible();
+  await expect(page).toHaveTitle('المواد | أمانة الكلمة');
+
+  // The switch is a real link to the other language's URL, for crawlers too.
+  await expect(page.getByRole('link', { name: 'EN', exact: true })).toHaveAttribute('href', '/materials');
+  await expect(page.getByRole('link', { name: 'EN', exact: true })).toHaveAttribute('hreflang', 'en');
+
+  await page.getByRole('link', { name: 'EN', exact: true }).click();
+  await expect(page).toHaveURL(/\/materials$/);
+  await expect(page).toHaveTitle('Materials | AALKC');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://aalkc.com/materials');
+
+  // An explicit Arabic link is honoured even after choosing English.
+  await page.goto('/ar/faq');
+  await expect(page).toHaveURL(/\/ar\/faq$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+
+  expect(problems).toEqual([]);
+});
+
+test('offers WhatsApp everywhere and a call button on small screens', async ({ page }, testInfo) => {
+  await page.goto('/ar');
+  const dock = page.getByRole('navigation', { name: 'تواصل سريع' });
+  const whatsapp = dock.getByRole('link', { name: /واتساب/ });
+  await expect(whatsapp).toBeVisible();
+  const href = new URL((await whatsapp.getAttribute('href'))!);
+  expect(href.origin + href.pathname).toBe('https://wa.me/966551811700');
+  expect(href.searchParams.get('text')).toContain('أمانة الكلمة');
+
+  // Hidden with display: none on wide screens, so it leaves the accessibility
+  // tree there; locate it structurally to cover both cases.
+  const call = page.locator('.contact-dock .contact-dock-call');
+  await expect(call).toHaveAttribute('href', 'tel:+966551811700');
+  await expect(call).toHaveAttribute('aria-label', 'اتصل بأمانة الكلمة');
+  if (testInfo.project.name === 'mobile-chromium') await expect(call).toBeVisible();
+  else await expect(call).toBeHidden();
+});
+
+test('never leaves a separator dangling when the certification list wraps', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  for (const path of ['/', '/ar']) {
+    await page.goto(path);
+    const layout = await page.locator('.hero-trust').evaluate((list) => {
+      const box = list.getBoundingClientRect();
+      const items = Array.from(list.children).map((item) => item.getBoundingClientRect());
+      const rtl = getComputedStyle(list).direction === 'rtl';
+      return { rows: new Set(items.map((item) => Math.round(item.top))).size, rtl, box: { left: box.left, right: box.right }, items: items.map((item) => ({ top: Math.round(item.top), left: item.left, right: item.right })) };
+    });
+    expect(layout.rows, `${path} should wrap at 390px`).toBeGreaterThan(1);
+    // The item that starts each line must have its leading separator pushed
+    // outside the list, where the list clips it.
+    const lineStarts = layout.items.filter((item, index) => index === 0 || item.top !== layout.items[index - 1].top);
+    for (const item of lineStarts) {
+      if (layout.rtl) expect(item.right).toBeGreaterThan(layout.box.right);
+      else expect(item.left).toBeLessThan(layout.box.left);
+    }
+  }
 });

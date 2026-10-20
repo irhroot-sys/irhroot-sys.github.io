@@ -1,4 +1,4 @@
-User-agent: *
-Allow: /
-
+# Crawler rules (including the `User-agent: *` group) are prepended to this
+# file by Cloudflare's managed robots.txt, so none are repeated here. Without
+# any rules, everything may be crawled.
 Sitemap: https://aalkc.com/sitemap.xml

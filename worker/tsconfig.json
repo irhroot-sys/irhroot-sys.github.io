@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["../node_modules/@cloudflare/workers-types/index.d.ts", "src/**/*.ts", "../tests/worker/**/*.ts"]
+  "include": ["../node_modules/@cloudflare/workers-types/index.d.ts", "src/**/*.ts", "../spa-fallback-worker/src/**/*.ts", "../tests/worker/**/*.ts"]
 }

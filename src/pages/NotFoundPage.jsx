@@ -1,15 +1,9 @@
 import { FaChevronRight, FaMapSigns } from "react-icons/fa";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function NotFoundPage({ compact = false }) {
   const { t } = useLanguage();
-  usePageMeta({
-    title: "Page not found",
-    description: "The requested AALKC page could not be found.",
-    path: window.location.pathname,
-  });
 
   return (
     <section className={`not-found ${compact ? "is-compact" : ""}`}>

@@ -4,21 +4,32 @@ Apply these rules to the `aalkc.com` zone after authenticating Wrangler or the C
 
 ## Response headers
 
-Create an HTTP Response Header Modification Rule for `aalkc.com/*`:
+The edge Worker ([`spa-fallback-worker/`](../spa-fallback-worker)) now sends these on every page, so no Header Modification Rule is needed for them:
 
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
 - `Permissions-Policy: camera=(), geolocation=(), microphone=(), payment=(), usb=()`
 - `X-Frame-Options: DENY`
-- `Content-Security-Policy-Report-Only: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; media-src 'self'; frame-src https://www.google.com https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; report-to csp-endpoint`
+- `Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'`
 
-Review reports, resolve violations, then change the last header name to `Content-Security-Policy`.
+Still to stage by hand — a full script/style policy, report-only first. Create an HTTP Response Header Modification Rule for `aalkc.com/*`:
+
+- `Content-Security-Policy-Report-Only: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; frame-src https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; report-to csp-endpoint`
+
+`static.cloudflareinsights.com` / `cloudflareinsights.com` are Cloudflare Web Analytics, which is enabled on the zone. Review reports, resolve violations, then move the policy into the Worker's `Content-Security-Policy` header.
 
 ## Cache rules
 
-- HTML, `/`, and `/404.html`: browser and edge TTL 5 minutes; respect revalidation.
-- `/assets/*` with a hashed filename: `public, max-age=31536000, immutable`.
-- `/api/*`: bypass cache. The Worker owns its explicit market-data cache.
+The edge Worker sets browser cache lifetimes itself:
+
+- Pages: `public, max-age=300, must-revalidate`; the 404 document: `max-age=60`.
+- Fingerprinted build files under `/assets/` (`name-<hash>.js|css|woff2|svg`): `public, max-age=31536000, immutable`.
+- Photos and generated image variants: `public, max-age=604800, stale-while-revalidate=86400`.
+- `/api/*`: untouched; the quotes Worker owns its explicit market-data cache. Keep a Cache Rule that bypasses cache for it.
+
+## robots.txt
+
+Cloudflare's managed robots.txt is enabled and prepends its own rules, including a `User-agent: *` group. `public/robots.txt` therefore only adds the sitemap line. If the managed robots.txt is ever switched off, the file still allows all crawling.
 
 ## Operational checks
 
