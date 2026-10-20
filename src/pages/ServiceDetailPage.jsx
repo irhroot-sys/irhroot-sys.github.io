@@ -48,7 +48,7 @@ export function ServiceDetailPage({ slug }) {
             </>
           )}
         </div>
-        <aside className="service-page-aside" aria-label={t("Talk to our team")}>
+        <aside className="service-page-aside on-ink" aria-label={t("Talk to our team")}>
           <span className="label"><span className="label-index">→</span>{t("Talk to AALKC")}</span>
           <h2>{t("Talk to our team")}</h2>
           <p>{t("Share the material, estimated quantity and site location. Our Dammam team will come back with the next step.")}</p>

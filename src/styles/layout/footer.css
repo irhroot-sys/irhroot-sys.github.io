@@ -4,7 +4,7 @@
    on every page — the identity is bilingual, so the close is too. */
 .site-footer {
   color: var(--on-ink-muted);
-  background: var(--ink-950);
+  background: var(--surface-ink-deep);
   font-size: var(--fs-15);
 }
 .footer-main {
@@ -14,6 +14,8 @@
   padding-block: var(--s-9) var(--s-8);
 }
 .footer-lockup { display: flex; align-items: center; gap: var(--s-4); }
+/* On navy the mark uses its approved reversed form: the A in white, the
+   skyline bars keep the logo's steel. */
 .footer-brandmark { width: 60px; height: 60px; flex: 0 0 auto; }
 .footer-brandmark > path { fill: var(--white); }
 .footer-brandmark > g path { fill: var(--steel-500); }
@@ -51,7 +53,7 @@ html[lang="ar"] .footer-main h2 { font-family: var(--font-arabic); font-size: va
   inset-inline: 0;
   bottom: 3px;
   height: 1px;
-  background: var(--copper-on-ink);
+  background: var(--signal-on-ink);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform var(--t-mid) var(--ease-out);
@@ -62,7 +64,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
 :is(.footer-links, .footer-contact, .footer-legal) a:hover::after,
 :is(.footer-links, .footer-contact, .footer-legal) a:focus-visible::after { transform: scaleX(1); }
 .footer-contact a { display: flex; align-items: flex-start; gap: var(--s-3); line-height: 1.55; }
-.footer-contact svg { flex: 0 0 auto; margin-top: 4px; color: var(--copper-on-ink); font-size: 14px; }
+.footer-contact svg { flex: 0 0 auto; margin-top: 4px; color: var(--signal-on-ink); font-size: 14px; }
 .footer-contact button {
   margin-top: var(--s-4);
   min-height: 44px;
@@ -73,7 +75,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
   font-weight: 600;
   transition: border-color var(--t-fast) var(--ease-std);
 }
-.footer-contact button:hover, .footer-contact button:focus-visible { border-color: var(--copper-on-ink); }
+.footer-contact button:hover, .footer-contact button:focus-visible { border-color: var(--platinum); background: rgba(255, 255, 255, .06); }
 
 /* Latin on the leading edge, Arabic answering on the trailing edge: the two
    names read as one diagonal across the measure. */
@@ -82,7 +84,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
   gap: var(--s-2);
   padding-block: var(--s-7);
   border-top: 1px solid var(--rule-ink);
-  color: #4D6687; /* 3.3:1 — display-size text, decorative duplicate of the name */
+  color: #677C97; /* 3.5:1 on navy-900 — a steel engraving: display-size, decorative duplicate of the name */
   line-height: 1;
   user-select: none;
 }
@@ -103,6 +105,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
 }
 
 .footer-bottom {
+  position: relative;
   min-height: 64px;
   display: flex;
   align-items: center;
@@ -111,6 +114,14 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
   border-top: 1px solid var(--rule-ink);
   font-size: var(--fs-13);
 }
+.footer-bottom::before {
+  content: "";
+  position: absolute;
+  inset: -1px -100vmax 0;
+  z-index: -1;
+  background: var(--navy-950);
+}
+.site-footer { isolation: isolate; overflow: clip; }
 .footer-legal { display: flex; align-items: center; gap: var(--s-5); }
 .footer-legal span { font-family: var(--font-mono); font-size: var(--fs-12); letter-spacing: .04em; }
 

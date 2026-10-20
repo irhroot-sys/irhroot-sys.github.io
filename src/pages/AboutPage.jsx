@@ -27,7 +27,7 @@ export function AboutPage() {
           <p className="about-lede">{t("Established in 2017, Amanat Al-Kalima Company (شركة أمانة الكلمة) is a licensed scrap metal dealer based in Dammam, Eastern Province, Kingdom of Saudi Arabia. We provide professional metal recycling services tailored to industrial, commercial, and construction businesses.")}</p>
           <p>{t("Our commitment to integrity, efficiency, and environmental sustainability has made us a trusted partner in the region's expanding industrial sector. We manage the complete lifecycle of scrap metal trading—from reliable site collection to meticulous sorting and processing.")}</p>
         </div>
-        <aside className="about-name" aria-label={t("The name")}>
+        <aside className="about-name on-ink" aria-label={t("The name")}>
           <span className="label">{t("The name")}</span>
           <p className="about-name-ar" lang="ar" dir="rtl">أمانة الكلمة</p>
           <p className="about-name-gloss">{t("Amanat Al-Kalima — “the trust of one’s word”.")}</p>

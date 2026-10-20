@@ -4,7 +4,7 @@
    except where a measurement (tracking, mono labels) genuinely differs. */
 *, *::before, *::after { box-sizing: border-box; }
 html {
-  background: var(--ink-900);
+  background: var(--surface-ink-deep);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -14,7 +14,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: var(--text);
-  background: var(--paper);
+  background: var(--surface);
   font-family: var(--font-text);
   font-size: var(--fs-16);
   line-height: var(--lh-text);
@@ -25,7 +25,7 @@ body {
 }
 h1, h2, h3, h4 {
   margin: 0;
-  color: var(--text-strong);
+  color: var(--heading);
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
   font-weight: 640;
@@ -42,11 +42,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 button, a { -webkit-tap-highlight-color: transparent; }
-::selection { color: var(--white); background: var(--navy-700); }
+::selection { color: var(--white); background: var(--navy-600); }
 
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .on-ink :focus-visible,
-.site-header :focus-visible,
 .site-footer :focus-visible { outline-color: var(--focus-on-ink); }
 
 /* Arabic: Kufi for display, Plex Sans Arabic for text. Latin tracking is
@@ -78,10 +77,12 @@ html[dir="rtl"] .directional-icon { transform: scaleX(-1); }
   margin-inline: auto;
 }
 .content-section { padding-block: var(--section); }
-.surface-paper { background: var(--paper); }
-.surface-white, .soft-section { background: var(--white); }
-.surface-ink { color: var(--on-ink); background: var(--ink-900); }
-.surface-ink :is(h1, h2, h3, h4) { color: var(--white); }
+/* Light sections alternate pure white and a cool mist; navy is reserved for
+   the moments that carry the brand (hero, sectors, closing, footer). */
+.surface-mist { background: var(--surface-alt); }
+.surface-white, .soft-section { background: var(--surface); }
+.surface-ink { color: var(--on-ink-body); background: var(--surface-ink); }
+:is(.surface-ink, .on-ink) :is(h1, h2, h3, h4) { color: var(--on-ink); }
 
 .sr-only {
   position: absolute;
@@ -103,14 +104,14 @@ html[dir="rtl"] .directional-icon { transform: scaleX(-1); }
   display: inline-flex;
   align-items: center;
   padding: 0 var(--s-5);
-  color: var(--ink-900);
-  background: var(--copper-fill);
+  color: var(--action-text);
+  background: var(--action);
   font-weight: 600;
   transition: top var(--t-fast) var(--ease-std);
 }
 .skip-link:focus { top: 0; }
 
-.site-shell { min-height: 100vh; overflow: clip; background: var(--paper); }
+.site-shell { min-height: 100vh; overflow: clip; background: var(--surface); }
 /* <ResponsiveImage> wraps its <img> in <picture>; taking the wrapper out of
    layout lets every image rule target the <img> as a direct child. */
 .responsive-picture { display: contents; }
@@ -125,7 +126,7 @@ html[dir="rtl"] .directional-icon { transform: scaleX(-1); }
 .scroll-progress span {
   display: block;
   height: 100%;
-  background: var(--copper);
+  background: var(--navy-500);
   transform: scaleX(var(--scroll-progress, 0));
   transform-origin: left center;
 }
