@@ -924,7 +924,7 @@ a { color: inherit; text-decoration: none; }
   border-top: 1px solid rgba(255,255,255,.09);
   font-size: var(--text-base);
 }
-.footer-main { min-height: 0; padding-block: var(--space-9) var(--space-8); display: grid; grid-template-columns: minmax(280px, 1.7fr) 1fr 1.3fr; gap: clamp(40px, 6vw, 96px); }
+.footer-main { min-height: 0; padding-block: var(--space-9) var(--space-8); display: grid; grid-template-columns: minmax(260px, 1.5fr) 1fr 1fr 1.3fr; gap: clamp(32px, 4.5vw, 72px); }
 /* The footer identity is the real mark plus real text, tinted for the dark
    surface — the same lockup the header uses. It replaced a flattened raster
    export that had to sit on its own white panel to stay legible. */
@@ -1788,7 +1788,10 @@ h3[data-motion="reveal"].is-revealed { animation-name: content-reveal-heading; }
   .stat { padding-inline: 15px; gap: 12px; }
 }
 
-@media (max-width: 1020px) {
+/* The full menu needs about 1240px beside the logo, language switch and
+   quote button, so below that the header switches to the compact bar and
+   the menu moves into the drop-down. */
+@media (max-width: 1240px) {
   .site-header { height: 84px; top: 0; }
   .primary-header { inset: 0; padding: 0 22px 0 24px; gap: 20px; }
   .brand { flex-basis: 190px; width: 190px; height: 78px; gap: 10px; }
@@ -1822,6 +1825,11 @@ h3[data-motion="reveal"].is-revealed { animation-name: content-reveal-heading; }
   .primary-nav a::after { display: none; }
   .menu-button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.2); border-radius: var(--radius-control); color: #fff; background: rgba(255,255,255,.05); font-size: 18px; }
   .primary-nav-wrap { justify-content: flex-end; }
+  .nav-scrim { position: fixed; inset: 84px 0 0; z-index: 1; display: block; border: 0; background: rgba(0,18,40,.42); }
+  .primary-nav { z-index: 2; }
+}
+
+@media (max-width: 1020px) {
   /* The hero stays full-bleed on tablets — the image is the art direction,
      so it keeps its frame rather than being demoted to a banner. */
   .hero { min-height: min(680px, 86vh); }
@@ -2026,8 +2034,6 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
 
 @media (max-width: 1020px) {
   .content-section { padding-top: 65px; padding-bottom: 65px; }
-  .nav-scrim { position: fixed; inset: 84px 0 0; z-index: 1; display: block; border: 0; background: rgba(0,18,40,.42); }
-  .primary-nav { z-index: 2; }
   .page-hero { min-height: 380px; }
   .page-hero h1 { max-width: 100%; }
   .page-hero-copy > p { width: 46ch; max-width: 100%; }
@@ -2047,7 +2053,8 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
   .service-detail-copy { padding-inline: 0 !important; padding-block: var(--space-7); }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grading-grid { grid-template-columns: 1fr; }
-  .footer-main { grid-template-columns: 1.4fr 1fr 1.2fr; gap: 30px; }
+  .footer-main { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; }
+  .footer-brand { grid-column: 1 / -1; }
 }
 
 @media (max-width: 760px) {
@@ -2207,4 +2214,138 @@ html[lang="ar"] .contact-dock a { font-family: var(--font-arabic); letter-spacin
 @media (prefers-reduced-motion: reduce) {
   .contact-dock a { transition: none; }
   .contact-dock a:hover { transform: none; }
+}
+
+/* ── Shared chips ────────────────────────────────────────────────────────
+   Used for "typical materials" and "suited to" lists: quiet labels, links
+   only where they lead somewhere. */
+.chip-list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.chip-list a, .chip-list span {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--body-ink);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color var(--motion-fast), color var(--motion-fast), background var(--motion-fast);
+}
+.chip-list a:hover, .chip-list a:focus-visible { border-color: var(--navy); color: var(--navy); background: var(--surface); }
+
+/* ── Service detail page ─────────────────────────────────────────────────
+   Copy on the leading side, an ink contact panel that stays in view on the
+   trailing side. */
+.service-page-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(40px, 6vw, 96px); align-items: start; }
+.service-page-main .section-heading { margin-bottom: var(--space-6); }
+.service-page-lede { margin: 0; max-width: 64ch; color: var(--body-ink); font-size: var(--text-lg); line-height: var(--leading-body); }
+.service-page-subheading { margin: var(--space-8) 0 var(--space-4); color: var(--accent-text); font-family: var(--font-heading); font-size: var(--text-2xs); font-weight: 700; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.service-page-capabilities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-6); margin: 0; padding: 0; list-style: none; }
+.service-page-capabilities li { display: flex; align-items: flex-start; gap: var(--space-3); padding-block: var(--space-4); border-bottom: 1px solid var(--line); color: var(--body-ink); font-size: var(--text-md); }
+.service-page-capabilities svg { flex: 0 0 auto; margin-top: 5px; color: var(--accent); font-size: 14px; }
+.service-page-aside {
+  position: sticky;
+  top: 120px;
+  padding: var(--space-8) var(--space-7);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  color: var(--on-ink);
+  background: var(--ink);
+}
+.service-page-aside-icon { font-size: 28px; color: var(--steel); }
+.service-page-aside h2 { margin: var(--space-2) 0 0; color: #fff; font-size: var(--text-2xl); }
+.service-page-aside p { margin: 0 0 var(--space-3); color: var(--on-ink-muted); font-size: var(--text-base); line-height: var(--leading-body); }
+.service-page-aside .primary-button { width: 100%; }
+.service-page-aside-link { min-height: 44px; display: inline-flex; align-items: center; gap: var(--space-3); color: var(--on-ink); font-weight: 600; text-decoration: none; }
+.service-page-aside-link:hover, .service-page-aside-link:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.service-page-aside-link svg { color: var(--steel); }
+.service-page-aside :focus-visible { outline-color: #fff; }
+.related-services .service-cards { margin-top: 0; }
+.service-detail-actions { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-7); }
+
+/* ── Industries ──────────────────────────────────────────────────────────
+   One row per sector, separated by hairlines like the service detail list. */
+.industry-list { display: grid; gap: 0; }
+.industry-row { display: grid; grid-template-columns: minmax(220px, .9fr) minmax(0, 1.2fr) minmax(0, 1.3fr); gap: var(--space-7); padding-block: var(--space-8); border-top: 1px solid var(--line); scroll-margin-top: 120px; }
+.industry-row:last-child { border-bottom: 1px solid var(--line); }
+.industry-row-title { display: flex; flex-direction: column; gap: var(--space-4); }
+.industry-row-title svg { font-size: 26px; color: var(--accent); }
+.industry-row-title h2 { margin: 0; color: var(--navy); font-size: var(--text-xl); }
+.industry-row > p { margin: 0; color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+.industry-row-meta { display: grid; gap: var(--space-6); }
+.industry-row-meta h3 { margin: 0 0 var(--space-3); color: var(--accent-text); font-family: var(--font-heading); font-size: var(--text-2xs); font-weight: 700; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.industry-service-links { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.industry-service-links a { min-height: 40px; display: inline-flex; align-items: center; gap: var(--space-3); color: var(--navy); font-weight: 600; text-decoration: none; }
+.industry-service-links a:hover, .industry-service-links a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+.industry-service-links svg { font-size: 10px; }
+
+.industries-preview-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-7); margin-bottom: var(--space-8); }
+.industries-preview-head .section-heading { margin-bottom: 0; }
+.industry-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+.industry-tile { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border-inline-start: 1px solid var(--line); color: inherit; text-decoration: none; transition: background var(--motion-fast); }
+.industry-tile:first-child { padding-inline-start: 0; border-inline-start: 0; }
+.industry-tile:hover, .industry-tile:focus-visible { background: var(--surface); }
+.industry-tile:first-child:hover, .industry-tile:first-child:focus-visible { padding-inline-start: var(--space-6); }
+.industry-tile svg { font-size: 24px; color: var(--accent); }
+.industry-tile h3 { margin: var(--space-3) 0 0; color: var(--navy); font-size: var(--text-lg); }
+.industry-tile p { margin: 0; color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+/* ── Recycling facts band ────────────────────────────────────────────────
+   Ink chrome, so it reads as part of the same frame as the stats band. */
+.facts-band { padding-block: var(--space-10); color: var(--on-ink); background: var(--ink); }
+.facts-kicker { color: var(--accent-soft-on-dark); font-family: var(--font-heading); font-size: var(--text-2xs); font-weight: 600; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.facts-band h2 { max-width: 24ch; margin: var(--space-5) 0 var(--space-8); color: #fff; font-size: var(--text-3xl); }
+.facts-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+.facts-grid figure { margin: 0; padding: 0 var(--space-7); border-inline-start: 1px solid rgba(255,255,255,.14); }
+.facts-grid figure:first-child { padding-inline-start: 0; border-inline-start: 0; }
+.facts-grid strong { display: block; color: #fff; font-family: var(--font-heading); font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); font-weight: 700; line-height: 1; }
+.facts-grid figcaption span { display: block; margin-top: var(--space-5); color: var(--accent-soft-on-dark); font-family: var(--font-heading); font-size: var(--text-2xs); font-weight: 600; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.facts-grid p { margin: var(--space-3) 0 var(--space-4); color: var(--on-ink); font-size: var(--text-md); line-height: var(--leading-body); }
+.facts-grid small { color: var(--on-ink-muted); font-size: var(--text-sm); }
+.facts-link { margin-top: var(--space-8); }
+.facts-band :focus-visible { outline-color: #fff; }
+
+.sustainability-context .section-heading { max-width: 70ch; margin-bottom: 0; }
+
+html[lang="ar"] .service-page-subheading,
+html[lang="ar"] .industry-row-meta h3,
+html[lang="ar"] .facts-kicker,
+html[lang="ar"] .facts-grid figcaption span { font-family: var(--font-arabic); letter-spacing: 0; }
+
+@media (max-width: 1200px) {
+  .industry-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .industry-tile { border-top: 1px solid var(--line); }
+  .industry-tile:nth-child(3n + 1) { padding-inline-start: 0; border-inline-start: 0; }
+  .industry-tile:nth-child(-n + 3) { border-top: 0; }
+}
+
+@media (max-width: 1020px) {
+  .service-page-layout { grid-template-columns: 1fr; }
+  .service-page-aside { position: static; }
+  .industry-row { grid-template-columns: 1fr; gap: var(--space-5); }
+  .industries-preview-head { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 760px) {
+  .facts-grid { grid-template-columns: 1fr; }
+  .facts-grid figure { padding: var(--space-6) 0; border-inline-start: 0; border-top: 1px solid rgba(255,255,255,.14); }
+  .facts-grid figure:first-child { padding-top: 0; border-top: 0; }
+  .industry-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .industry-tile:nth-child(3n + 1) { padding-inline-start: var(--space-6); border-inline-start: 1px solid var(--line); }
+  .industry-tile:nth-child(odd) { padding-inline-start: 0; border-inline-start: 0; }
+  .industry-tile:nth-child(3) { border-top: 1px solid var(--line); }
+  .industry-tile:nth-child(-n + 2) { border-top: 0; }
+}
+
+@media (max-width: 620px) {
+  .service-page-capabilities { grid-template-columns: 1fr; }
+  .service-page-aside { padding: var(--space-7) var(--space-6); }
+  .industry-tiles { grid-template-columns: 1fr; }
+  .industry-tile, .industry-tile:nth-child(odd), .industry-tile:nth-child(3n + 1) { padding-inline: 0; border-inline-start: 0; border-top: 1px solid var(--line); }
+  .industry-tile:first-child { border-top: 0; }
+  .industry-tile:hover, .industry-tile:focus-visible, .industry-tile:first-child:hover, .industry-tile:first-child:focus-visible { padding-inline: 0; background: transparent; }
 }

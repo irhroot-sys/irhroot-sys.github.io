@@ -561,3 +561,84 @@ test('never leaves a separator dangling when the certification list wraps', asyn
     }
   }
 });
+
+test('prerenders the service, industries and sustainability pages in both languages', async ({ request }) => {
+  for (const [path, lang, title] of [
+    ['/services/container-service', 'en', 'Container Service | AALKC'],
+    ['/ar/services/container-service', 'ar', 'خدمة الحاويات | أمانة الكلمة'],
+    ['/services/global-export', 'en', 'Global Export | AALKC'],
+    ['/industries', 'en', 'Industries | AALKC'],
+    ['/ar/industries', 'ar', 'القطاعات | أمانة الكلمة'],
+    ['/sustainability', 'en', 'Sustainability | AALKC'],
+    ['/ar/sustainability', 'ar', 'الاستدامة | أمانة الكلمة'],
+  ]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain(`<html lang="${lang}"`);
+    expect(html, path).toContain(`<title>${title}</title>`);
+    expect(html, path).toContain(`<link rel="canonical" href="https://aalkc.com${path}" />`);
+  }
+
+  // A service page names its parent in the breadcrumb and describes itself as a Service.
+  const service = await (await request.get('/services/metal-sorting')).text();
+  const graph = JSON.parse(service.match(/<script type="application\/ld\+json" data-page-jsonld>(.*?)<\/script>/)![1])['@graph'];
+  const breadcrumb = graph.find((node: { '@type': string }) => node['@type'] === 'BreadcrumbList');
+  expect(breadcrumb.itemListElement.map((item: { name: string }) => item.name)).toEqual(['Home', 'Services', 'Metal Sorting']);
+  const serviceNode = graph.find((node: { '@type': string }) => node['@type'] === 'Service');
+  expect(serviceNode.name).toBe('Metal Sorting');
+  expect(serviceNode.url).toBe('https://aalkc.com/services/metal-sorting');
+
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  for (const loc of ['/services/container-service', '/ar/services/container-service', '/industries', '/ar/sustainability']) {
+    expect(sitemap, loc).toContain(`<loc>https://aalkc.com${loc}</loc>`);
+  }
+});
+
+test('has no serious or critical axe findings on the new company pages', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing']) {
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical'), path).toEqual([]);
+  }
+});
+
+test('links every service card to its own page and opens the quote dialog from it', async ({ page }) => {
+  await page.goto('/services');
+  await page.getByRole('link', { name: /View service details/i }).first().click();
+  await expect(page).toHaveURL(/\/services\/container-service$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Container Service' })).toBeVisible();
+  await expect(page.locator('.page-breadcrumb')).toContainText('Services');
+
+  await page.locator('.service-page-aside').getByRole('button', { name: /Request a quote/i }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  for (const name of ['material', 'weightTons', 'location', 'timing']) {
+    await expect(dialog.locator(`[name="${name}"]`), name).toHaveCount(1);
+  }
+  await expect(dialog.locator('select[name="material"] option')).toContainText(['Copper', 'Mixed or other metals']);
+});
+
+test('keeps the full menu on one line wherever it is shown', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop header only');
+  for (const width of [1440, 1280, 1241]) {
+    for (const path of ['/', '/ar']) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(path);
+      const boxes = await page.evaluate(() => {
+        const box = (selector: string) => {
+          const rect = document.querySelector(selector)!.getBoundingClientRect();
+          return { left: rect.left, right: rect.right, height: rect.height };
+        };
+        return { nav: box('.primary-nav'), lang: box('.language-toggle'), quote: box('.header-quote'), brand: box('.brand') };
+      });
+      const label = `${width} ${path}`;
+      expect(boxes.quote.height, label).toBeLessThanOrEqual(48);
+      const ordered = path === '/' ? [boxes.brand, boxes.nav, boxes.lang, boxes.quote] : [boxes.quote, boxes.lang, boxes.nav, boxes.brand];
+      for (let i = 1; i < ordered.length; i += 1) expect(ordered[i].left, label).toBeGreaterThanOrEqual(ordered[i - 1].right);
+      expect(Math.max(...ordered.map((b) => b.right)), label).toBeLessThanOrEqual(width);
+    }
+  }
+});

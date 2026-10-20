@@ -6,7 +6,10 @@ import { FaqPage } from "./pages/FaqPage.jsx";
 import { LegalPage } from "./pages/LegalPage.jsx";
 import { ContactPage } from "./pages/ContactPage.jsx";
 import { NotFoundPage } from "./pages/NotFoundPage.jsx";
-import { legalContent } from "./data/siteContent.jsx";
+import { ServiceDetailPage } from "./pages/ServiceDetailPage.jsx";
+import { IndustriesPage } from "./pages/IndustriesPage.jsx";
+import { SustainabilityPage } from "./pages/SustainabilityPage.jsx";
+import { legalContent, services } from "./data/siteContent.jsx";
 import { splitLocalePath } from "./lib/i18n.js";
 
 const DEFAULT_IMAGE = "/assets/service-industrial-dismantling.webp";
@@ -44,6 +47,39 @@ export const routes = [
     heroImage: "/assets/service-scrap-metal.webp",
     changefreq: "monthly",
     priority: "0.9",
+  },
+  // One page per service, generated from the service list.
+  ...services.map((service) => ({
+    path: `/services/${service.slug}`,
+    element: () => <ServiceDetailPage slug={service.slug} />,
+    title: service.title,
+    description: service.overview,
+    image: service.image,
+    heroImage: service.image,
+    parent: { title: "Services", path: "/services" },
+    service,
+    changefreq: "monthly",
+    priority: "0.8",
+  })),
+  {
+    path: "/industries",
+    element: () => <IndustriesPage />,
+    title: "Industries",
+    description: "AALKC scrap metal collection, grading and purchasing for construction, manufacturing, industrial plants, electrical and commercial operations in the Eastern Province.",
+    image: "/assets/service-construction-materials.webp",
+    heroImage: "/assets/service-construction-materials.webp",
+    changefreq: "monthly",
+    priority: "0.8",
+  },
+  {
+    path: "/sustainability",
+    element: () => <SustainabilityPage />,
+    title: "Sustainability",
+    description: "How AALKC keeps industrial metal in productive use: circular materials, responsible handling, ISO 14001 environmental management and efficient logistics.",
+    image: "/assets/service-metal-sorting.webp",
+    heroImage: "/assets/service-metal-sorting.webp",
+    changefreq: "yearly",
+    priority: "0.7",
   },
   {
     path: "/materials",

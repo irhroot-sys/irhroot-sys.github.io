@@ -2,9 +2,11 @@ import { FaCheck, FaChevronRight } from "react-icons/fa";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
-import { processSteps, services } from "../data/siteContent.jsx";
+import { services } from "../data/siteContent.jsx";
+import { ProcessSection } from "../components/ProcessSection.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { Link } from "../lib/router.jsx";
 import { ResponsiveImage } from "../components/ResponsiveImage.jsx";
 
 // Measured against the alternating detail rows: full width until the rows
@@ -38,23 +40,21 @@ export function ServicesPage() {
                 <h2>{t(title)}</h2>
                 <p>{t(copy)}</p>
                 <ul>{capabilities.map((capability) => <li key={capability}><FaCheck />{t(capability)}</li>)}</ul>
-                <button type="button" className="inline-action" onClick={() => openQuote({ service: title })}>
-                  {t("Discuss this service")} <FaChevronRight className="directional-icon" />
-                </button>
+                <div className="service-detail-actions">
+                  <Link className="inline-action" to={`/services/${slug}`}>
+                    {t("View service details")} <FaChevronRight className="directional-icon" />
+                  </Link>
+                  <button type="button" className="inline-action" onClick={() => openQuote({ service: title })}>
+                    {t("Discuss this service")} <FaChevronRight className="directional-icon" />
+                  </button>
+                </div>
               </div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="content-section soft-section">
-        <div className="content-width">
-          <SectionHeading eyebrow="Our process" title="A clear route from requirement to completion" align="center" />
-          <div className="process-grid">
-            {processSteps.map((step) => <article key={step.number}><strong>{step.number}</strong><h3>{t(step.title)}</h3><p>{t(step.copy)}</p></article>)}
-          </div>
-        </div>
-      </section>
+      <ProcessSection />
       <CtaBand />
     </>
   );
