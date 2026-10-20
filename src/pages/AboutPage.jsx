@@ -3,7 +3,8 @@ import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { Statistics } from "../components/Statistics.jsx";
-import { certifications, companyServices, statistics, values } from "../data/siteContent.jsx";
+import { companyServices, statistics, values } from "../data/siteContent.jsx";
+import { CertificationList } from "../components/CertificationList.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function AboutPage() {
@@ -54,15 +55,7 @@ export function AboutPage() {
 
       <section className="content-section content-width certification-section">
         <SectionHeading eyebrow="Official certification" title="Institutional integrity and trust" copy="AALKC maintains quality, environmental, and safety certifications alongside verified Ministry of Commerce registration." />
-        <div className="certification-grid">
-          {certifications.map((certification) => (
-            <article key={certification.title}>
-              <strong>{t(certification.title)}</strong>
-              <span>{t(certification.label)}</span>
-              <p>{t(certification.copy)}</p>
-            </article>
-          ))}
-        </div>
+        <CertificationList />
       </section>
       <CtaBand />
     </>

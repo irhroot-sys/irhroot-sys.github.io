@@ -2,12 +2,15 @@ import {
   FaAward,
   FaBalanceScale,
   FaBolt,
+  FaBuilding,
   FaCertificate,
   FaCheckCircle,
   FaCogs,
   FaCube,
   FaGlobe,
+  FaHardHat,
   FaIndustry,
+  FaLeaf,
   FaMapMarkerAlt,
   FaRecycle,
   FaShieldAlt,
@@ -19,7 +22,17 @@ export const navigation = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
   { label: "Services", to: "/services" },
+  { label: "Industries", to: "/industries" },
   { label: "Materials", to: "/materials" },
+  { label: "Sustainability", to: "/sustainability" },
+  { label: "Contact", to: "/contact" },
+];
+
+export const footerCompanyLinks = [
+  { label: "About Us", to: "/about" },
+  { label: "Industries", to: "/industries" },
+  { label: "Materials", to: "/materials" },
+  { label: "Sustainability", to: "/sustainability" },
   { label: "FAQ", to: "/faq" },
   { label: "Contact", to: "/contact" },
 ];
@@ -50,6 +63,7 @@ export const features = [
 export const services = [
   {
     slug: "container-service",
+    overview: "AALKC places roll-off containers from 10 to 40 yards, and flatbed transport, where your scrap is generated, then swaps or collects them on a schedule that suits the site. Containers are matched to the material and the access available, so space is used well and collections stay predictable.",
     icon: FaTruck,
     title: "Container Service",
     category: "Collection",
@@ -61,6 +75,7 @@ export const services = [
   },
   {
     slug: "industrial-demolition",
+    overview: "For plant decommissioning, equipment replacement and facility clearance, AALKC recovers machinery, structural steel and other metal assets. Recoverable material is separated during dismantling, so it can be graded and valued instead of sold as mixed scrap.",
     icon: FaIndustry,
     title: "Industrial Demolition",
     category: "Processing",
@@ -72,6 +87,7 @@ export const services = [
   },
   {
     slug: "scrap-purchasing",
+    overview: "AALKC buys ferrous and non-ferrous scrap from industrial, commercial and construction suppliers. Every load is inspected, graded and weighed on certified scales, and quotations follow current market conditions.",
     icon: FaRecycle,
     title: "Scrap Purchasing",
     category: "Trading",
@@ -83,6 +99,7 @@ export const services = [
   },
   {
     slug: "heavy-logistics",
+    overview: "Bulk scrap and heavy items need the right vehicle and a planned route. AALKC coordinates the fleet and transport for bulk collections and industrial relocations across the Eastern Province and the wider Kingdom.",
     icon: FaShippingFast,
     title: "Heavy Logistics",
     category: "Collection",
@@ -94,6 +111,7 @@ export const services = [
   },
   {
     slug: "metal-sorting",
+    overview: "Mixed loads are worth more once they are separated. AALKC uses laser and XRF-supported identification to classify alloys and verify grades, and documents the acceptance review for every load.",
     icon: FaCogs,
     title: "Metal Sorting",
     category: "Processing",
@@ -105,6 +123,7 @@ export const services = [
   },
   {
     slug: "global-export",
+    overview: "Some grades find their best value beyond the local market. AALKC coordinates supply to international foundries and mills through coordinated trade channels and handles the commercial coordination.",
     icon: FaGlobe,
     title: "Global Export",
     category: "Trading",
@@ -115,6 +134,68 @@ export const services = [
     capabilities: ["International buyer network", "Foundry and mill supply", "Commercial coordination", "Export-channel support"],
   },
 ];
+
+// Sectors AALKC works with. `services` and `materials` reference the slugs
+// and names above, so service pages can list the sectors they suit.
+export const industries = [
+  {
+    slug: "construction",
+    icon: FaHardHat,
+    title: "Construction & Contracting",
+    copy: "Rebar offcuts, structural steel, formwork hardware and demolition arisings, collected from active sites on a schedule that suits the programme.",
+    materials: ["Rebar", "Heavy Melt Steel", "Plate & Structural"],
+    services: ["container-service", "industrial-demolition", "heavy-logistics"],
+  },
+  {
+    slug: "manufacturing",
+    icon: FaCogs,
+    title: "Manufacturing & Fabrication",
+    copy: "Production offcuts, turnings, sheet skeletons and rejected parts, kept separate by alloy so they are graded and valued correctly.",
+    materials: ["Stainless Steel", "Aluminum", "Brass", "Copper"],
+    services: ["scrap-purchasing", "metal-sorting", "container-service"],
+  },
+  {
+    slug: "industrial-plants",
+    icon: FaIndustry,
+    title: "Industrial Plants & Facilities",
+    copy: "Decommissioning and shutdown scrap, obsolete machinery and redundant structural steel, removed safely and documented.",
+    materials: ["Heavy Melt Steel", "Cast Iron", "Stainless Steel", "Copper"],
+    services: ["industrial-demolition", "heavy-logistics", "scrap-purchasing"],
+  },
+  {
+    slug: "electrical",
+    icon: FaBolt,
+    title: "Electrical & Cabling",
+    copy: "Cable, wire, busbar and conductor scrap, with copper and aluminium separated from insulated material for accurate grading.",
+    materials: ["Copper", "Aluminum", "Brass"],
+    services: ["scrap-purchasing", "metal-sorting"],
+  },
+  {
+    slug: "commercial",
+    icon: FaBuilding,
+    title: "Commercial & Facilities Management",
+    copy: "Fit-out strip-outs, building-services metals and end-of-life equipment from offices, retail and warehousing, cleared with minimal disruption.",
+    materials: ["Aluminum", "Copper", "Stainless Steel", "Plate & Structural"],
+    services: ["container-service", "scrap-purchasing"],
+  },
+];
+
+export const sustainabilityPillars = [
+  { icon: FaRecycle, title: "Circular materials", copy: "Graded scrap goes back to mills and foundries as feedstock, so metal already in circulation is used again." },
+  { icon: FaShieldAlt, title: "Responsible handling", copy: "Loads are inspected before acceptance, and sealed, pressurised or hazardous containers are not accepted." },
+  { icon: FaLeaf, title: "Environmental management", copy: "Processing procedures follow the ISO 14001 environmental-management standard." },
+  { icon: FaTruck, title: "Efficient logistics", copy: "Collections are planned around each site, with container swaps that avoid unnecessary trips." },
+];
+
+// Published industry figures, quoted with their source. They describe metal
+// recycling in general, not AALKC's own results.
+export const recyclingFacts = [
+  { figure: "95%", metal: "Aluminium", copy: "less energy is needed to recycle aluminium than to produce it from ore.", source: "International Aluminium Institute" },
+  { figure: "1.5 t", metal: "Steel", copy: "of CO₂ emissions are avoided for every tonne of scrap used to make steel.", source: "World Steel Association" },
+  { figure: "Up to 85%", metal: "Copper", copy: "less energy is needed to recycle copper than to produce it from ore.", source: "International Copper Association" },
+];
+
+export const collectionTimings = ["Flexible", "Within a week", "Within a month", "Recurring collections"];
 
 export const statistics = [
   { icon: FaAward, label: "Year Established", value: "2017" },

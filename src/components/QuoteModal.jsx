@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { FaCheckCircle, FaChevronRight, FaTimes } from "react-icons/fa";
 import { services } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
-import { submitEnquiry } from "../lib/enquiries.js";
+import { readQuoteDetails, submitEnquiry } from "../lib/enquiries.js";
+import { QuoteDetailsFields } from "./QuoteDetailsFields.jsx";
 import { Link } from "../lib/router.jsx";
 import { TurnstileWidget } from "./TurnstileWidget.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -61,6 +62,7 @@ export function QuoteModal() {
         phone: formData.get("phone"),
         service: quoteContext.service || formData.get("service"),
         message: formData.get("message"),
+        ...readQuoteDetails(formData),
         consent: formData.get("consent") === "yes",
         website: formData.get("website"),
         turnstileToken,
@@ -125,7 +127,8 @@ export function QuoteModal() {
                 </select>
               </label>
             )}
-            <label>{t("Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" required placeholder={t("Material type, estimated quantity, condition, and site location")} /></label>
+            <QuoteDetailsFields defaultMaterial={quoteContext.kind === "material" ? quoteContext.service : undefined} />
+            <label>{t("Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" maxLength="1800" required placeholder={t("Material type, estimated quantity, condition, and site location")} /></label>
             <label className="consent-field">
               <input type="checkbox" name="consent" value="yes" required />
               <span>{t("I consent to AALKC storing and using these details to respond to my request, as described in the")} <Link to="/privacy" onClick={closeQuote}>{t("Privacy Policy")}</Link>.</span>

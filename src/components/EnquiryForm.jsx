@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaCheckCircle, FaChevronRight } from "react-icons/fa";
-import { submitEnquiry } from "../lib/enquiries.js";
+import { readQuoteDetails, submitEnquiry } from "../lib/enquiries.js";
+import { QuoteDetailsFields } from "./QuoteDetailsFields.jsx";
 import { Link } from "../lib/router.jsx";
 import { TurnstileWidget } from "./TurnstileWidget.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -29,6 +30,7 @@ export function EnquiryForm() {
         phone: formData.get("phone"),
         service: formData.get("subject"),
         message: formData.get("message"),
+        ...readQuoteDetails(formData),
         consent: formData.get("consent") === "yes",
         website: formData.get("website"),
         turnstileToken,
@@ -68,7 +70,8 @@ export function EnquiryForm() {
           {["General enquiry", "Scrap metal trading", "Construction materials", "Machinery and equipment", "Container service", "Industrial demolition", "Heavy logistics", "Metal sorting", "Global export"].map((option) => <option key={option} value={option}>{t(option)}</option>)}
         </select>
       </label>
-      <label>{t("How can we help?")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="6" minLength="10" required placeholder={t("Describe the materials, estimated quantity, and site location.")} /></label>
+      <QuoteDetailsFields />
+      <label>{t("How can we help?")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="6" minLength="10" maxLength="1800" required placeholder={t("Describe the materials, estimated quantity, and site location.")} /></label>
       <label className="consent-field">
         <input type="checkbox" name="consent" value="yes" required />
         <span>{t("I consent to AALKC storing and using these details to respond to my request, as described in the")} <Link to="/privacy">{t("Privacy Policy")}</Link>.</span>

@@ -1,5 +1,5 @@
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
-import { contactDetails, navigation } from "../data/siteContent.jsx";
+import { contactDetails, footerCompanyLinks, services } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -24,8 +24,12 @@ export function Footer() {
           <p>{t("Licensed scrap metal purchasing, collection, sorting, industrial logistics, and recycling services from Dammam across Saudi Arabia's Eastern Province.")}</p>
         </div>
         <div className="footer-links">
+          <h2>{t("Services")}</h2>
+          {services.map(({ slug, title }) => <Link key={slug} to={`/services/${slug}`}>{t(title)}</Link>)}
+        </div>
+        <div className="footer-links">
           <h2>{t("Company")}</h2>
-          {navigation.slice(1).map(({ label, to }) => <Link key={to} to={to}>{t(label)}</Link>)}
+          {footerCompanyLinks.map(({ label, to }) => <Link key={to} to={to}>{t(label)}</Link>)}
         </div>
         <div className="footer-contact">
           <h2>{t("Contact")}</h2>

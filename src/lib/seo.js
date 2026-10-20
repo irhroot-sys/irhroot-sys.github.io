@@ -61,6 +61,18 @@ function pageSpecificNodes(route, language, canonical) {
       })),
     }];
   }
+  if (route.service) {
+    return [{
+      "@type": "Service",
+      "@id": `${canonical}#service`,
+      name: t(route.service.title),
+      description: t(route.service.overview),
+      serviceType: t(route.service.category),
+      url: canonical,
+      provider: { "@id": ORGANIZATION_ID },
+      areaServed: { "@type": "AdministrativeArea", name: "Eastern Province, Saudi Arabia" },
+    }];
+  }
   if (route.path === "/services") {
     return [{
       "@type": "ItemList",
@@ -72,7 +84,7 @@ function pageSpecificNodes(route, language, canonical) {
           "@type": "Service",
           name: t(service.title),
           description: t(service.copy),
-          url: `${canonical}#${service.slug}`,
+          url: absoluteUrl(localizePath(`/services/${service.slug}`, language)),
           provider: { "@id": ORGANIZATION_ID },
           areaServed: "SA",
         },
@@ -123,13 +135,15 @@ export function buildPageHead({ route, language = DEFAULT_LANGUAGE }) {
       },
     );
     if (route.path !== "/") {
+      const trail = [
+        { name: t("Home"), item: absoluteUrl(localizePath("/", language)) },
+        ...(route.parent ? [{ name: t(route.parent.title), item: absoluteUrl(localizePath(route.parent.path, language)) }] : []),
+        { name: t(route.title), item: canonical },
+      ];
       graph.push({
         "@type": "BreadcrumbList",
         "@id": `${canonical}#breadcrumb`,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: t("Home"), item: absoluteUrl(localizePath("/", language)) },
-          { "@type": "ListItem", position: 2, name: t(route.title), item: canonical },
-        ],
+        itemListElement: trail.map((crumb, index) => ({ "@type": "ListItem", position: index + 1, ...crumb })),
       });
     }
     graph.push(...pageSpecificNodes(route, language, canonical));
