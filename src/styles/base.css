@@ -1,0 +1,177 @@
+/* ── Base ─────────────────────────────────────────────────────────────────
+   Element defaults for both scripts. Latin and Arabic swap families on the
+   root, so components never need to know which language they render in
+   except where a measurement (tracking, mono labels) genuinely differs. */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  background: var(--ink-900);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text);
+  background: var(--paper);
+  font-family: var(--font-text);
+  font-size: var(--fs-16);
+  line-height: var(--lh-text);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-stretch: var(--display-stretch);
+  font-weight: 640;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--track-heading);
+  text-wrap: balance;
+}
+h3, h4 { font-stretch: 100%; font-weight: 600; letter-spacing: -.012em; line-height: var(--lh-snug); }
+p { margin: 0; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; }
+img, svg, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+button, a { -webkit-tap-highlight-color: transparent; }
+::selection { color: var(--white); background: var(--navy-700); }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.on-ink :focus-visible,
+.site-header :focus-visible,
+.site-footer :focus-visible { outline-color: var(--focus-on-ink); }
+
+/* Arabic: Kufi for display, Plex Sans Arabic for text. Latin tracking is
+   cancelled because Arabic letters join. */
+html[lang="ar"] body { font-family: var(--font-arabic); line-height: 1.8; }
+html[lang="ar"] :is(h1, h2, h3, h4) {
+  font-family: var(--font-arabic-display);
+  font-stretch: 100%;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.32;
+}
+html[lang="ar"] :is(h3, h4) { font-family: var(--font-arabic); font-weight: 600; }
+
+/* Line icons draw at a finer stroke than the library default. */
+svg[stroke-linecap="round"] { stroke-width: 1.6; }
+
+/* Directional glyphs (arrows) mirror in right-to-left text; nothing else
+   does. Hover motion uses `translate`, so it never fights this transform. */
+html[dir="rtl"] .directional-icon { transform: scaleX(-1); }
+.directional-icon { flex: 0 0 auto; transition: translate var(--t-fast) var(--ease-soft); }
+
+.phone-number { direction: ltr; unicode-bidi: isolate; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ── Layout utilities ──────────────────────────────────────────────────── */
+.container,
+.content-width {
+  width: min(var(--measure), calc(100% - 2 * var(--margin)));
+  margin-inline: auto;
+}
+.content-section { padding-block: var(--section); }
+.surface-paper { background: var(--paper); }
+.surface-white, .soft-section { background: var(--white); }
+.surface-ink { color: var(--on-ink); background: var(--ink-900); }
+.surface-ink :is(h1, h2, h3, h4) { color: var(--white); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  top: -120%;
+  inset-inline-start: var(--s-4);
+  z-index: 999;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--s-5);
+  color: var(--ink-900);
+  background: var(--copper-fill);
+  font-weight: 600;
+  transition: top var(--t-fast) var(--ease-std);
+}
+.skip-link:focus { top: 0; }
+
+.site-shell { min-height: 100vh; overflow: clip; background: var(--paper); }
+/* <ResponsiveImage> wraps its <img> in <picture>; taking the wrapper out of
+   layout lets every image rule target the <img> as a direct child. */
+.responsive-picture { display: contents; }
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 120;
+  height: 2px;
+  pointer-events: none;
+}
+.scroll-progress span {
+  display: block;
+  height: 100%;
+  background: var(--copper);
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left center;
+}
+html[dir="rtl"] .scroll-progress span { transform-origin: right center; }
+
+/* ── Motion ─────────────────────────────────────────────────────────────
+   Only elements the MotionManager measured below the fold are staged, so a
+   first paint never hides content. Reduced motion disables staging in JS
+   and every transition here. */
+@supports (view-transition-name: none) {
+  main { view-transition-name: page; }
+  ::view-transition-old(page) { animation: page-leave var(--t-fast) var(--ease-std) both; }
+  ::view-transition-new(page) { animation: page-arrive var(--t-slow) var(--ease-out) both; }
+  ::view-transition-group(page) { animation-duration: var(--t-fast); }
+  @keyframes page-leave { to { opacity: 0; translate: 0 -6px; } }
+  @keyframes page-arrive { from { opacity: 0; translate: 0 12px; } }
+}
+.page-stage:not(.is-home) { animation: page-stage-in 460ms var(--ease-out) both; }
+@keyframes page-stage-in { from { opacity: .72; translate: 0 8px; } }
+
+[data-motion="reveal"] { opacity: 0; translate: 0 16px; }
+[data-motion="reveal"].is-revealed {
+  opacity: 1;
+  translate: 0 0;
+  animation: reveal var(--t-slow) var(--ease-out) both;
+  animation-delay: calc(var(--motion-order, 0) * 40ms);
+}
+[data-motion="reveal"].is-revealed.is-immediate { animation-duration: var(--t-mid); animation-delay: 0ms; }
+@keyframes reveal { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
+
+/* Photographs open behind a mask rather than fading, which reads as a cut
+   instead of a slow image load. Only inside staged elements. */
+[data-motion="reveal"] :is(.plate-frame, .service-media, .product-media, .service-detail-media) { clip-path: inset(0 0 100% 0); }
+[data-motion="reveal"].is-revealed :is(.plate-frame, .service-media, .product-media, .service-detail-media) {
+  animation: media-wipe var(--t-slow) var(--ease-out) both;
+  animation-delay: calc(var(--motion-order, 0) * 40ms);
+}
+[data-motion="reveal"].is-revealed.is-immediate :is(.plate-frame, .service-media, .product-media, .service-detail-media) { animation-duration: var(--t-mid); animation-delay: 0ms; }
+@keyframes media-wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .page-stage:not(.is-home) { animation: none; }
+}

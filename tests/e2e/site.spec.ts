@@ -15,7 +15,7 @@ test('renders critical content in the new industrial design', async ({ page }) =
   page.on('pageerror', (error) => runtimeErrors.push(error.message));
 
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: /Building Value, Recycling the Future/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Integrity, weighed in every tonne/i })).toBeVisible();
   await expect(page.locator('nav[aria-label="Primary navigation"]')).toHaveCount(1);
   await expect(page.getByText(/Premium, transparent, and efficient metal recycling services/i)).toBeVisible();
   expect(failedAssets).toEqual([]);
@@ -30,7 +30,7 @@ test('loads the cinematic hero as high-priority media without hiding conversion 
   const heading = hero.getByRole('heading', { level: 1 });
   const actions = hero.locator('.hero-actions');
 
-  await expect(image).toHaveAttribute('src', '/assets/service-industrial-dismantling.webp');
+  await expect(image).toHaveAttribute('src', '/assets/service-metal-sorting.webp');
   await expect(image).toHaveAttribute('fetchpriority', 'high');
   await expect(image).toHaveJSProperty('complete', true);
   await expect(heading).toBeVisible();
@@ -119,49 +119,48 @@ test('supports keyboard navigation and the quote dialog focus trap', async ({ pa
   await expect(page.getByRole('dialog')).toBeHidden();
 });
 
-test('keeps the stats bar content inside its responsive bounds', async ({ page }) => {
+test('keeps the company register inside its responsive bounds', async ({ page }) => {
   await page.goto('/');
-  const stats = page.getByRole('region', { name: 'Company statistics' });
-  await expect(stats.getByText('Eastern Province')).toBeVisible();
-  const containerBox = await stats.boundingBox();
-  const coverageBox = await stats.getByText('Eastern Province').boundingBox();
-  expect(containerBox).not.toBeNull();
-  expect(coverageBox).not.toBeNull();
+  const register = page.getByRole('region', { name: 'Company register' });
+  await expect(register.getByText('Eastern Province', { exact: true })).toBeVisible();
+  await expect(register.getByText('7050308233')).toBeVisible();
+  const containerBox = await register.boundingBox();
+  const coverageBox = await register.getByText('Eastern Province', { exact: true }).boundingBox();
   expect(coverageBox!.x).toBeGreaterThanOrEqual(containerBox!.x);
   expect(coverageBox!.x + coverageBox!.width).toBeLessThanOrEqual(containerBox!.x + containerBox!.width);
-  expect(await stats.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+  expect(await register.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
 });
 
-test('uses consistent service-card media ratios', async ({ page }) => {
+test('grades every capability photograph the same way', async ({ page }) => {
   await page.goto('/');
-  const media = page.locator('.service-card .service-media');
-  await expect(media).toHaveCount(6);
-  const ratios = await media.evaluateAll((elements) => elements.map((element) => {
+  const frames = page.locator('.capability-plate .plate-frame');
+  await expect(frames).toHaveCount(6);
+  const ratios = await frames.evaluateAll((elements) => elements.map((element) => {
     const box = element.getBoundingClientRect();
-    return box.width / box.height;
+    return Math.round((box.width / box.height) * 100) / 100;
   }));
-  // Assert against the design token rather than a hard-coded number so the
-  // ratio can change with the system while consistency stays enforced.
-  const expectedRatio = await page.evaluate(() => {
-    const [w, h] = getComputedStyle(document.documentElement).getPropertyValue('--media-ratio').split('/').map((part) => Number(part.trim()));
-    return w / h;
-  });
-  for (const ratio of ratios) expect(ratio).toBeCloseTo(expectedRatio, 1);
+  expect(new Set(ratios).size).toBe(1);
 
-  const sources = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => image.getAttribute('src')));
+  const images = page.locator('.capability-plate img');
+  const sources = await images.evaluateAll((list) => list.map((image) => image.getAttribute('src')));
   expect(new Set(sources).size).toBe(6);
-
-  const treatments = await page.locator('.service-card img').evaluateAll((images) => images.map((image) => ({
+  const treatments = await images.evaluateAll((list) => list.map((image) => ({
     fit: getComputedStyle(image).objectFit,
     filter: getComputedStyle(image).filter,
   })));
   expect(new Set(treatments.map(({ fit }) => fit))).toEqual(new Set(['cover']));
-  // Every card shares one grade — that shared treatment is what makes a set of
-  // separately-licensed photographs read as a commissioned set. Assert the
-  // consistency and the presence of the grade, not a literal filter string.
+  // One shared grade makes separately licensed photographs read as one set;
+  // it keeps their colour, so it must never desaturate fully.
   const filters = new Set(treatments.map(({ filter }) => filter));
   expect(filters.size).toBe(1);
-  expect([...filters][0]).toMatch(/grayscale\(/);
+  expect([...filters][0]).toMatch(/saturate\(/);
+  expect([...filters][0]).not.toMatch(/grayscale\(1\)/);
+
+  // Hovering a row brings its photograph forward.
+  if (await page.evaluate(() => matchMedia('(min-width: 901px)').matches)) {
+    await page.locator('.capability-row').nth(3).hover();
+    await expect(page.locator('.capability-plate').nth(3)).toHaveClass(/is-active/);
+  }
 });
 
 test('uses the premium bilingual body fonts and interactive link states', async ({ page }) => {
@@ -171,7 +170,7 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     body: getComputedStyle(document.body).fontFamily,
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
-  expect(englishFonts.body).toContain('Manrope');
+  expect(englishFonts.body).toContain('IBM Plex Sans');
   expect(englishFonts.heading).toContain('Archivo');
 
   const activeNav = page.locator('.primary-nav a.active');
@@ -180,8 +179,8 @@ test('uses the premium bilingual body fonts and interactive link states', async 
   const footerLink = page.locator('.footer-links a').first();
   await footerLink.hover();
   await expect(footerLink).toHaveCSS('color', 'rgb(255, 255, 255)');
-  const underlineTransform = await footerLink.evaluate((link) => getComputedStyle(link, '::after').transform);
-  expect(underlineTransform).toBe('matrix(1, 0, 0, 1, 0, 0)');
+  // The underline draws in over a transition; assert where it settles.
+  await expect.poll(() => footerLink.evaluate((link) => getComputedStyle(link, '::after').transform)).toBe('matrix(1, 0, 0, 1, 0, 0)');
 
   await page.getByRole('link', { name: 'AR', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
@@ -190,7 +189,7 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
   expect(arabicFonts.body).toContain('IBM Plex Sans Arabic');
-  expect(arabicFonts.heading).toContain('IBM Plex Sans Arabic');
+  expect(arabicFonts.heading).toContain('Noto Kufi Arabic');
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -199,7 +198,7 @@ test('switches the full interface between English and Arabic', async ({ page }) 
   await expect(page).toHaveURL(/\/ar$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-  await expect(page.getByRole('heading', { level: 1, name: /نبني القيمة/ })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /في كل طن/ })).toBeVisible();
   await expect(page.locator('.primary-nav a[href="/ar/about"]')).toHaveText('من نحن');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
@@ -225,9 +224,9 @@ test('keeps the premium bilingual layout contained at every supported breakpoint
   for (const width of widths) {
     await page.setViewportSize({ width, height: 900 });
     await expect(page.locator('.brand .brand-mark')).toBeVisible();
-    await expect(page.getByRole('region', { name: 'Company statistics' }).getByText('Eastern Province')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Company register' }).getByText('Eastern Province', { exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-    expect(await page.getByRole('region', { name: 'Company statistics' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    expect(await page.getByRole('region', { name: 'Company register' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
     if (width <= 620) {
       await expect(page.locator('.brand-wordmark')).toBeHidden();
     } else {
@@ -239,9 +238,9 @@ test('keeps the premium bilingual layout contained at every supported breakpoint
   await page.getByRole('link', { name: 'AR', exact: true }).click();
   for (const width of widths) {
     await page.setViewportSize({ width, height: 900 });
-    await expect(page.getByRole('region', { name: 'إحصاءات الشركة' }).getByText('المنطقة الشرقية')).toBeVisible();
+    await expect(page.getByRole('region', { name: 'سجل الشركة' }).getByText('المنطقة الشرقية', { exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-    expect(await page.getByRole('region', { name: 'إحصاءات الشركة' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    expect(await page.getByRole('region', { name: 'سجل الشركة' }).evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
   }
 });
 
@@ -464,8 +463,8 @@ test('ships every page as prerendered HTML with its own head in both languages',
   for (const [path, lang, title, heading] of [
     ['/services', 'en', 'Services | AALKC', 'Scrap management built for industrial scale.'],
     ['/ar/services', 'ar', 'الخدمات | أمانة الكلمة', 'إدارة خردة مصممة للنطاق الصناعي.'],
-    ['/', 'en', 'Scrap Metal Buyer &amp; Recycling in Dammam | AALKC', 'Building Value,'],
-    ['/ar', 'ar', 'شراء الخردة المعدنية وإعادة تدويرها في الدمام | أمانة الكلمة', 'نبني القيمة،'],
+    ['/', 'en', 'Scrap Metal Buyer &amp; Recycling in Dammam | AALKC', 'weighed in every tonne.'],
+    ['/ar', 'ar', 'شراء الخردة المعدنية وإعادة تدويرها في الدمام | أمانة الكلمة', 'في كل طن.'],
   ]) {
     const html = await (await request.get(path)).text();
     const canonical = `https://aalkc.com${path === '/' ? '/' : path}`;
@@ -523,43 +522,65 @@ test('keeps the language in the URL and hydrates prerendered pages cleanly', asy
   expect(problems).toEqual([]);
 });
 
-test('offers WhatsApp everywhere and a call button on small screens', async ({ page }, testInfo) => {
+test('opens the contact concierge with WhatsApp, call and email on every page', async ({ page }) => {
   await page.goto('/ar');
-  const dock = page.getByRole('navigation', { name: 'تواصل سريع' });
-  const whatsapp = dock.getByRole('link', { name: /واتساب/ });
-  await expect(whatsapp).toBeVisible();
+  const toggle = page.getByRole('button', { name: 'تواصل مع أمانة الكلمة' });
+  await expect(toggle).toBeVisible();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await toggle.click();
+  await expect(page.getByRole('button', { name: 'إغلاق خيارات التواصل' })).toHaveAttribute('aria-expanded', 'true');
+
+  const panel = page.getByRole('dialog', { name: 'تحدث إلى فريقنا' });
+  await expect(panel).toBeVisible();
+  const whatsapp = panel.getByRole('link', { name: /واتساب/ });
+  await expect(whatsapp).toBeFocused();
   const href = new URL((await whatsapp.getAttribute('href'))!);
   expect(href.origin + href.pathname).toBe('https://wa.me/966551811700');
   expect(href.searchParams.get('text')).toContain('أمانة الكلمة');
+  await expect(panel.getByRole('link', { name: 'اتصل بأمانة الكلمة' })).toHaveAttribute('href', 'tel:+966551811700');
+  await expect(panel.getByRole('link', { name: /contact@aalkc\.com/ })).toHaveAttribute('href', 'mailto:contact@aalkc.com');
 
-  // Hidden with display: none on wide screens, so it leaves the accessibility
-  // tree there; locate it structurally to cover both cases.
-  const call = page.locator('.contact-dock .contact-dock-call');
-  await expect(call).toHaveAttribute('href', 'tel:+966551811700');
-  await expect(call).toHaveAttribute('aria-label', 'اتصل بأمانة الكلمة');
-  if (testInfo.project.name === 'mobile-chromium') await expect(call).toBeVisible();
-  else await expect(call).toBeHidden();
+  // Escape closes it and hands focus back to the launcher.
+  await page.keyboard.press('Escape');
+  await expect(panel).toBeHidden();
+  await expect(page.locator('.concierge-toggle')).toBeFocused();
+
+  // The quote action closes the panel and opens the enquiry dialog.
+  await page.locator('.concierge-toggle').click();
+  await page.locator('.concierge-quote').click();
+  await expect(page.locator('.concierge-panel')).toHaveCount(0);
+  await expect(page.locator('.quote-modal')).toBeVisible();
 });
 
-test('never leaves a separator dangling when the certification list wraps', async ({ page }) => {
+test('keeps the hero ledger inside the hero at phone width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 900 });
   for (const path of ['/', '/ar']) {
     await page.goto(path);
-    const layout = await page.locator('.hero-trust').evaluate((list) => {
+    const ledger = page.locator('.hero-ledger dl');
+    await expect(ledger.locator('dd')).toHaveCount(5);
+    const layout = await ledger.evaluate((list) => {
       const box = list.getBoundingClientRect();
-      const items = Array.from(list.children).map((item) => item.getBoundingClientRect());
-      const rtl = getComputedStyle(list).direction === 'rtl';
-      return { rows: new Set(items.map((item) => Math.round(item.top))).size, rtl, box: { left: box.left, right: box.right }, items: items.map((item) => ({ top: Math.round(item.top), left: item.left, right: item.right })) };
+      const cells = Array.from(list.children).map((cell) => cell.getBoundingClientRect());
+      return { box: { left: box.left, right: box.right }, cells: cells.map((cell) => ({ left: cell.left, right: cell.right })), overflow: list.scrollWidth > list.clientWidth };
     });
-    expect(layout.rows, `${path} should wrap at 390px`).toBeGreaterThan(1);
-    // The item that starts each line must have its leading separator pushed
-    // outside the list, where the list clips it.
-    const lineStarts = layout.items.filter((item, index) => index === 0 || item.top !== layout.items[index - 1].top);
-    for (const item of lineStarts) {
-      if (layout.rtl) expect(item.right).toBeGreaterThan(layout.box.right);
-      else expect(item.left).toBeLessThan(layout.box.left);
+    expect(layout.overflow, path).toBe(false);
+    for (const cell of layout.cells) {
+      expect(cell.left, path).toBeGreaterThanOrEqual(layout.box.left - 1);
+      expect(cell.right, path).toBeLessThanOrEqual(layout.box.right + 1);
     }
+    await expect(ledger.getByText('7050308233')).toBeVisible();
+    await expect(ledger.getByText('ISO 9001 · 14001 · 45001')).toBeVisible();
   }
+});
+
+test('links each assay tile to its material in the catalogue', async ({ page }) => {
+  await page.goto('/');
+  const tiles = page.locator('.assay-tile');
+  await expect(tiles).toHaveCount(8);
+  await tiles.filter({ hasText: 'Copper' }).click();
+  await expect(page).toHaveURL(/\/materials#copper$/);
+  await expect(page.locator('#copper')).toBeInViewport();
+  await expect(page.locator('#copper .product-symbol')).toHaveText('Cu');
 });
 
 test('prerenders the service, industries and sustainability pages in both languages', async ({ request }) => {

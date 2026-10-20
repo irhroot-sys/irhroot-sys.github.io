@@ -1,4 +1,5 @@
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
+import { LuMail, LuMapPin, LuPhone } from "react-icons/lu";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { EnquiryForm } from "../components/EnquiryForm.jsx";
@@ -19,14 +20,14 @@ export function ContactPage() {
         alt={t("Scrap-handling crane loading recovered metal at an industrial yard")}
         trail="Contact"
       />
-      <section className="content-section content-width contact-layout">
+      <section className="content-section container contact-layout">
         <div className="contact-details">
-          <SectionHeading eyebrow="Official contact details" title="Direct access to AALKC" copy="Reach our Dammam headquarters directly using the official phone, email, and address below." />
+          <SectionHeading index="01" eyebrow="Official contact details" title="Direct access to AALKC" copy="Reach our Dammam headquarters directly using the official phone, email, and address below." />
           <div className="contact-methods">
-            <a href={contactDetails.phoneHref}><FaPhoneAlt /><div><span>{t("Phone")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
-            <a href={`mailto:${contactDetails.email}`}><FaEnvelope /><div><span>{t("Email")}</span><strong>{contactDetails.email}</strong></div></a>
+            <a href={contactDetails.phoneHref}><LuPhone /><div><span>{t("Phone")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
+            <a href={`mailto:${contactDetails.email}`}><LuMail /><div><span>{t("Email")}</span><strong>{contactDetails.email}</strong></div></a>
             <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp /><div><span>{t("WhatsApp")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
-            <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><FaMapMarkerAlt /><div><span>{t("Headquarters")}</span><strong>{isArabic ? contactDetails.addressArabic : <>{contactDetails.addressLine1}<br />{contactDetails.addressLine2}<br />{contactDetails.addressCountry}</>}</strong><em className="contact-method-hint">{t("Open in Google Maps")}</em></div></a>
+            <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><LuMapPin /><div><span>{t("Headquarters")}</span><strong>{isArabic ? contactDetails.addressArabic : <>{contactDetails.addressLine1}<br />{contactDetails.addressLine2}<br />{contactDetails.addressCountry}</>}</strong><em className="contact-method-hint">{t("Open in Google Maps")}</em></div></a>
           </div>
         </div>
         <div className="contact-form-panel">

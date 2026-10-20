@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaBars, FaChevronRight, FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaTimes } from "react-icons/fa";
+import { LuArrowRight, LuMail, LuMapPin, LuMenu, LuPhone, LuX } from "react-icons/lu";
 import { navigation, contactDetails } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link, NavLink, useLocation } from "../lib/router.jsx";
@@ -55,9 +55,9 @@ export function Header() {
   return (
     <header className="site-header" aria-label={t("AALKC website header")}>
       <div className="utility-bar">
-        <a href={contactDetails.phoneHref}><FaPhoneAlt /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
-        <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
-        <span><FaMapMarkerAlt /> {t("Dammam, Saudi Arabia")}</span>
+        <a href={contactDetails.phoneHref}><LuPhone /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
+        <a href={`mailto:${contactDetails.email}`}><LuMail /> {contactDetails.email}</a>
+        <span><LuMapPin /> {t("Dammam, Saudi Arabia")}</span>
       </div>
 
       <div className="primary-header">
@@ -78,7 +78,7 @@ export function Header() {
               </NavLink>
             ))}
             <button type="button" className="mobile-nav-quote" onClick={() => openQuote()}>
-              {t("Get a Quote")} <FaChevronRight className="directional-icon" />
+              {t("Get a Quote")} <LuArrowRight className="directional-icon" />
             </button>
           </nav>
           {/* Real links, so the other language's URL is discoverable without
@@ -105,7 +105,7 @@ export function Header() {
             ))}
           </div>
           <button type="button" className="quote-button header-quote" onClick={() => openQuote()}>
-            {t("Get a Quote")} <FaChevronRight className="directional-icon" />
+            {t("Get a Quote")} <LuArrowRight className="directional-icon" />
           </button>
           <button
             type="button"
@@ -115,7 +115,7 @@ export function Header() {
             aria-expanded={menuOpen}
             aria-label={menuOpen ? t("Close navigation") : t("Open navigation")}
           >
-            {menuOpen ? <FaTimes /> : <FaBars />}
+            {menuOpen ? <LuX /> : <LuMenu />}
           </button>
         </div>
       </div>

@@ -1,0 +1,368 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Primitives — the small vocabulary every page is composed from.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Label ────────────────────────────────────────────────────────────────
+   The technical voice: monospaced, small, tracked. An optional index (01,
+   02…) sits in copper before the text, the way a drawing numbers its
+   sheets. In Arabic, Plex Sans Arabic replaces the mono face. */
+.label,
+.section-heading > span,
+.page-kicker,
+.panel-kicker,
+.modal-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.label-index { color: var(--copper-text); }
+.label-index::after {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  margin-inline-start: var(--s-3);
+  vertical-align: middle;
+  background: currentColor;
+}
+.on-ink .label,
+.on-ink .section-heading > span,
+.surface-ink .section-heading > span { color: var(--on-ink-muted); }
+.on-ink .label-index,
+.surface-ink .label-index { color: var(--copper-on-ink); }
+html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker, .modal-kicker) {
+  font-family: var(--font-arabic);
+  font-size: var(--fs-13);
+  letter-spacing: 0;
+}
+
+/* ── Section heading ──────────────────────────────────────────────────────
+   Editorial, not centred: label and title hold the left of the measure and
+   the supporting copy answers from the right, aligned to the title's base.
+   `is-center` survives for the few places a symmetric heading is right. */
+.section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  column-gap: var(--gutter);
+  align-items: end;
+  margin-bottom: var(--s-8);
+}
+.section-heading > span { grid-column: 1 / -1; margin-bottom: var(--s-5); }
+.section-heading h2 {
+  grid-column: 1;
+  max-width: 22ch;
+  font-size: var(--fs-60);
+  letter-spacing: var(--track-display);
+  line-height: 1.02;
+}
+.section-heading p {
+  grid-column: 2;
+  max-width: 46ch;
+  color: var(--text-muted);
+  font-size: var(--fs-18);
+  line-height: var(--lh-text);
+}
+.section-heading.is-center { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+.section-heading.is-center > span { justify-content: center; }
+.section-heading.is-center h2 { max-width: 20ch; }
+.section-heading.is-center p { grid-column: 1; margin-top: var(--s-5); }
+.section-heading.is-compact h2 { font-size: var(--fs-44); }
+.surface-ink .section-heading h2 { color: var(--white); }
+.surface-ink .section-heading p { color: var(--on-ink-muted); }
+html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: 1.3; }
+@media (max-width: 900px) {
+  .section-heading { grid-template-columns: minmax(0, 1fr); margin-bottom: var(--s-7); }
+  .section-heading p { grid-column: 1; margin-top: var(--s-5); }
+}
+
+/* ── Scale rule ───────────────────────────────────────────────────────────
+   The signature mark: a graduated rule — minor ticks every 8px, a major
+   tick every 80px — drawn with gradients, so it costs no DOM and scales to
+   any width. It reads as the skyline bars of the logo and as the scale of a
+   weighbridge at once. */
+.scale-rule {
+  --tick: currentColor;
+  display: block;
+  height: 14px;
+  color: var(--rule-strong);
+  background:
+    linear-gradient(var(--tick), var(--tick)) left bottom / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 8px) left bottom / 100% 5px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 80px) left bottom / 100% 14px no-repeat;
+}
+.on-ink .scale-rule,
+.surface-ink .scale-rule { color: var(--rule-ink-strong); }
+.scale-rule.is-signal { color: var(--copper); }
+
+/* ── Plate ────────────────────────────────────────────────────────────────
+   Photographs are presented as captioned plates with registration corners,
+   not dropped in as backgrounds. The caption numbers the figure. */
+.plate { margin: 0; }
+.plate-frame {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  aspect-ratio: var(--plate-ratio);
+  background: var(--ink-800);
+}
+.plate-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: var(--photo-grade);
+  transition: filter var(--t-slow) var(--ease-out), scale var(--t-slow) var(--ease-out);
+}
+.plate-frame::before,
+.plate-frame::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  border-color: rgba(255, 255, 255, .85);
+  border-style: solid;
+}
+.plate-frame::before { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+.plate-frame::after { right: 12px; bottom: 12px; border-width: 0 1px 1px 0; }
+.plate figcaption {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: .02em;
+  line-height: 1.5;
+}
+.plate figcaption b { flex: 0 0 auto; color: var(--copper-text); font-weight: 500; }
+.on-ink .plate figcaption { color: var(--on-ink-muted); }
+.on-ink .plate figcaption b { color: var(--copper-on-ink); }
+html[lang="ar"] .plate figcaption { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────
+   Sentence case, medium weight, square. The copper button is the one call
+   to action per view; the outline button and the text action support it. */
+.primary-button,
+.secondary-button,
+.explore-button,
+.quote-button {
+  position: relative;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding: 0 var(--s-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-text);
+  font-size: var(--fs-15);
+  font-weight: 600;
+  letter-spacing: .005em;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background var(--t-fast) var(--ease-std), color var(--t-fast) var(--ease-std), border-color var(--t-fast) var(--ease-std);
+}
+.primary-button { color: var(--ink-900); background: var(--copper-fill); }
+.primary-button:hover,
+.primary-button:focus-visible { background: var(--copper-fill-hover); }
+.primary-button:disabled { color: var(--steel-600); background: var(--steel-200); }
+.secondary-button,
+.explore-button { color: var(--text-strong); background: transparent; border-color: var(--rule-strong); }
+.secondary-button:hover,
+.secondary-button:focus-visible,
+.explore-button:hover,
+.explore-button:focus-visible { border-color: var(--text-strong); }
+.on-ink .secondary-button,
+.on-ink .explore-button { color: var(--white); border-color: var(--rule-ink-strong); }
+.on-ink .secondary-button:hover,
+.on-ink .secondary-button:focus-visible { border-color: var(--white); }
+:is(.primary-button, .secondary-button, .explore-button, .quote-button, .inline-action):hover .directional-icon { translate: 4px 0; }
+html[dir="rtl"] :is(.primary-button, .secondary-button, .explore-button, .quote-button, .inline-action):hover .directional-icon { translate: -4px 0; }
+.primary-button svg, .secondary-button svg, .explore-button svg, .quote-button svg { font-size: 18px; }
+html[lang="ar"] :is(.primary-button, .secondary-button, .explore-button, .quote-button) { font-family: var(--font-arabic); font-size: var(--fs-16); }
+
+/* Text action: an underlined link with an arrow, for secondary routes. */
+.inline-action {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 0;
+  border: 0;
+  color: var(--navy-700);
+  background: none;
+  font-family: var(--font-text);
+  font-size: var(--fs-15);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color var(--t-fast) var(--ease-std), color var(--t-fast) var(--ease-std);
+}
+.inline-action:hover,
+.inline-action:focus-visible { color: var(--text-strong); text-decoration-color: var(--copper); }
+.on-ink .inline-action { color: var(--white); text-decoration-color: var(--rule-ink-strong); }
+.on-ink .inline-action:hover { text-decoration-color: var(--copper-on-ink); }
+html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
+
+/* ── Chips ──────────────────────────────────────────────────────────────── */
+.chip-list { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; }
+.chip-list li > * {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--s-3);
+  border: 1px solid var(--rule-strong);
+  color: var(--text);
+  font-size: var(--fs-14);
+  line-height: 1.3;
+  transition: border-color var(--t-fast) var(--ease-std), color var(--t-fast) var(--ease-std);
+}
+.chip-list a:hover, .chip-list a:focus-visible { color: var(--text-strong); border-color: var(--copper); }
+.on-ink .chip-list li > *, .surface-ink .chip-list li > * { color: var(--on-ink); border-color: var(--rule-ink-strong); }
+
+/* ── Check list ─────────────────────────────────────────────────────────── */
+.check-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gutter); list-style: none; }
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+  border-top: 1px solid var(--rule);
+  color: var(--text);
+  font-size: var(--fs-15);
+  line-height: 1.5;
+}
+.check-list svg { flex: 0 0 auto; margin-top: 3px; color: var(--copper); font-size: 16px; }
+@media (max-width: 620px) { .check-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* ── Register (definition table) ──────────────────────────────────────────
+   Key facts as a register: a mono key, a set value, a hairline between. */
+.register { margin: 0; border-top: 1px solid var(--rule-strong); }
+.register > div {
+  display: grid;
+  grid-template-columns: minmax(150px, 2fr) minmax(0, 5fr);
+  gap: var(--gutter);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--rule);
+}
+.register dt {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: var(--track-label);
+  line-height: 1.9;
+  text-transform: uppercase;
+}
+.register dd { margin: 0; color: var(--text-strong); font-size: var(--fs-16); font-weight: 500; line-height: 1.55; }
+.register dd small { display: block; color: var(--text-muted); font-size: var(--fs-14); font-weight: 400; }
+html[dir="ltr"] .register dd small[dir="rtl"] { text-align: left; }
+html[lang="ar"] .register dt { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
+@media (max-width: 620px) { .register > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); } }
+
+/* ── Form fields (quote dialog and contact form) ─────────────────────────── */
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+:is(.quote-modal, .contact-form) label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) 0;
+  margin: 0 0 var(--s-5);
+  color: var(--text-strong);
+  font-size: var(--fs-14);
+  font-weight: 600;
+}
+:is(.quote-modal, .contact-form) :is(input, select, textarea) {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  color: var(--text-strong);
+  background: var(--white);
+  font-family: inherit;
+  font-size: var(--fs-16);
+  font-weight: 400;
+  transition: border-color var(--t-fast) var(--ease-std), box-shadow var(--t-fast) var(--ease-std);
+}
+:is(.quote-modal, .contact-form) label > :is(input, select, textarea) { flex: 1 0 100%; }
+:is(.quote-modal, .contact-form) textarea { resize: vertical; min-height: 120px; }
+:is(.quote-modal, .contact-form) :is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--navy-700);
+  box-shadow: 0 0 0 3px rgba(14, 51, 92, .14);
+}
+:is(.quote-modal, .contact-form) ::placeholder { color: #737A82; }
+.field-status {
+  margin-inline-start: var(--s-2);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+html[lang="ar"] .field-status { font-family: var(--font-arabic); font-size: var(--fs-12); letter-spacing: 0; }
+:is(.quote-modal, .contact-form) .consent-field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s-3);
+  color: var(--text-muted);
+  font-size: var(--fs-14);
+  font-weight: 400;
+  line-height: 1.6;
+}
+:is(.quote-modal, .contact-form) .consent-field input { flex: none; width: 18px; min-height: 18px; height: 18px; margin-top: 3px; padding: 0; accent-color: var(--navy-700); }
+.consent-field a { color: var(--navy-700); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.honeypot {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.turnstile-area { min-height: 72px; margin: 0 0 var(--s-4); }
+.turnstile-widget, .turnstile-widget iframe { width: 100% !important; max-width: 100%; }
+.form-notice,
+.selected-context {
+  margin: 0 0 var(--s-5);
+  padding: var(--s-3) var(--s-4);
+  border-inline-start: 2px solid var(--copper);
+  color: var(--text-muted);
+  background: var(--paper);
+  font-size: var(--fs-14);
+  line-height: 1.6;
+}
+.selected-context strong { color: var(--text-strong); }
+.form-alert { margin: 0 0 var(--s-4); padding: var(--s-3) var(--s-4); border-inline-start: 2px solid #A43A3A; color: #7E2424; background: #FBEFEF; font-size: var(--fs-14); line-height: 1.5; }
+.submit-button { width: 100%; }
+@media (max-width: 620px) { .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+/* Technical values (grades, alloy codes, standards) are often Latin inside
+   Arabic text; each value takes its direction from its own content so
+   "6061 / 6063 alloys" never reorders. */
+:is(.register dd, .product-spec dd, .assay-name small, .hero-ledger dd) { unicode-bidi: plaintext; }
+
+/* Coarse pointers: every text link in lists clears the 44px target. */
+@media (pointer: coarse) {
+  :is(.footer-links, .footer-contact, .footer-legal) a,
+  .page-breadcrumb a,
+  .utility-bar a { min-height: 44px; display: inline-flex; align-items: center; }
+  .chip-list li > * { min-height: 44px; }
+}

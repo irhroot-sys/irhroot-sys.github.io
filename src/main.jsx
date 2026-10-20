@@ -1,23 +1,24 @@
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
-// Display: Archivo — a grotesque with enough weight to carry editorial-scale
-// headlines. Body: Manrope — refined, humanist, legible at long measures.
-// Arabic: IBM Plex Sans Arabic — structurally harmonious with both.
-import "@fontsource/manrope/latin-400.css";
-import "@fontsource/manrope/latin-500.css";
-import "@fontsource/manrope/latin-600.css";
-import "@fontsource/manrope/latin-700.css";
-import "@fontsource/archivo/latin-500.css";
-import "@fontsource/archivo/latin-600.css";
-import "@fontsource/archivo/latin-700.css";
-import "@fontsource/archivo/latin-800.css";
+// Display: Archivo (variable, with its width axis — set expanded for
+// headlines). Text: IBM Plex Sans with its Arabic partner, one family across
+// both scripts. Data: IBM Plex Mono. Arabic display: Noto Kufi Arabic.
+// Every face is subset by unicode-range, so a page only downloads the
+// scripts it renders.
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource/ibm-plex-sans/latin-400.css";
+import "@fontsource/ibm-plex-sans/latin-500.css";
+import "@fontsource/ibm-plex-sans/latin-600.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
+import "@fontsource/noto-kufi-arabic/arabic-600.css";
+import "@fontsource/noto-kufi-arabic/arabic-700.css";
 import { App } from "./App.jsx";
 import { renderKeyFor } from "./routes.jsx";
-import "./styles.css";
+import "./styles/index.css";
 
 const container = document.getElementById("root");
 const app = (

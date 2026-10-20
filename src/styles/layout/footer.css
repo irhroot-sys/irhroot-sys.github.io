@@ -1,0 +1,126 @@
+/* ── Footer ───────────────────────────────────────────────────────────────
+   A register of the company, closed by its name set large in both scripts.
+   The signature is the one place the Arabic name is shown at display size
+   on every page — the identity is bilingual, so the close is too. */
+.site-footer {
+  color: var(--on-ink-muted);
+  background: var(--ink-950);
+  font-size: var(--fs-15);
+}
+.footer-main {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 2.5fr) minmax(0, 3.5fr);
+  gap: var(--s-7) var(--gutter);
+  padding-block: var(--s-9) var(--s-8);
+}
+.footer-lockup { display: flex; align-items: center; gap: var(--s-4); }
+.footer-brandmark { width: 60px; height: 60px; flex: 0 0 auto; }
+.footer-brandmark > path { fill: var(--white); }
+.footer-brandmark > g path { fill: var(--steel-500); }
+.footer-wordmark { display: grid; gap: 3px; margin: 0; color: var(--white); line-height: 1.1; }
+.footer-wordmark strong { font-family: var(--font-display); font-stretch: 125%; font-size: 22px; font-weight: 700; letter-spacing: .06em; }
+.footer-wordmark span { color: var(--on-ink-muted); font-size: var(--fs-12); }
+.footer-wordmark span[lang="ar"] { font-family: var(--font-arabic); font-size: var(--fs-13); }
+.footer-brand > p { max-width: 40ch; margin-top: var(--s-6); line-height: var(--lh-text); }
+
+.footer-main h2 {
+  margin: 0 0 var(--s-4);
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-stretch: 100%;
+  font-size: var(--fs-12);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+html[lang="ar"] .footer-main h2 { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
+.footer-links, .footer-contact { display: flex; flex-direction: column; align-items: flex-start; }
+.footer-links a,
+.footer-contact a,
+.footer-legal a {
+  position: relative;
+  padding-block: 7px;
+  color: var(--on-ink-muted);
+  transition: color var(--t-fast) var(--ease-std);
+}
+.footer-links a::after,
+.footer-contact a::after,
+.footer-legal a::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 3px;
+  height: 1px;
+  background: var(--copper-on-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-mid) var(--ease-out);
+}
+html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { transform-origin: right center; }
+:is(.footer-links, .footer-contact, .footer-legal) a:hover,
+:is(.footer-links, .footer-contact, .footer-legal) a:focus-visible { color: var(--white); }
+:is(.footer-links, .footer-contact, .footer-legal) a:hover::after,
+:is(.footer-links, .footer-contact, .footer-legal) a:focus-visible::after { transform: scaleX(1); }
+.footer-contact a { display: flex; align-items: flex-start; gap: var(--s-3); line-height: 1.55; }
+.footer-contact svg { flex: 0 0 auto; margin-top: 4px; color: var(--copper-on-ink); font-size: 14px; }
+.footer-contact button {
+  margin-top: var(--s-4);
+  min-height: 44px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--rule-ink-strong);
+  color: var(--white);
+  background: transparent;
+  font-weight: 600;
+  transition: border-color var(--t-fast) var(--ease-std);
+}
+.footer-contact button:hover, .footer-contact button:focus-visible { border-color: var(--copper-on-ink); }
+
+/* Latin on the leading edge, Arabic answering on the trailing edge: the two
+   names read as one diagonal across the measure. */
+.footer-signature {
+  display: grid;
+  gap: var(--s-2);
+  padding-block: var(--s-7);
+  border-top: 1px solid var(--rule-ink);
+  color: #4D6687; /* 3.3:1 — display-size text, decorative duplicate of the name */
+  line-height: 1;
+  user-select: none;
+}
+.footer-signature span:first-child {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-size: clamp(2.25rem, 1rem + 5.4vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+.footer-signature span[lang="ar"] {
+  justify-self: end;
+  font-family: var(--font-arabic-display);
+  font-size: clamp(2.25rem, 1rem + 5.4vw, 6rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.footer-bottom {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  border-top: 1px solid var(--rule-ink);
+  font-size: var(--fs-13);
+}
+.footer-legal { display: flex; align-items: center; gap: var(--s-5); }
+.footer-legal span { font-family: var(--font-mono); font-size: var(--fs-12); letter-spacing: .04em; }
+
+@media (max-width: 1020px) {
+  .footer-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-block: var(--s-8) var(--s-7); }
+  .footer-contact { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--s-4); padding-inline-end: 80px; }
+  .footer-legal { flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+}

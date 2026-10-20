@@ -1,4 +1,5 @@
-import { FaCheck, FaChevronRight, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
+import { LuArrowRight, LuCheck, LuPhone } from "react-icons/lu";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { ProcessSection } from "../components/ProcessSection.jsx";
@@ -23,20 +24,20 @@ export function ServiceDetailPage({ slug }) {
   const service = services.find((item) => item.slug === slug);
   const { openQuote } = useQuote();
   const { t } = useLanguage();
-  const { icon: Icon, title, copy, overview, capabilities, image, alt } = service;
+  const { title, copy, overview, capabilities, image, alt } = service;
   const suitedTo = industries.filter((industry) => industry.services.includes(slug));
 
   return (
     <>
       <PageHero eyebrow={service.category} title={title} copy={copy} image={image} alt={alt} parent={{ label: "Services", to: "/services" }} />
 
-      <section className="content-section content-width service-page-layout">
+      <section className="content-section container service-page-layout">
         <div className="service-page-main">
-          <SectionHeading eyebrow="Service overview" title={title} />
+          <SectionHeading index="01" eyebrow="Service overview" title={title} compact />
           <p className="service-page-lede">{t(overview)}</p>
           <h3 className="service-page-subheading">{t("What this service covers")}</h3>
-          <ul className="service-page-capabilities">
-            {capabilities.map((capability) => <li key={capability}><FaCheck aria-hidden="true" />{t(capability)}</li>)}
+          <ul className="check-list service-page-capabilities">
+            {capabilities.map((capability) => <li key={capability}><LuCheck aria-hidden="true" />{t(capability)}</li>)}
           </ul>
           {suitedTo.length > 0 && (
             <>
@@ -48,26 +49,23 @@ export function ServiceDetailPage({ slug }) {
           )}
         </div>
         <aside className="service-page-aside" aria-label={t("Talk to our team")}>
-          <Icon className="service-page-aside-icon" aria-hidden="true" />
+          <span className="label"><span className="label-index">→</span>{t("Talk to AALKC")}</span>
           <h2>{t("Talk to our team")}</h2>
           <p>{t("Share the material, estimated quantity and site location. Our Dammam team will come back with the next step.")}</p>
           <button type="button" className="primary-button" onClick={() => openQuote({ service: title })}>
-            {t("Request a quote")} <FaChevronRight className="directional-icon" />
+            {t("Request a quote")} <LuArrowRight className="directional-icon" />
           </button>
           <a className="service-page-aside-link" href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp aria-hidden="true" /> {t("WhatsApp")}</a>
-          <a className="service-page-aside-link" href={contactDetails.phoneHref}><FaPhoneAlt aria-hidden="true" /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
+          <a className="service-page-aside-link" href={contactDetails.phoneHref}><LuPhone aria-hidden="true" /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
         </aside>
       </section>
 
-      <ProcessSection />
+      <ProcessSection index="02" />
 
-      <section className="content-section content-width related-services" aria-labelledby="related-services-title">
-        <header className="section-heading">
-          <span>{t("Related services")}</span>
-          <h2 id="related-services-title">{t("Often combined with")}</h2>
-        </header>
+      <section className="content-section container related-services" aria-labelledby="related-services-title">
+        <SectionHeading id="related-services-title" index="03" eyebrow="Related services" title="Often combined with" compact />
         <div className="service-cards">
-          {relatedServices(slug).map((related) => <ServiceCard key={related.slug} service={related} />)}
+          {relatedServices(slug).map((related) => <ServiceCard key={related.slug} service={related} index={services.indexOf(related)} />)}
         </div>
       </section>
 

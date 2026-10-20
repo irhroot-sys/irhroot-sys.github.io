@@ -1,0 +1,200 @@
+/* ── Header ───────────────────────────────────────────────────────────────
+   One ink bar. A thin utility row carries the direct lines in mono and
+   scrolls away; the main row stays. The active page is marked the way the
+   rest of the system marks what matters: a copper rule. */
+.site-header {
+  position: sticky;
+  top: calc(-1 * var(--utility-h));
+  z-index: 40;
+  isolation: isolate;
+  color: var(--on-ink);
+}
+/* The surface lives on a pseudo-element: a backdrop-filter on the header
+   itself would become the containing block for the fixed mobile menu. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-bottom: 1px solid var(--rule-ink);
+  background: var(--ink-900);
+  transition: background var(--t-mid) var(--ease-std), box-shadow var(--t-mid) var(--ease-std);
+}
+.site-header.is-scrolled::before { background: rgba(8, 22, 43, .94); box-shadow: 0 18px 40px -28px rgba(5, 13, 26, .9); }
+@supports (backdrop-filter: blur(1px)) {
+  .site-header.is-scrolled::before { background: rgba(8, 22, 43, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+}
+
+.utility-bar {
+  height: var(--utility-h);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-6);
+  padding-inline: var(--margin);
+  color: var(--on-ink-muted);
+  background: var(--ink-950);
+  font-family: var(--font-mono);
+  font-size: var(--fs-12);
+  letter-spacing: .02em;
+}
+.utility-bar a, .utility-bar span { display: inline-flex; align-items: center; gap: var(--s-2); }
+.utility-bar a { transition: color var(--t-fast) var(--ease-std); }
+.utility-bar a:hover, .utility-bar a:focus-visible { color: var(--white); }
+.utility-bar svg { color: var(--copper-on-ink); font-size: 13px; }
+html[lang="ar"] .utility-bar { font-family: var(--font-arabic); letter-spacing: 0; }
+
+.primary-header {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  padding-inline: var(--margin);
+}
+
+/* Brand lockup: the official mark in white and steel, with the name set in
+   live text in both scripts. */
+.brand { flex: 0 0 auto; display: flex; align-items: center; gap: var(--s-3); min-height: 56px; }
+.brand-mark { width: 52px; height: 52px; flex: 0 0 auto; }
+.brand-mark > path { fill: var(--white); }
+.brand-mark > g path { fill: var(--steel-500); }
+.brand-wordmark { display: grid; gap: 2px; line-height: 1; }
+.brand-wordmark strong {
+  color: var(--white);
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.brand-wordmark span { color: var(--on-ink-muted); font-size: 10px; font-weight: 500; letter-spacing: .03em; white-space: nowrap; }
+.brand-wordmark span[lang="ar"] { font-family: var(--font-arabic); font-size: 11px; letter-spacing: 0; }
+
+.primary-nav-wrap { flex: 1 1 auto; height: 100%; display: flex; align-items: center; justify-content: flex-end; gap: var(--s-5); }
+.primary-nav { height: 100%; display: flex; align-items: stretch; gap: clamp(18px, 2vw, 32px); margin-inline-end: auto; padding-inline-start: clamp(16px, 3vw, 48px); counter-reset: nav; }
+.primary-nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--on-ink-muted);
+  font-size: var(--fs-15);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease-std);
+}
+.primary-nav a::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--copper);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-mid) var(--ease-out);
+}
+html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
+.primary-nav a:hover, .primary-nav a:focus-visible, .primary-nav a.active { color: var(--white); }
+.primary-nav a:hover::after, .primary-nav a.active::after { transform: scaleX(1); }
+.mobile-nav-quote, .nav-scrim { display: none; }
+
+.language-toggle { display: flex; align-items: center; gap: var(--s-1); font-family: var(--font-mono); font-size: var(--fs-12); letter-spacing: .06em; }
+.language-option { display: inline-flex; align-items: center; gap: var(--s-1); }
+.language-option > span { color: var(--rule-ink-strong); }
+.language-toggle a {
+  min-width: 34px;
+  min-height: 34px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--on-ink-muted);
+  transition: color var(--t-fast) var(--ease-std);
+}
+.language-toggle a:hover { color: var(--white); }
+.language-toggle a[aria-current="true"] { color: var(--white); text-decoration: underline; text-decoration-color: var(--copper); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+.header-quote { min-height: 44px; padding-inline: var(--s-4); color: var(--ink-900); background: var(--copper-fill); }
+.header-quote:hover, .header-quote:focus-visible { background: var(--copper-fill-hover); }
+html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var(--fs-16); }
+
+.menu-button { display: none; }
+
+/* ── Compact header and menu ──────────────────────────────────────────────
+   Seven destinations need about 1240px beside the brand and actions. Below
+   that the menu becomes a full-height sheet: numbered, large, unhurried. */
+@media (max-width: 1240px) {
+  :root { --header-h: 72px; }
+  .site-header { top: 0; }
+  .utility-bar { display: none; }
+  .primary-nav-wrap { gap: var(--s-3); }
+  .primary-nav {
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    z-index: 2;
+    height: auto;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: var(--s-6) var(--margin) var(--s-7);
+    overflow-y: auto;
+    background: var(--ink-950);
+  }
+  .primary-nav.is-open { display: flex; animation: menu-in var(--t-mid) var(--ease-out) both; }
+  @keyframes menu-in { from { opacity: 0; translate: 0 -8px; } }
+  .primary-nav a {
+    min-height: 64px;
+    gap: var(--s-5);
+    border-bottom: 1px solid var(--rule-ink);
+    color: var(--on-ink);
+    font-family: var(--font-display);
+    font-stretch: var(--display-stretch);
+    font-size: var(--fs-24);
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  .primary-nav a::before {
+    counter-increment: nav;
+    content: counter(nav, decimal-leading-zero) / "";
+    min-width: 2ch;
+    color: var(--copper-on-ink);
+    font-family: var(--font-mono);
+    font-size: var(--fs-12);
+    font-stretch: 100%;
+    font-weight: 400;
+    letter-spacing: .04em;
+  }
+  .primary-nav a::after { display: none; }
+  .primary-nav a.active { color: var(--white); }
+  html[lang="ar"] .primary-nav a { font-family: var(--font-arabic-display); font-size: var(--fs-20); }
+  .mobile-nav-quote {
+    display: inline-flex;
+    min-height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--s-6);
+    padding: 0 var(--s-5);
+    border: 0;
+    color: var(--ink-900);
+    background: var(--copper-fill);
+    font-weight: 600;
+  }
+  .menu-button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--rule-ink-strong);
+    color: var(--white);
+    background: transparent;
+    font-size: 20px;
+  }
+}
+@media (max-width: 620px) {
+  .brand-wordmark { display: none; }
+  .brand-mark { width: 48px; height: 48px; }
+  .header-quote { display: none; }
+  .primary-header { gap: var(--s-3); }
+}
+@media (pointer: coarse) {
+  .language-toggle a { min-width: 44px; min-height: 44px; }
+}
