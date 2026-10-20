@@ -1,18 +1,11 @@
 import { FaChevronLeft } from "react-icons/fa";
 import { legalContent } from "../data/siteContent.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function LegalPage({ documentKey }) {
   const content = legalContent[documentKey];
   const { t } = useLanguage();
-
-  usePageMeta({
-    title: content?.title || "Legal",
-    description: content?.intro || "AALKC legal information.",
-    path: `/${documentKey}`,
-  });
 
   return (
     <article className="legal-page content-width">

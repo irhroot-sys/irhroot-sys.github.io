@@ -1,6 +1,11 @@
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { ResponsiveImage } from "./ResponsiveImage.jsx";
+
+// Measured against the card grid: one column, then two, then three capped at
+// the content width.
+const SERVICE_CARD_SIZES = "(max-width: 620px) calc(100vw - 44px), (max-width: 1020px) 45vw, (max-width: 1300px) 31vw, 400px";
 
 export function Services({ services }) {
   const { t } = useLanguage();
@@ -20,7 +25,7 @@ export function Services({ services }) {
           {services.map(({ slug, icon: Icon, title, copy, image, alt, focalPosition }) => (
             <Link className="service-card" key={title} to={`/services#${slug}`}>
               <div className="service-media">
-                <img src={image} alt={t(alt)} loading="lazy" style={{ objectPosition: focalPosition || "center" }} />
+                <ResponsiveImage src={image} sizes={SERVICE_CARD_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} />
                 <div className="service-icon"><Icon /></div>
               </div>
               <div className="service-copy">

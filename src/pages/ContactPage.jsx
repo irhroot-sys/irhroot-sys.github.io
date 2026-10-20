@@ -1,20 +1,13 @@
-import { FaEnvelope, FaGlobe, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { EnquiryForm } from "../components/EnquiryForm.jsx";
 import { contactDetails } from "../data/siteContent.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { PhoneNumber } from "../components/PhoneNumber.jsx";
 
 export function ContactPage() {
   const { t, isArabic } = useLanguage();
-  usePageMeta({
-    title: "Contact",
-    description: "Contact Amanat Al-Kalima Company at 3508 Al Qatif 1 in Dammam for scrap-metal purchasing, collection, sorting, and industrial recycling enquiries.",
-    path: "/contact",
-    image: "/assets/service-container-handling.webp",
-  });
 
   return (
     <>
@@ -32,14 +25,18 @@ export function ContactPage() {
           <div className="contact-methods">
             <a href={contactDetails.phoneHref}><FaPhoneAlt /><div><span>{t("Phone")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
             <a href={`mailto:${contactDetails.email}`}><FaEnvelope /><div><span>{t("Email")}</span><strong>{contactDetails.email}</strong></div></a>
-            <a href="https://www.aalkc.com" target="_blank" rel="noreferrer"><FaGlobe /><div><span>{t("Website")}</span><strong>{contactDetails.website}</strong></div></a>
-            <div><FaMapMarkerAlt /><div><span>{t("Headquarters")}</span><strong>{isArabic ? contactDetails.addressArabic : <>{contactDetails.addressLine1}<br />{contactDetails.addressLine2}<br />{contactDetails.addressCountry}</>}</strong></div></div>
+            <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp /><div><span>{t("WhatsApp")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
+            <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><FaMapMarkerAlt /><div><span>{t("Headquarters")}</span><strong>{isArabic ? contactDetails.addressArabic : <>{contactDetails.addressLine1}<br />{contactDetails.addressLine2}<br />{contactDetails.addressCountry}</>}</strong><em className="contact-method-hint">{t("Open in Google Maps")}</em></div></a>
           </div>
         </div>
         <div className="contact-form-panel">
           <span className="panel-kicker">{t("Request a spot quote")}</span>
           <h2>{t("Tell us about your materials")}</h2>
           <p>{t("Required fields are marked. Website values and enquiries are non-binding until inspection, grading, and weighing are complete.")}</p>
+          <p className="form-photo-hint">
+            <FaWhatsapp aria-hidden="true" />
+            <span>{t("Have photos of the material? Send them on")} <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer">{t("WhatsApp")}</a> {t("for a faster assessment.")}</span>
+          </p>
           <EnquiryForm />
         </div>
       </section>

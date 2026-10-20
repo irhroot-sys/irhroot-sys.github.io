@@ -4,16 +4,10 @@ import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { Statistics } from "../components/Statistics.jsx";
 import { certifications, companyServices, statistics, values } from "../data/siteContent.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
 
 export function AboutPage() {
   const { t } = useLanguage();
-  usePageMeta({
-    title: "About Us",
-    description: "Learn about Amanat Al-Kalima Company, a licensed scrap metal dealer established in 2017 in Dammam, Saudi Arabia.",
-    path: "/about",
-  });
 
   return (
     <>

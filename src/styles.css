@@ -205,6 +205,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 .site-shell { min-height: 100vh; overflow: clip; background: var(--paper); }
+/* <ResponsiveImage> wraps its <img> in <picture>; taking the wrapper out of
+   layout keeps every existing image rule working as if it were not there. */
+.responsive-picture { display: contents; }
 
 .scroll-progress {
   position: fixed;
@@ -367,20 +370,24 @@ a { color: inherit; text-decoration: none; }
   background: rgba(255,255,255,.04);
   color: rgba(255,255,255,.7);
 }
-.language-toggle button {
+.language-option { display: inline-flex; align-items: center; gap: 3px; }
+.language-toggle a {
   min-width: 30px;
   min-height: 30px;
   padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
   border: 0;
   border-radius: 4px;
   background: transparent;
   color: inherit;
   font-size: 11px;
   font-weight: 800;
+  text-decoration: none;
 }
-.language-toggle button[aria-pressed="true"] { background: #fff; color: var(--navy); }
-.language-toggle button:not([aria-pressed="true"]):hover { background: rgba(255,255,255,.1); color: #fff; }
-.language-toggle span { color: rgba(255,255,255,.35); font-size: 10px; }
+.language-toggle a[aria-current="true"] { background: #fff; color: var(--navy); }
+.language-toggle a:not([aria-current="true"]):hover { background: rgba(255,255,255,.1); color: #fff; }
+.language-option > span { color: rgba(255,255,255,.35); font-size: 10px; }
 .primary-nav {
   align-self: stretch;
   display: flex;
@@ -604,11 +611,17 @@ a { color: inherit; text-decoration: none; }
 .primary-button:hover, .primary-button:focus-visible { color: var(--navy); background: #E8EBEE; box-shadow: 0 18px 40px -14px rgba(0,0,0,.6); }
 .secondary-button { color: #fff; background: transparent; border-color: rgba(255,255,255,.4); min-width: 200px; }
 .hero-actions .secondary-button:hover, .hero-actions .secondary-button:focus-visible { color: var(--ink); background: #fff; border-color: #fff; }
+/* Separators sit before each item and every item is pulled back by exactly
+   one separator's width, with the matching column gap. The list clips its
+   leading edge, so whichever item starts a line — in either direction — has
+   its separator cut off instead of a dot dangling at the end of a line. */
 .hero-trust {
+  --trust-separator: calc(3px + 2 * var(--space-4));
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0;
+  gap: var(--space-2) var(--trust-separator);
+  overflow: hidden;
   margin: var(--space-8) 0 0;
   padding: var(--space-4) 0 0;
   border-top: 1px solid rgba(255,255,255,.16);
@@ -623,7 +636,8 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   color: rgba(255,255,255,.62);
 }
-.hero-trust li:not(:last-child)::after { content: ""; display: inline-block; width: 3px; height: 3px; margin: 0 var(--space-4); border-radius: 50%; vertical-align: middle; background: var(--steel); }
+.hero-trust li { margin-inline-start: calc(var(--trust-separator) * -1); }
+.hero-trust li::before { content: ""; display: inline-block; width: 3px; height: 3px; margin: 0 var(--space-4); border-radius: 50%; vertical-align: middle; background: var(--steel); }
 
 /* ── Feature strip ───────────────────────────────────────────────────────
    Four bordered, drop-shadowed cards with icon chips on a grey band. Premium
@@ -1100,12 +1114,17 @@ a { color: inherit; text-decoration: none; }
   --parallax-y: 0px;
   position: absolute;
   inset: -6% 0;
-  background-position: center;
-  background-size: cover;
   clip-path: none;
   filter: grayscale(1) sepia(.32) hue-rotate(176deg) saturate(1.12) brightness(.95) contrast(1.06);
   translate: 0 var(--parallax-y);
   will-change: translate;
+}
+.page-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .page-hero-media::after {
   content: "";
@@ -1515,6 +1534,11 @@ a { color: inherit; text-decoration: none; }
 .contact-methods span { color: var(--muted); font-family: var(--font-heading); font-size: var(--text-2xs); font-weight: 600; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
 .contact-methods strong { color: var(--navy); font-size: var(--text-md); font-weight: 600; line-height: 1.55; }
 .contact-methods strong, .footer-contact a, .footer-contact span { overflow-wrap: anywhere; }
+.contact-method-hint { color: var(--accent-text); font-family: var(--font-heading); font-size: var(--text-2xs); font-style: normal; font-weight: 700; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+html[lang="ar"] .contact-method-hint { font-family: var(--font-arabic); letter-spacing: 0; }
+.contact-form-panel > .form-photo-hint { display: flex; align-items: flex-start; gap: var(--space-3); margin: calc(var(--space-5) * -1) 0 var(--space-7); color: var(--muted); }
+.form-photo-hint svg { flex: 0 0 auto; margin-top: 4px; color: #0E7468; font-size: 18px; }
+.form-photo-hint a { color: var(--navy); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .contact-form-panel {
   padding: var(--space-8);
   border: 1px solid var(--line);
@@ -1741,7 +1765,7 @@ h3[data-motion="reveal"].is-revealed { animation-name: content-reveal-heading; }
 .brand-mark > path, .brand-mark > g path { transition: fill var(--dur-md) var(--ease-standard); }
 
 /* Language toggle: the pressed state slides its fill in. */
-.language-toggle button { transition: background var(--dur-sm) var(--ease-out-quart), color var(--dur-sm) var(--ease-standard); }
+.language-toggle a { transition: background var(--dur-sm) var(--ease-out-quart), color var(--dur-sm) var(--ease-standard); }
 
 
 @media (max-width: 1350px) {
@@ -1835,7 +1859,7 @@ h3[data-motion="reveal"].is-revealed { animation-name: content-reveal-heading; }
   .brand-wordmark { display: none; }
   .primary-nav-wrap { height: 72px; }
   .language-toggle { min-height: 44px; padding: 2px 4px; }
-  .language-toggle button { min-width: 34px; min-height: 40px; padding-inline: 3px; font-size: 10px; }
+  .language-toggle a { min-width: 34px; min-height: 40px; padding-inline: 3px; font-size: 10px; }
   .header-quote { min-width: 0; min-height: 44px; padding: 0 14px; gap: 8px; font-size: 10px; }
   .menu-button { width: 44px; height: 44px; }
   .primary-nav { top: 66px; right: -14px; }
@@ -2111,7 +2135,7 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
 @media (pointer: coarse) {
   .skip-link { min-height: 48px; }
   .language-toggle { min-height: 48px; padding: 2px 5px; }
-  .language-toggle button { min-width: 44px; min-height: 44px; }
+  .language-toggle a { min-width: 44px; min-height: 44px; }
   .menu-button { width: 44px; height: 44px; }
   .header-quote, .mobile-nav-quote { min-height: 44px; }
   .footer-links a, .footer-legal a {
@@ -2123,4 +2147,64 @@ html[dir="rtl"] .footer-legal a::after { transform-origin: right; }
   .footer-contact a { min-height: 44px; align-items: center; padding-block: 0; }
   .footer-contact button { min-height: 44px; padding-block: 0; }
   .faq-list summary { min-height: 48px; }
+}
+
+/* ── Quick contact dock ──────────────────────────────────────────────────
+   WhatsApp is how most industrial suppliers in the Kingdom start a
+   conversation, so it stays one tap away. It sits under the header layer, so
+   the open mobile menu and the quote dialog always cover it. */
+.contact-dock {
+  position: fixed;
+  inset-inline-end: clamp(14px, 2.2vw, 28px);
+  bottom: clamp(14px, 2.2vw, 28px);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+.contact-dock a {
+  pointer-events: auto;
+  min-width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 14px 34px -12px rgba(7,19,36,.55);
+  transition: transform var(--dur-sm) var(--ease-out-quart), box-shadow var(--dur-sm) var(--ease-out-quart), background var(--dur-sm) var(--ease-standard);
+}
+.contact-dock svg { font-size: 22px; flex: 0 0 auto; }
+/* A deep WhatsApp teal: still recognisable, and 5.6:1 against the white
+   label (the brand green and lighter teal fall short of the 4.5:1 that
+   small text needs). */
+.contact-dock-whatsapp { padding: 0 20px 0 16px; background: #0E7468; }
+.contact-dock-whatsapp:hover, .contact-dock-whatsapp:focus-visible { background: #075E54; }
+.contact-dock .contact-dock-call { display: none; width: 52px; background: var(--navy); }
+.contact-dock-call:hover, .contact-dock-call:focus-visible { background: var(--navy-bright); }
+.contact-dock a:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -12px rgba(7,19,36,.6); }
+.contact-dock a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 6px var(--navy); }
+html[lang="ar"] .contact-dock a { font-family: var(--font-arabic); letter-spacing: 0; }
+
+@media (max-width: 620px) {
+  .contact-dock .contact-dock-call { display: inline-flex; }
+  .contact-dock-whatsapp { width: 52px; padding: 0; }
+  .contact-dock-label { display: none; }
+  /* The dock's column (52px button + 14px inset) is kept clear, so the
+     copyright and registration lines never sit underneath it. */
+  .footer-bottom { padding-inline-end: 76px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-dock a { transition: none; }
+  .contact-dock a:hover { transform: none; }
 }

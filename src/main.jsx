@@ -1,5 +1,5 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 // Display: Archivo — a grotesque with enough weight to carry editorial-scale
 // headlines. Body: Manrope — refined, humanist, legible at long measures.
 // Arabic: IBM Plex Sans Arabic — structurally harmonious with both.
@@ -16,10 +16,23 @@ import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-700.css";
 import { App } from "./App.jsx";
+import { renderKeyFor } from "./routes.jsx";
 import "./styles.css";
 
-createRoot(document.getElementById("root")).render(
+const container = document.getElementById("root");
+const app = (
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+// Every page is prerendered at build time. Adopt that markup only when it was
+// rendered for this exact URL (unknown URLs get the matching 404 document, so
+// they hydrate too). Anything else — e.g. an older edge Worker that answers
+// every route with the homepage document — is rendered fresh, so React never
+// hydrates against markup for a different page.
+if (container.hasChildNodes() && container.dataset.prerendered === renderKeyFor(window.location.pathname)) {
+  hydrateRoot(container, app);
+} else {
+  createRoot(container).render(app);
+}

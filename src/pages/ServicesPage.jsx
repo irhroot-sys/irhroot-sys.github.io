@@ -4,18 +4,16 @@ import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { processSteps, services } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { ResponsiveImage } from "../components/ResponsiveImage.jsx";
+
+// Measured against the alternating detail rows: full width until the rows
+// split into image and copy columns.
+const SERVICE_DETAIL_SIZES = "(max-width: 1020px) 100vw, (max-width: 1300px) 52vw, 620px";
 
 export function ServicesPage() {
   const { openQuote } = useQuote();
   const { t } = useLanguage();
-  usePageMeta({
-    title: "Services",
-    description: "Explore AALKC container service, industrial demolition, scrap purchasing, heavy logistics, metal sorting, and global export support.",
-    path: "/services",
-    image: "/assets/service-scrap-metal.webp",
-  });
 
   return (
     <>
@@ -33,7 +31,7 @@ export function ServicesPage() {
         <div className="service-detail-list">
           {services.map(({ slug, icon: Icon, title, copy, image, alt, capabilities, focalPosition }, index) => (
             <article className={`service-detail ${index % 2 ? "is-reversed" : ""}`} id={slug} key={slug}>
-              <div className="service-detail-media"><img src={image} alt={t(alt)} loading="lazy" style={{ objectPosition: focalPosition || "center" }} /></div>
+              <div className="service-detail-media"><ResponsiveImage src={image} sizes={SERVICE_DETAIL_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} /></div>
               <div className="service-detail-copy">
                 <span className="detail-number">0{index + 1}</span>
                 <Icon className="detail-icon" />

@@ -1,34 +1,45 @@
-# AALKC SPA fallback Worker
+# AALKC edge Worker
 
-Fixes the issue where `/about`, `/services`, `/materials`, `/faq`, `/contact`,
-`/privacy`, and `/terms` return a real **HTTP 404** with
-`<meta name="robots" content="noindex, nofollow">` on direct load, instead of
-the actual page. Only `/` currently works correctly — this brings the rest
-in line with it.
+Sits in front of GitHub Pages on `aalkc.com/*` and `www.aalkc.com/*`. GitHub
+Pages only hosts files; this Worker gives the prerendered site the behaviour
+a real web server would:
 
-This is intentionally a separate Worker from [`worker/`](../worker), which
-handles `/api/*` (quotes and market data). This one only ever touches the
-HTML shell for non-API routes — see `src/index.js` for the explicit
-`/api/*` passthrough and the reasoning behind keeping the two isolated.
+| Request | Response |
+| --- | --- |
+| `/`, `/services`, `/ar`, `/ar/services`, … | **200** with that page's prerendered file (`/index.html`, `/services.html`, `/ar.html`, `/ar/services.html`, …) |
+| Any URL with no page, e.g. `/old-page`, `/ar/old-page` | **404** with the prerendered `404.html` / `ar/404.html` (`noindex`) |
+| `/services/`, `/services.html`, `/index.html`, `/ar/` | **301** to the canonical URL |
+| `/products`, `/ar/products` | **301** to `/materials`, `/ar/materials` |
+| Fingerprinted build files (`/assets/index-B5DAFa_R.js`, fonts, CSS) | `Cache-Control: public, max-age=31536000, immutable` |
+| Photos and image variants | `Cache-Control: public, max-age=604800, stale-while-revalidate=86400` |
+| Pages | `Cache-Control: public, max-age=300, must-revalidate` plus security headers |
+| `/api/*` | Passed through untouched (owned by the quotes Worker in [`worker/`](../worker)) |
 
-## What changes for visitors
+Security headers on pages: `X-Content-Type-Options`, `Referrer-Policy`,
+`Permissions-Policy`, `X-Frame-Options: DENY` and a minimal
+`Content-Security-Policy` (`frame-ancestors`, `base-uri`, `object-src`,
+`form-action`). A full script/style policy is staged separately — see
+[`cloudflare/security-and-cache.md`](../cloudflare/security-and-cache.md).
 
-Nothing. This only affects the very first HTML response for a direct
-hit/refresh on a sub-page. The React app itself, the "Get a Quote" modal,
-the language toggle, etc. all behave exactly as they do today.
+Retired URLs live in `REDIRECTS` in [`src/index.ts`](src/index.ts) and must
+match `redirects` in [`src/routes.jsx`](../src/routes.jsx).
 
-## Deploy
+## Deploy order — important
 
-No secrets or per-environment IDs are needed (unlike `worker/`), so
-`wrangler.jsonc` here is committed directly rather than kept as an
-`.example` template.
+This Worker serves the prerendered files (`/about.html`, `/ar/about.html`, …)
+that the Pages build produces. **Deploy the site first, then the Worker:**
 
-**Via GitHub Actions (recommended, matches how `worker/` is deployed):**
-Actions → "Deploy SPA Fallback Worker" → Run workflow. Uses the same
-`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` already configured for the
-`production` environment.
+1. Merge to `main` and let **Deploy Pages** finish.
+2. Actions → **Deploy SPA Fallback Worker** → Run workflow (uses the
+   `production` environment's `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`).
 
-**Via Wrangler CLI locally:**
+Deploying the Worker before the new Pages build is live would send page
+requests to `.html` files that do not exist yet. The reverse order is safe:
+until the new Worker is deployed, the previous one keeps serving the homepage
+document for every route and the app renders the right page in the browser,
+exactly as before.
+
+Local alternative to step 2:
 
 ```bash
 npm ci
@@ -39,27 +50,19 @@ npx wrangler deploy --config spa-fallback-worker/wrangler.jsonc
 ## Verify it worked
 
 ```bash
-# Should now return 200, not 404 — and no "noindex" in the body
-curl -sS -D - -o /dev/null https://aalkc.com/services
-curl -s https://aalkc.com/about | grep -i robots
-
-# Static assets and the API should still work exactly as before
-curl -sS -o /dev/null -w "%{http_code}\n" https://aalkc.com/assets/index-q7l_f7L8.js
-curl -sS -o /dev/null -w "%{http_code}\n" https://aalkc.com/api/health
+curl -sS -o /dev/null -w "%{http_code}\n" https://aalkc.com/services          # 200
+curl -s https://aalkc.com/ar/services | grep -o '<title>[^<]*'                # Arabic title
+curl -sS -o /dev/null -w "%{http_code}\n" https://aalkc.com/no-such-page      # 404
+curl -sSI https://aalkc.com/services/ | grep -i '^location'                    # /services
+curl -sSI https://aalkc.com/services | grep -iE 'x-frame-options|content-security-policy'
+curl -sS -o /dev/null -w "%{http_code}\n" https://aalkc.com/api/health        # unchanged
 ```
 
-Once live, resubmit `public/sitemap.xml` in Google Search Console so the
-previously-blocked pages get recrawled.
+Then resubmit `https://aalkc.com/sitemap.xml` in Google Search Console (and
+Bing Webmaster Tools) so the Arabic pages are discovered.
 
-## Known limitation (separate from this fix)
+## Tests
 
-Per-page `<title>` and meta description are set by client-side JavaScript
-after the app mounts. Bots that don't run JS (WhatsApp, X, LinkedIn,
-Facebook link previews) will still show the homepage's generic
-title/description for a shared `/services` or `/contact` link — they just
-won't say "Page Not Found" anymore. Closing that gap needs prerendering
-each route's HTML at build time, which is a separate, larger change.
-
-`public/404.html` and `public/404-redirect.js` are left in place — they
-still matter for direct hits on the raw `irhroot-sys.github.io` domain,
-which isn't proxied through Cloudflare and so never reaches this Worker.
+`tests/worker/edge.test.ts` runs `handleRequest` against a stand-in origin
+that, like GitHub Pages, serves only the files it has. It is part of
+`npm test` and the Worker is typechecked by `npm run typecheck`.

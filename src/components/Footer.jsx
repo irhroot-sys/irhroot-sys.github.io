@@ -1,4 +1,4 @@
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
 import { contactDetails, navigation } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link } from "../lib/router.jsx";
@@ -30,14 +30,16 @@ export function Footer() {
         <div className="footer-contact">
           <h2>{t("Contact")}</h2>
           <a href={contactDetails.phoneHref}><FaPhoneAlt /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
+          <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp /> {t("WhatsApp")}</a>
           <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
-          <span><FaMapMarkerAlt /> {isArabic ? contactDetails.addressArabic : contactDetails.address}</span>
+          <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><FaMapMarkerAlt /> {isArabic ? contactDetails.addressArabic : contactDetails.address}</a>
           <button type="button" onClick={() => openQuote()}>{t("Request a quote")}</button>
         </div>
       </div>
       <div className="footer-bottom content-width">
-        <p>© {new Date().getFullYear()} {t("Amanat Al-Kalima Company")}. {t("All rights reserved.")}</p>
-        <div className="footer-legal"><Link to="/privacy">{t("Privacy Policy")}</Link><Link to="/terms">{t("Terms of Service")}</Link><span>C.R. 7050308233</span></div>
+        {/* The year is baked in at build time; tolerate it moving on before the next deploy. */}
+        <p suppressHydrationWarning>© {new Date().getFullYear()} {t("Amanat Al-Kalima Company")}. {t("All rights reserved.")}</p>
+        <div className="footer-legal"><Link to="/privacy">{t("Privacy Policy")}</Link><Link to="/terms">{t("Terms of Service")}</Link><span>C.R. {contactDetails.commercialRegistration}</span></div>
       </div>
     </footer>
   );

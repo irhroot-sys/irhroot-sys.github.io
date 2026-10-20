@@ -5,8 +5,11 @@ import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { gradingStandards, materials } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
-import { usePageMeta } from "../lib/usePageMeta.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { ResponsiveImage } from "../components/ResponsiveImage.jsx";
+
+// Measured against the catalogue grid: one, two, three, then four columns.
+const PRODUCT_CARD_SIZES = "(max-width: 620px) 100vw, (max-width: 1020px) 50vw, (max-width: 1300px) 31vw, 300px";
 
 const categories = ["All", ...new Set(materials.map((material) => material.category))];
 
@@ -34,12 +37,6 @@ export function MaterialsPage() {
   const [query, setQuery] = useState("");
   const { openQuote } = useQuote();
   const { t } = useLanguage();
-  usePageMeta({
-    title: "Materials",
-    description: "Review the ferrous and non-ferrous materials AALKC purchases, including copper, steel, aluminum, brass, cast iron, stainless steel, and structural plate.",
-    path: "/materials",
-    image: "/assets/service-construction-materials.webp",
-  });
 
   const filteredProducts = useMemo(() => {
     const queryTokens = tokenize(query);
@@ -86,7 +83,7 @@ export function MaterialsPage() {
           <div className="product-grid">
             {filteredProducts.map(({ id, icon: Icon, name, category: productCategory, image, alt, summary, details }) => (
               <article className="product-card" key={id}>
-                <div className="product-media"><img src={image} alt={t(alt)} loading="lazy" /><span>{t(productCategory)}</span></div>
+                <div className="product-media"><ResponsiveImage src={image} sizes={PRODUCT_CARD_SIZES} alt={t(alt)} loading="lazy" decoding="async" /><span>{t(productCategory)}</span></div>
                 <div className="product-copy">
                   <Icon />
                   <h2>{t(name)}</h2>
