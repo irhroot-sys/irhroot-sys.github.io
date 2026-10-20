@@ -1,23 +1,24 @@
-import { FaChevronRight } from "react-icons/fa";
+import { LuArrowRight } from "react-icons/lu";
 import { recyclingFacts } from "../data/siteContent.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
+import { SectionHeading } from "./SectionHeading.jsx";
 
 // Published industry figures about metal recycling in general, each credited
-// to its source — never presented as AALKC's own results.
-export function RecyclingFacts({ withLink = false }) {
+// to its source — never presented as AALKC's own results. Set as a data
+// plate: the figure, the metal, the statement and its source.
+export function RecyclingFacts({ withLink = false, index }) {
   const { t } = useLanguage();
   return (
-    <section className="facts-band" aria-labelledby="facts-title">
-      <div className="content-width">
-        <span className="facts-kicker">{t("Why metal recycling matters")}</span>
-        <h2 id="facts-title">{t("Recycled metal saves energy and raw materials")}</h2>
+    <section className="facts content-section surface-ink on-ink" aria-labelledby="facts-title">
+      <div className="container">
+        <SectionHeading id="facts-title" index={index} eyebrow="Why metal recycling matters" title="Recycled metal saves energy and raw materials" />
         <div className="facts-grid">
           {recyclingFacts.map(({ figure, metal, copy, source }) => (
             <figure key={metal}>
+              <span className="facts-metal">{t(metal)}</span>
               <strong dir="auto">{t(figure)}</strong>
               <figcaption>
-                <span>{t(metal)}</span>
                 <p>{t(copy)}</p>
                 <small>{t("Source:")} {source}</small>
               </figcaption>
@@ -26,7 +27,7 @@ export function RecyclingFacts({ withLink = false }) {
         </div>
         {withLink && (
           <Link className="secondary-button facts-link" to="/sustainability">
-            {t("Our approach to sustainability")} <FaChevronRight className="directional-icon" />
+            {t("Our approach to sustainability")} <LuArrowRight className="directional-icon" />
           </Link>
         )}
       </div>

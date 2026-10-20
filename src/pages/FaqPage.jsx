@@ -17,12 +17,12 @@ export function FaqPage() {
         alt={t("Sorted scrap metal at an industrial recycling yard")}
         trail="FAQ"
       />
-      <section className="content-section content-width faq-section">
-        <SectionHeading eyebrow="AALKC guidance" title="What industrial suppliers ask us" copy="If your question is not covered here, send the material and site details to our Dammam team." />
+      <section className="content-section container faq-section">
+        <SectionHeading index="01" eyebrow="AALKC guidance" title="What industrial suppliers ask us" copy="If your question is not covered here, send the material and site details to our Dammam team." />
         <div className="faq-list">
           {frequentlyAskedQuestions.map(({ question, answer }, index) => (
             <details key={question} open={index === 0}>
-              <summary>{t(question)}</summary>
+              <summary><span className="faq-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><span>{t(question)}</span></summary>
               <p>{t(answer)}</p>
             </details>
           ))}

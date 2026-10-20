@@ -1,4 +1,5 @@
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
+import { LuMail, LuMapPin, LuPhone } from "react-icons/lu";
 import { contactDetails, footerCompanyLinks, services } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link } from "../lib/router.jsx";
@@ -33,13 +34,17 @@ export function Footer() {
         </div>
         <div className="footer-contact">
           <h2>{t("Contact")}</h2>
-          <a href={contactDetails.phoneHref}><FaPhoneAlt /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
+          <a href={contactDetails.phoneHref}><LuPhone /> <PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></a>
           <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp /> {t("WhatsApp")}</a>
-          <a href={`mailto:${contactDetails.email}`}><FaEnvelope /> {contactDetails.email}</a>
-          <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><FaMapMarkerAlt /> {isArabic ? contactDetails.addressArabic : contactDetails.address}</a>
+          <a href={`mailto:${contactDetails.email}`}><LuMail /> {contactDetails.email}</a>
+          <a href={contactDetails.mapHref} target="_blank" rel="noopener noreferrer"><LuMapPin /> {isArabic ? contactDetails.addressArabic : contactDetails.address}</a>
           <button type="button" onClick={() => openQuote()}>{t("Request a quote")}</button>
         </div>
       </div>
+      <p className="footer-signature content-width" aria-hidden="true">
+        <span dir="ltr">Amanat Al-Kalima</span>
+        <span lang="ar" dir="rtl">أمانة الكلمة</span>
+      </p>
       <div className="footer-bottom content-width">
         {/* The year is baked in at build time; tolerate it moving on before the next deploy. */}
         <p suppressHydrationWarning>© {new Date().getFullYear()} {t("Amanat Al-Kalima Company")}. {t("All rights reserved.")}</p>

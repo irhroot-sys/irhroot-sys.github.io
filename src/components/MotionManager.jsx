@@ -2,22 +2,26 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation } from "../lib/router.jsx";
 
 const revealSelectors = [
-  ".feature-grid > .feature",
-  ".services-intro > *",
-  ".service-cards > .service-card",
-  ".statistics-grid > .stat",
-  ".page-hero .page-breadcrumb",
-  ".page-hero .page-kicker",
-  ".page-hero h1",
-  ".page-hero-copy > p",
   ".section-heading > *",
+  ".assay-grid > li",
+  ".capability-index > li",
+  ".capability-stage",
+  ".method-track",
+  ".sector-list > li",
+  ".register > div",
+  ".commitments > li",
+  ".closing-copy > *",
+  ".closing-channels > li",
+  ".service-cards > .service-card",
+  ".service-detail-list > .service-detail",
+  ".check-list > li",
   ".about-story > p",
+  ".about-name",
   ".mission-grid > article",
   ".value-grid > .value-card",
-  ".company-service-grid > div",
-  ".certification-grid > article",
-  ".service-detail-list > .service-detail",
-  ".process-grid > article",
+  ".certification-grid > li",
+  ".facts-grid > figure",
+  ".industry-list > .industry-row",
   ".catalog-tools",
   ".result-count",
   ".product-grid > .product-card",
@@ -30,7 +34,6 @@ const revealSelectors = [
   ".legal-page > h1",
   ".legal-page > .legal-intro",
   ".legal-sections > section",
-  ".cta-band > *",
   ".not-found > *",
 ].join(",");
 
@@ -182,7 +185,10 @@ export function MotionManager() {
     // overscan scale in CSS is what buys the room.
     const updateParallax = (viewportHeight) => {
       for (const element of parallaxTargets) {
-        const frameEl = element.parentElement ?? element;
+        // <ResponsiveImage> wraps the image in a `display: contents` <picture>,
+        // which has no box of its own; measure the frame around it instead.
+        let frameEl = element.parentElement ?? element;
+        if (frameEl.classList.contains("responsive-picture")) frameEl = frameEl.parentElement ?? element;
         const rect = frameEl.getBoundingClientRect();
         if (rect.bottom < -160 || rect.top > viewportHeight + 160) continue;
 

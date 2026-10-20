@@ -37,8 +37,8 @@ function fontAsset(prefix) {
   return `/assets/${file}`;
 }
 const criticalFonts = {
-  en: [fontAsset("manrope-latin-400-normal-"), fontAsset("archivo-latin-700-normal-")],
-  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("ibm-plex-sans-arabic-arabic-700-normal-")],
+  en: [fontAsset("ibm-plex-sans-latin-400-normal-"), fontAsset("archivo-latin-wdth-normal-")],
+  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("noto-kufi-arabic-arabic-700-normal-")],
 };
 
 function preloadTags(route, language) {
@@ -47,7 +47,7 @@ function preloadTags(route, language) {
   // Preload exactly the AVIF candidates the <picture> will choose from, so the
   // browser starts the download before React renders and never fetches twice.
   if (route.heroImage) {
-    tags.push(`<link rel="preload" as="image" type="image/avif" imagesrcset="${variantSrcSet(route.heroImage, "avif")}" imagesizes="100vw" fetchpriority="high" />`);
+    tags.push(`<link rel="preload" as="image" type="image/avif" imagesrcset="${variantSrcSet(route.heroImage, "avif")}" imagesizes="${route.heroSizes ?? "100vw"}" fetchpriority="high" />`);
   }
   return tags;
 }

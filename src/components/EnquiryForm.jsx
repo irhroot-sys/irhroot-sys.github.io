@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaCheckCircle, FaChevronRight } from "react-icons/fa";
+import { LuArrowRight, LuCircleCheck } from "react-icons/lu";
 import { readQuoteDetails, submitEnquiry } from "../lib/enquiries.js";
 import { QuoteDetailsFields } from "./QuoteDetailsFields.jsx";
 import { Link } from "../lib/router.jsx";
@@ -47,10 +47,10 @@ export function EnquiryForm() {
   if (status === "success") {
     return (
       <div className="contact-success" role="status">
-        <FaCheckCircle />
+        <LuCircleCheck />
         <h2>{t("Message received")}</h2>
         <p>{t("Your enquiry has been saved. Our team will respond using the contact details you provided.")}</p>
-        <button type="button" className="inline-action" onClick={() => setStatus("idle")}>{t("Send another message")} <FaChevronRight className="directional-icon" /></button>
+        <button type="button" className="inline-action" onClick={() => setStatus("idle")}>{t("Send another message")} <LuArrowRight className="directional-icon" /></button>
       </div>
     );
   }
@@ -86,7 +86,7 @@ export function EnquiryForm() {
       )}
       {error && <div className="form-alert" role="alert">{error}</div>}
       <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-        {status === "loading" ? t("Sending…") : t("Send message")} <FaChevronRight className="directional-icon" />
+        {status === "loading" ? t("Sending…") : t("Send message")} <LuArrowRight className="directional-icon" />
       </button>
     </form>
   );

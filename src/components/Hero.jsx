@@ -1,12 +1,24 @@
 import { useEffect, useRef } from "react";
-import { FaChevronRight } from "react-icons/fa";
+import { LuArrowRight } from "react-icons/lu";
 import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
-import { certifications } from "../data/siteContent.jsx";
-import { BrandMark } from "./BrandMark.jsx";
+import { useQuote } from "../context/QuoteContext.jsx";
+import { contactDetails } from "../data/siteContent.jsx";
+import { HOME_HERO_SIZES } from "../data/imageSizes.js";
 import { ResponsiveImage } from "./ResponsiveImage.jsx";
 
-const HERO_IMAGE = "/assets/service-industrial-dismantling.webp";
+export const HERO_IMAGE = "/assets/service-metal-sorting.webp";
+
+// The ledger under the statement: facts the company states elsewhere on the
+// site and in its registration, set the way a register would set them.
+// Nothing here is a performance claim.
+const LEDGER = [
+  { label: "Established", value: "2017" },
+  { label: "Commercial registration", value: contactDetails.commercialRegistration, mono: true },
+  { label: "Management standards", value: "ISO 9001 · 14001 · 45001", mono: true },
+  { label: "Registry", value: "Saudi Ministry of Commerce" },
+  { label: "Headquarters", value: "Dammam", note: "26.42° N  50.09° E" },
+];
 
 // Keep the depth effect local to the hero so pointer movement elsewhere on
 // the page cannot keep the image in motion. Media-query listeners also make
@@ -70,50 +82,63 @@ function useHeroDepthMotion(heroRef) {
 
 export function Hero() {
   const { t } = useLanguage();
+  const { openQuote } = useQuote();
   const heroRef = useRef(null);
   useHeroDepthMotion(heroRef);
 
   return (
-    <section ref={heroRef} className="hero" aria-labelledby="hero-title">
-      <div className="hero-media">
-        <ResponsiveImage
-          className="hero-media-image"
-          data-parallax="0.07"
-          src={HERO_IMAGE}
-          sizes="100vw"
-          alt={t("Industrial material recovery and dismantling operation")}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-        />
+    <section ref={heroRef} className="hero on-ink" aria-labelledby="hero-title">
+      <div className="hero-grid container">
+        <div className="hero-copy">
+          <p className="label hero-label">
+            <span className="label-index">AALKC</span>
+            {t("Amanat Al-Kalima Company")}
+          </p>
+          <h1 id="hero-title">
+            <span className="hero-line hero-line-1">{t("Integrity,")}</span>{" "}
+            <span className="hero-line hero-line-2">{t("weighed in every tonne.")}</span>
+          </h1>
+          <p className="hero-lede">
+            {t("Premium, transparent, and efficient metal recycling services for industrial, commercial, and construction businesses across Saudi Arabia.")}
+          </p>
+          <div className="hero-actions">
+            <button type="button" className="primary-button" onClick={() => openQuote()}>
+              {t("Request a quote")} <LuArrowRight className="directional-icon" />
+            </button>
+            <Link className="inline-action" to="/services">
+              {t("Explore our capabilities")} <LuArrowRight className="directional-icon" />
+            </Link>
+          </div>
+        </div>
+        <figure className="plate hero-plate">
+          <div className="plate-frame hero-media">
+            <ResponsiveImage
+              className="hero-media-image"
+              src={HERO_IMAGE}
+              sizes={HOME_HERO_SIZES}
+              alt={t("Grapple loading sorted scrap metal at an industrial recycling yard")}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
+          <figcaption><b>{t("Fig.")} 01</b>{t("Grapple loading recovered scrap metal")}</figcaption>
+        </figure>
       </div>
-      <div className="hero-copy">
-        <div className="eyebrow light hero-eyebrow">
-          <BrandMark className="hero-badge" />
-          <span>{t("Amanat Al-Kalima Company")}</span>
-        </div>
-        <h1 id="hero-title">
-          <span className="hero-line hero-line-1">{t("Building Value,")}</span>{" "}
-          <span className="hero-line hero-line-2">{t("Recycling the Future.")}</span>
-        </h1>
-        <p className="hero-lede">
-          {t("Premium, transparent, and efficient metal recycling services for industrial, commercial, and construction businesses across Saudi Arabia.")}
-        </p>
-        <div className="hero-actions">
-          <Link className="primary-button" to="/services">
-            {t("Our Services")} <FaChevronRight className="directional-icon" />
-          </Link>
-          <Link className="secondary-button" to="/contact">
-            {t("Contact Us")} <FaChevronRight className="directional-icon" />
-          </Link>
-        </div>
-        <ul className="hero-trust" aria-label={t("Certifications and registrations")}>
-          {certifications.map(({ title }) => (
-            <li key={title}>{t(title)}</li>
+      <div className="hero-ledger container">
+        <span className="scale-rule" aria-hidden="true" />
+        <dl aria-label={t("Company credentials")}>
+          {LEDGER.map(({ label, value, mono, note }) => (
+            <div key={label}>
+              <dt>{t(label)}</dt>
+              <dd className={mono ? "is-mono" : undefined} dir={mono ? "ltr" : undefined}>
+                {mono ? value : t(value)}
+                {note && <small dir="ltr">{note}</small>}
+              </dd>
+            </div>
           ))}
-        </ul>
+        </dl>
       </div>
     </section>
   );
 }
-

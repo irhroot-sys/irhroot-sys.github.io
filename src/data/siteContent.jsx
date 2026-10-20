@@ -1,22 +1,4 @@
-import {
-  FaAward,
-  FaBalanceScale,
-  FaBolt,
-  FaBuilding,
-  FaCertificate,
-  FaCheckCircle,
-  FaCogs,
-  FaCube,
-  FaGlobe,
-  FaHardHat,
-  FaIndustry,
-  FaLeaf,
-  FaMapMarkerAlt,
-  FaRecycle,
-  FaShieldAlt,
-  FaShippingFast,
-  FaTruck,
-} from "react-icons/fa";
+import { LuAward, LuContainer, LuLayers, LuBadgeCheck, LuBox, LuBuilding2, LuCircleCheck, LuCog, LuFactory, LuGlobe, LuHardHat, LuLeaf, LuMapPin, LuRecycle, LuScale, LuShieldCheck, LuTruck, LuZap } from "react-icons/lu";
 
 export const navigation = [
   { label: "Home", to: "/" },
@@ -39,22 +21,22 @@ export const footerCompanyLinks = [
 
 export const features = [
   {
-    icon: FaCertificate,
+    icon: LuBadgeCheck,
     title: "Licensed & Compliant",
     copy: "A licensed dealer aligned with environmental regulations and responsible practice.",
   },
   {
-    icon: FaBalanceScale,
+    icon: LuScale,
     title: "Competitive Pricing",
     copy: "Transparent, market-aware pricing supported by precise grading and certified weights.",
   },
   {
-    icon: FaShippingFast,
+    icon: LuTruck,
     title: "Reliable Logistics",
     copy: "Prompt collection and industrial logistics across the Eastern Province.",
   },
   {
-    icon: FaAward,
+    icon: LuAward,
     title: "Established 2017",
     copy: "A proven track record supporting industrial partners across Saudi Arabia.",
   },
@@ -64,7 +46,7 @@ export const services = [
   {
     slug: "container-service",
     overview: "AALKC places roll-off containers from 10 to 40 yards, and flatbed transport, where your scrap is generated, then swaps or collects them on a schedule that suits the site. Containers are matched to the material and the access available, so space is used well and collections stay predictable.",
-    icon: FaTruck,
+    icon: LuContainer,
     title: "Container Service",
     category: "Collection",
     copy: "10 to 40-yard roll-off containers, flatbeds, and specialized transport designed around site requirements.",
@@ -76,7 +58,7 @@ export const services = [
   {
     slug: "industrial-demolition",
     overview: "For plant decommissioning, equipment replacement and facility clearance, AALKC recovers machinery, structural steel and other metal assets. Recoverable material is separated during dismantling, so it can be graded and valued instead of sold as mixed scrap.",
-    icon: FaIndustry,
+    icon: LuFactory,
     title: "Industrial Demolition",
     category: "Processing",
     copy: "Asset recovery and dismantling for obsolete machinery, structural steel, and industrial facilities.",
@@ -88,7 +70,7 @@ export const services = [
   {
     slug: "scrap-purchasing",
     overview: "AALKC buys ferrous and non-ferrous scrap from industrial, commercial and construction suppliers. Every load is inspected, graded and weighed on certified scales, and quotations follow current market conditions.",
-    icon: FaRecycle,
+    icon: LuRecycle,
     title: "Scrap Purchasing",
     category: "Trading",
     copy: "Competitive, market-aware purchasing for ferrous and non-ferrous metals to maximize material value.",
@@ -100,7 +82,7 @@ export const services = [
   {
     slug: "heavy-logistics",
     overview: "Bulk scrap and heavy items need the right vehicle and a planned route. AALKC coordinates the fleet and transport for bulk collections and industrial relocations across the Eastern Province and the wider Kingdom.",
-    icon: FaShippingFast,
+    icon: LuTruck,
     title: "Heavy Logistics",
     category: "Collection",
     copy: "Fleet coordination for industrial relocations and bulk scrap transport across the Kingdom.",
@@ -112,7 +94,7 @@ export const services = [
   {
     slug: "metal-sorting",
     overview: "Mixed loads are worth more once they are separated. AALKC uses laser and XRF-supported identification to classify alloys and verify grades, and documents the acceptance review for every load.",
-    icon: FaCogs,
+    icon: LuLayers,
     title: "Metal Sorting",
     category: "Processing",
     copy: "Laser and XRF-supported identification for complex alloys and mixed-metal loads.",
@@ -124,7 +106,7 @@ export const services = [
   {
     slug: "global-export",
     overview: "Some grades find their best value beyond the local market. AALKC coordinates supply to international foundries and mills through coordinated trade channels and handles the commercial coordination.",
-    icon: FaGlobe,
+    icon: LuGlobe,
     title: "Global Export",
     category: "Trading",
     copy: "Supply-chain access to international foundries and mills through coordinated global trade channels.",
@@ -140,7 +122,7 @@ export const services = [
 export const industries = [
   {
     slug: "construction",
-    icon: FaHardHat,
+    icon: LuHardHat,
     title: "Construction & Contracting",
     copy: "Rebar offcuts, structural steel, formwork hardware and demolition arisings, collected from active sites on a schedule that suits the programme.",
     materials: ["Rebar", "Heavy Melt Steel", "Plate & Structural"],
@@ -148,7 +130,7 @@ export const industries = [
   },
   {
     slug: "manufacturing",
-    icon: FaCogs,
+    icon: LuCog,
     title: "Manufacturing & Fabrication",
     copy: "Production offcuts, turnings, sheet skeletons and rejected parts, kept separate by alloy so they are graded and valued correctly.",
     materials: ["Stainless Steel", "Aluminum", "Brass", "Copper"],
@@ -156,7 +138,7 @@ export const industries = [
   },
   {
     slug: "industrial-plants",
-    icon: FaIndustry,
+    icon: LuFactory,
     title: "Industrial Plants & Facilities",
     copy: "Decommissioning and shutdown scrap, obsolete machinery and redundant structural steel, removed safely and documented.",
     materials: ["Heavy Melt Steel", "Cast Iron", "Stainless Steel", "Copper"],
@@ -164,7 +146,7 @@ export const industries = [
   },
   {
     slug: "electrical",
-    icon: FaBolt,
+    icon: LuZap,
     title: "Electrical & Cabling",
     copy: "Cable, wire, busbar and conductor scrap, with copper and aluminium separated from insulated material for accurate grading.",
     materials: ["Copper", "Aluminum", "Brass"],
@@ -172,7 +154,7 @@ export const industries = [
   },
   {
     slug: "commercial",
-    icon: FaBuilding,
+    icon: LuBuilding2,
     title: "Commercial & Facilities Management",
     copy: "Fit-out strip-outs, building-services metals and end-of-life equipment from offices, retail and warehousing, cleared with minimal disruption.",
     materials: ["Aluminum", "Copper", "Stainless Steel", "Plate & Structural"],
@@ -181,10 +163,10 @@ export const industries = [
 ];
 
 export const sustainabilityPillars = [
-  { icon: FaRecycle, title: "Circular materials", copy: "Graded scrap goes back to mills and foundries as feedstock, so metal already in circulation is used again." },
-  { icon: FaShieldAlt, title: "Responsible handling", copy: "Loads are inspected before acceptance, and sealed, pressurised or hazardous containers are not accepted." },
-  { icon: FaLeaf, title: "Environmental management", copy: "Processing procedures follow the ISO 14001 environmental-management standard." },
-  { icon: FaTruck, title: "Efficient logistics", copy: "Collections are planned around each site, with container swaps that avoid unnecessary trips." },
+  { icon: LuRecycle, title: "Circular materials", copy: "Graded scrap goes back to mills and foundries as feedstock, so metal already in circulation is used again." },
+  { icon: LuShieldCheck, title: "Responsible handling", copy: "Loads are inspected before acceptance, and sealed, pressurised or hazardous containers are not accepted." },
+  { icon: LuLeaf, title: "Environmental management", copy: "Processing procedures follow the ISO 14001 environmental-management standard." },
+  { icon: LuTruck, title: "Efficient logistics", copy: "Collections are planned around each site, with container swaps that avoid unnecessary trips." },
 ];
 
 // Published industry figures, quoted with their source. They describe metal
@@ -198,97 +180,115 @@ export const recyclingFacts = [
 export const collectionTimings = ["Flexible", "Within a week", "Within a month", "Recurring collections"];
 
 export const statistics = [
-  { icon: FaAward, label: "Year Established", value: "2017" },
-  { icon: FaMapMarkerAlt, label: "Headquarters", value: "Dammam, KSA" },
-  { icon: FaCertificate, label: "Operating Status", value: "Licensed Dealer" },
-  { icon: FaTruck, label: "Service Coverage", value: "Eastern Province" },
+  { icon: LuAward, label: "Year Established", value: "2017" },
+  { icon: LuMapPin, label: "Headquarters", value: "Dammam, KSA" },
+  { icon: LuBadgeCheck, label: "Operating Status", value: "Licensed Dealer" },
+  { icon: LuTruck, label: "Service Coverage", value: "Eastern Province" },
 ];
 
 export const values = [
-  { icon: FaShieldAlt, title: "Integrity", copy: "Transparent weighing, clear grading, and honest commercial communication on every load." },
-  { icon: FaCheckCircle, title: "Efficiency", copy: "Responsive collection, processing, and payment coordination tailored to industrial operations." },
-  { icon: FaBalanceScale, title: "Fair Value", copy: "Market-aware pricing designed to deliver competitive value for verified materials." },
-  { icon: FaRecycle, title: "Sustainability", copy: "Responsible recycling that returns valuable industrial materials to productive use." },
+  { icon: LuShieldCheck, title: "Integrity", copy: "Transparent weighing, clear grading, and honest commercial communication on every load." },
+  { icon: LuCircleCheck, title: "Efficiency", copy: "Responsive collection, processing, and payment coordination tailored to industrial operations." },
+  { icon: LuScale, title: "Fair Value", copy: "Market-aware pricing designed to deliver competitive value for verified materials." },
+  { icon: LuRecycle, title: "Sustainability", copy: "Responsible recycling that returns valuable industrial materials to productive use." },
 ];
 
 export const materials = [
   {
     id: "copper",
+    // Chemical symbol, or the principal elements of an alloy, and the
+    // atomic number for single-element metals.
+    symbol: "Cu",
+    atomicNumber: 29,
     name: "Copper",
     category: "Non-Ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Copper and non-ferrous recyclable metal",
-    icon: FaBolt,
+    icon: LuZap,
     summary: "Premium copper material for electrical and power applications.",
     details: ["Grade #1 Millberry", "≥ 99.9% purity", "Electrical & Power"],
   },
   {
     id: "heavy-melt-steel",
+    symbol: "Fe",
+    atomicNumber: 26,
     name: "Heavy Melt Steel",
     category: "Ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Heavy melt steel scrap ready for industrial recycling",
-    icon: FaRecycle,
+    icon: LuRecycle,
     summary: "Industrial-grade heavy melting steel for infrastructure and casting.",
     details: ["HMS 1 & 2 (80:20)", "Industrial grade", "Infrastructure & Casting"],
   },
   {
     id: "aluminum",
+    symbol: "Al",
+    atomicNumber: 13,
     name: "Aluminum",
     category: "Non-Ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Sorted aluminum recyclable material",
-    icon: FaCube,
+    icon: LuBox,
     summary: "Aluminum alloy material used across aerospace and automotive applications.",
     details: ["6061 / 6063 alloys", "≥ 99.5% purity", "Aerospace & Automotive"],
   },
   {
     id: "rebar",
+    symbol: "Fe",
+    atomicNumber: 26,
     name: "Rebar",
     category: "Ferrous",
     image: "/assets/service-construction-materials.webp",
     alt: "Deformed steel reinforcement bars",
-    icon: FaIndustry,
+    icon: LuFactory,
     summary: "Deformed steel bars for structural concrete applications.",
     details: ["Deformed steel bars", "Grade 60/75", "Structural Concrete"],
   },
   {
     id: "brass",
+    symbol: "Cu–Zn",
+    atomicNumber: null,
     name: "Brass",
     category: "Non-Ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Brass and mixed non-ferrous recyclable metal",
-    icon: FaCogs,
+    icon: LuCog,
     summary: "Copper-zinc alloy material for marine and plumbing use.",
     details: ["Honey brass & shells", "Cu-Zn alloy", "Marine & Plumbing"],
   },
   {
     id: "cast-iron",
+    symbol: "Fe–C",
+    atomicNumber: null,
     name: "Cast Iron",
     category: "Ferrous",
     image: "/assets/service-global-trade.webp",
     alt: "Industrial cast iron machinery material",
-    icon: FaCogs,
+    icon: LuCog,
     summary: "High-carbon grey and ductile iron for automotive and pipe applications.",
     details: ["Grey & ductile iron", "High carbon", "Automotive & Pipes"],
   },
   {
     id: "stainless-steel",
+    symbol: "Fe–Cr–Ni",
+    atomicNumber: null,
     name: "Stainless Steel",
     category: "Ferrous",
     image: "/assets/service-construction-materials.webp",
     alt: "Stainless steel industrial stock",
-    icon: FaIndustry,
+    icon: LuFactory,
     summary: "Chromium-nickel stainless grades for food and chemical applications.",
     details: ["304 & 316 grades", "18/8 Cr-Ni", "Food & Chemical"],
   },
   {
     id: "plate-structural",
+    symbol: "Fe",
+    atomicNumber: 26,
     name: "Plate & Structural",
     category: "Ferrous",
     image: "/assets/service-construction-materials.webp",
     alt: "Structural carbon steel plate and sections",
-    icon: FaIndustry,
+    icon: LuFactory,
     summary: "Carbon-steel plate and structural material for bridges and buildings.",
     details: ["A36 & equivalent", "Carbon steel", "Bridges & Building"],
   },

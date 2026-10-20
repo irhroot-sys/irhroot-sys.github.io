@@ -1,4 +1,4 @@
-import { FaCheck, FaChevronRight } from "react-icons/fa";
+import { LuArrowRight, LuCheck } from "react-icons/lu";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
@@ -8,10 +8,8 @@ import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
 import { ResponsiveImage } from "../components/ResponsiveImage.jsx";
+import { PLATE_SIZES } from "../data/imageSizes.js";
 
-// Measured against the alternating detail rows: full width until the rows
-// split into image and copy columns.
-const SERVICE_DETAIL_SIZES = "(max-width: 1020px) 100vw, (max-width: 1300px) 52vw, 620px";
 
 export function ServicesPage() {
   const { openQuote } = useQuote();
@@ -28,24 +26,26 @@ export function ServicesPage() {
         trail="Services"
       />
 
-      <section className="content-section content-width">
-        <SectionHeading eyebrow="What we do" title="Six connected service lines" copy="Choose a service below or send the full requirement and our team will coordinate the right operational route." />
+      <section className="content-section container">
+        <SectionHeading index="01" eyebrow="What we do" title="Six connected service lines" copy="Choose a service below or send the full requirement and our team will coordinate the right operational route." />
         <div className="service-detail-list">
-          {services.map(({ slug, icon: Icon, title, copy, image, alt, capabilities, focalPosition }, index) => (
+          {services.map(({ slug, title, copy, image, alt, capabilities, focalPosition, category }, index) => (
             <article className={`service-detail ${index % 2 ? "is-reversed" : ""}`} id={slug} key={slug}>
-              <div className="service-detail-media"><ResponsiveImage src={image} sizes={SERVICE_DETAIL_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} /></div>
+              <figure className="plate service-detail-plate">
+                <div className="plate-frame service-detail-media"><ResponsiveImage src={image} sizes={PLATE_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} /></div>
+                <figcaption><b>{t("Fig.")} {String(index + 2).padStart(2, "0")}</b>{t(alt)}</figcaption>
+              </figure>
               <div className="service-detail-copy">
-                <span className="detail-number">0{index + 1}</span>
-                <Icon className="detail-icon" />
+                <span className="label"><span className="label-index">{String(index + 1).padStart(2, "0")}</span>{t(category)}</span>
                 <h2>{t(title)}</h2>
                 <p>{t(copy)}</p>
-                <ul>{capabilities.map((capability) => <li key={capability}><FaCheck />{t(capability)}</li>)}</ul>
+                <ul className="check-list">{capabilities.map((capability) => <li key={capability}><LuCheck aria-hidden="true" />{t(capability)}</li>)}</ul>
                 <div className="service-detail-actions">
-                  <Link className="inline-action" to={`/services/${slug}`}>
-                    {t("View service details")} <FaChevronRight className="directional-icon" />
+                  <Link className="secondary-button" to={`/services/${slug}`}>
+                    {t("View service details")} <LuArrowRight className="directional-icon" />
                   </Link>
                   <button type="button" className="inline-action" onClick={() => openQuote({ service: title })}>
-                    {t("Discuss this service")} <FaChevronRight className="directional-icon" />
+                    {t("Discuss this service")} <LuArrowRight className="directional-icon" />
                   </button>
                 </div>
               </div>
@@ -54,7 +54,7 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <ProcessSection />
+      <ProcessSection index="02" />
       <CtaBand />
     </>
   );

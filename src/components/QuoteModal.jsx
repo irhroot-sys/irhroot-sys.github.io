@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaCheckCircle, FaChevronRight, FaTimes } from "react-icons/fa";
+import { LuArrowRight, LuCircleCheck, LuX } from "react-icons/lu";
 import { services } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { readQuoteDetails, submitEnquiry } from "../lib/enquiries.js";
@@ -97,11 +97,11 @@ export function QuoteModal() {
     }}>
       <section className="quote-modal" role="dialog" aria-modal="true" aria-labelledby="quote-title" ref={modalRef}>
         <button type="button" className="modal-close" aria-label={t("Close enquiry form")} onClick={closeQuote}>
-          <FaTimes />
+          <LuX />
         </button>
         {status === "success" ? (
           <div className="success-state" role="status">
-            <FaCheckCircle />
+            <LuCircleCheck />
             <h2 id="quote-title">{t("Request received")}</h2>
             <p>{t("Thank you. Your reference has been saved and our team will contact you shortly.")}</p>
             <button type="button" className="primary-button" onClick={closeQuote}>{t("Close")}</button>
@@ -143,7 +143,7 @@ export function QuoteModal() {
             )}
             {error && <div className="form-alert" role="alert">{error}</div>}
             <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-              {status === "loading" ? t("Sending…") : t("Send Request")} <FaChevronRight className="directional-icon" />
+              {status === "loading" ? t("Sending…") : t("Send Request")} <LuArrowRight className="directional-icon" />
             </button>
           </form>
         )}

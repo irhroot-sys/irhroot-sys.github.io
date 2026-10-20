@@ -18,21 +18,21 @@ export function SustainabilityPage() {
         alt="Industrial metal stock prepared for sorting and grading"
         trail="Sustainability"
       />
-      <section className="content-section content-width">
-        <SectionHeading eyebrow="Our approach" title="Four commitments behind every load" align="center" />
-        <div className="value-grid">
-          {sustainabilityPillars.map(({ icon: Icon, title, copy }) => (
-            <article className="value-card" key={title}><Icon /><h3>{t(title)}</h3><p>{t(copy)}</p></article>
+      <section className="content-section container">
+        <SectionHeading index="01" eyebrow="Our approach" title="Four commitments behind every load" />
+        <ol className="value-grid">
+          {sustainabilityPillars.map(({ icon: Icon, title, copy }, index) => (
+            <li className="value-card" key={title}><span className="value-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><Icon aria-hidden="true" /><h3>{t(title)}</h3><p>{t(copy)}</p></li>
           ))}
-        </div>
+        </ol>
       </section>
-      <RecyclingFacts />
-      <section className="content-section content-width sustainability-context">
-        <SectionHeading eyebrow="National direction" title="Supporting the Kingdom's circular economy" copy="Saudi Vision 2030 and the Saudi Green Initiative place growing emphasis on waste reduction and recycling. Recovering industrial metal in the Eastern Province, and returning it to mills and foundries, is AALKC's contribution to that direction." />
+      <RecyclingFacts index="02" />
+      <section className="content-section container sustainability-context">
+        <SectionHeading index="03" eyebrow="National direction" title="Supporting the Kingdom's circular economy" copy="Saudi Vision 2030 and the Saudi Green Initiative place growing emphasis on waste reduction and recycling. Recovering industrial metal in the Eastern Province, and returning it to mills and foundries, is AALKC's contribution to that direction." />
       </section>
-      <section className="content-section soft-section">
-        <div className="content-width certification-section">
-          <SectionHeading eyebrow="Standards" title="Certified operating standards" copy="AALKC maintains quality, environmental, and safety certifications alongside verified Ministry of Commerce registration." />
+      <section className="content-section surface-white">
+        <div className="container certification-section">
+          <SectionHeading index="04" eyebrow="Standards" title="Certified operating standards" copy="AALKC maintains quality, environmental, and safety certifications alongside verified Ministry of Commerce registration." />
           <CertificationList />
         </div>
       </section>

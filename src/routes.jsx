@@ -1,4 +1,5 @@
 import { HomePage } from "./pages/HomePage.jsx";
+import { HERO_IMAGE as HOME_HERO_IMAGE } from "./components/Hero.jsx";
 import { AboutPage } from "./pages/AboutPage.jsx";
 import { ServicesPage } from "./pages/ServicesPage.jsx";
 import { MaterialsPage } from "./pages/MaterialsPage.jsx";
@@ -11,6 +12,7 @@ import { IndustriesPage } from "./pages/IndustriesPage.jsx";
 import { SustainabilityPage } from "./pages/SustainabilityPage.jsx";
 import { legalContent, services } from "./data/siteContent.jsx";
 import { splitLocalePath } from "./lib/i18n.js";
+import { HOME_HERO_SIZES, PAGE_HERO_SIZES } from "./data/imageSizes.js";
 
 const DEFAULT_IMAGE = "/assets/service-industrial-dismantling.webp";
 
@@ -24,7 +26,7 @@ export const routes = [
     title: "Scrap Metal Buyer & Recycling in Dammam",
     description: "Amanat Al-Kalima Company is a licensed scrap metal dealer in Dammam providing recycling, trading, collection, sorting, and industrial logistics services.",
     image: DEFAULT_IMAGE,
-    heroImage: DEFAULT_IMAGE,
+    heroImage: HOME_HERO_IMAGE,
     changefreq: "monthly",
     priority: "1.0",
   },
@@ -130,6 +132,12 @@ export const routes = [
     priority: "0.3",
   },
 ];
+
+// Each hero image is displayed at a size the layout fixes; the prerender
+// preloads it with the same `sizes`, so the preload and the <img> agree.
+for (const route of routes) {
+  if (route.heroImage) route.heroSizes = route.path === "/" ? HOME_HERO_SIZES : PAGE_HERO_SIZES;
+}
 
 // Old URLs that now live elsewhere. The edge Worker answers these with a 301;
 // the client follows the same table for in-app navigation.

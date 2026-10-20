@@ -10,7 +10,7 @@ test('production site passes the critical synthetic check', async ({ page }) => 
 
   const response = await page.goto('/');
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole('heading', { level: 1, name: /Building Value, Recycling the Future/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Integrity, weighed in every tonne/i })).toBeVisible();
   await expect(page.locator('#root')).not.toBeEmpty();
   expect(criticalFailures).toEqual([]);
 });

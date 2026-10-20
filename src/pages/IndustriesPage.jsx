@@ -1,4 +1,4 @@
-import { FaChevronRight } from "react-icons/fa";
+import { LuArrowRight } from "react-icons/lu";
 import { PageHero } from "../components/PageHero.jsx";
 import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
@@ -20,12 +20,13 @@ export function IndustriesPage() {
         alt="Steel construction materials ready for supply"
         trail="Industries"
       />
-      <section className="content-section content-width">
-        <SectionHeading eyebrow="Sectors" title="Who we work with" copy="Manufacturers, fabricators, contractors and facility operators across the Eastern Province rely on AALKC to recover the value in their scrap." />
+      <section className="content-section container">
+        <SectionHeading index="01" eyebrow="Sectors" title="Who we work with" copy="Manufacturers, fabricators, contractors and facility operators across the Eastern Province rely on AALKC to recover the value in their scrap." />
         <div className="industry-list">
-          {industries.map(({ slug, icon: Icon, title, copy, materials, services: serviceSlugs }) => (
+          {industries.map(({ slug, icon: Icon, title, copy, materials, services: serviceSlugs }, index) => (
             <article className="industry-row" id={slug} key={slug}>
               <div className="industry-row-title">
+                <span className="industry-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 <Icon aria-hidden="true" />
                 <h2>{t(title)}</h2>
               </div>
@@ -39,7 +40,7 @@ export function IndustriesPage() {
                   <h3>{t("Relevant services")}</h3>
                   <ul className="industry-service-links">
                     {serviceSlugs.map((serviceSlug) => (
-                      <li key={serviceSlug}><Link to={`/services/${serviceSlug}`}>{t(serviceTitles[serviceSlug])} <FaChevronRight className="directional-icon" /></Link></li>
+                      <li key={serviceSlug}><Link to={`/services/${serviceSlug}`}>{t(serviceTitles[serviceSlug])} <LuArrowRight className="directional-icon" /></Link></li>
                     ))}
                   </ul>
                 </div>
