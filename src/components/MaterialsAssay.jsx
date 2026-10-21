@@ -6,7 +6,7 @@ import { SectionHeading } from "./SectionHeading.jsx";
 
 // What AALKC buys, set as an assay register: each family under its chemical
 // symbol (or an alloy's principal elements), with the grade AALKC lists for
-// it. Every tile opens that material in the catalogue.
+// it. Every tile opens the guide to that material.
 export function MaterialsAssay() {
   const { t } = useLanguage();
   return (
@@ -14,7 +14,6 @@ export function MaterialsAssay() {
       <div className="container">
         <SectionHeading
           id="assay-title"
-         
           eyebrow="What we buy"
           title="Ferrous and non-ferrous, graded at source."
           copy="Eight material families form the core of what AALKC purchases. Every load is inspected and weighed before its grade and value are confirmed."
@@ -22,7 +21,7 @@ export function MaterialsAssay() {
         <ul className="assay-grid">
           {materials.map(({ id, symbol, atomicNumber, name, category, details }) => (
             <li key={id}>
-              <Link className="assay-tile" to={`/materials#${id}`} data-alloy={atomicNumber ? undefined : ""}>
+              <Link className="assay-tile" to={`/materials/${id}`} data-alloy={atomicNumber ? undefined : ""}>
                 <span className="assay-meta">
                   <span dir="ltr">{atomicNumber ?? t("Alloy")}</span>
                   <span>{t(category)}</span>

@@ -1,6 +1,6 @@
 # AALKC design system
 
-**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, a broad and stable display face set light, generous space, and the photography of the yard. One bold gesture — the homepage hero, where the skyline bars of the mark rise out of the credentials band into the photograph — and everything else stays quiet.
+**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, a set serif for what is declared and a clear grotesk for what is measured, generous space, and the photography of the yard. One bold gesture — the homepage hero, where the skyline bars of the mark rise out of the credentials band into the photograph — and everything else stays quiet.
 
 ## Colour: Navy · Steel · Platinum
 The palette is the official logo, extended. Both scales sit on the mark's own hue (≈211°), so the whole site reads as one material family.
@@ -9,9 +9,9 @@ The palette is the official logo, extended. Both scales sit on the mark's own hu
 | --- | --- | --- | --- |
 | Brand navy | `--navy-800` | `#0E335C` | Dark surfaces, headings, primary actions |
 | Brand steel | `--steel-500` / `--metal` | `#7D8389` | Hairline accents on navy panels, inactive display titles, non-text marks |
-| White / mist / frost | `--white`, `--mist`, `--frost` | `#FFFFFF`, `#F3F6F9`, `#E8EDF2` | Light grounds; sections alternate white and mist |
-| Cobalt (signal on light) | `--signal` | `#2D63A0` | Indices, labels, active states, focus |
-| Ice / platinum (signal on navy) | `--signal-on-ink`, `--platinum` | `#9FC2EA`, `#D3DCE6` | Indices, hovers and highlights on navy |
+| White / mist / frost | `--white`, `--mist`, `--frost` | `#FFFFFF`, `#F5F7FA`, `#E8EDF2` | Light grounds; sections alternate white and mist |
+| Signal on light | `--signal` (`--navy-500`) | `#2F5F91` | Links, active states, focus — 6.6:1 on white |
+| Ice / platinum (signal on navy) | `--signal-on-ink` (`--navy-300`), `--platinum` | `#A9C3DE`, `#D3DCE6` | Indices, hovers and highlights on navy |
 | Footer | `--navy-900`, `--navy-950` | `#0A2848`, `#081F3A` | Deepest surfaces — still navy, never near-black |
 
 - **No gold, copper or orange.** The yard's photographs already carry the warm metals; the interface stays in the logo's cool register and lets the material be the warmth.
@@ -22,15 +22,21 @@ The palette is the official logo, extended. Both scales sit on the mark's own hu
 - **The skyline bars** are reused, never redrawn: `SkylineGraphic` renders the exact paths exported from `BrandMark.jsx`. On the homepage hero they rise from the credentials band as a navy silhouette against the photograph. They are never mirrored in Arabic.
 - **Kickers** carry two bars from the mark — the A's navy stroke and a shorter steel bar — instead of an index number.
 - **The scale rule** (minor tick every 8px, major every 80px) appears only where something is weighed: the four-step process track, and the 404 page. It sits under heroes, the process track and the 404 page.
-- **The wide, stable A** is echoed by Archivo at an expanded width (`--display-stretch`).
 - **Navy-to-steel** is the system's quiet motion: capability titles rest in steel and turn navy when chosen; navy panels carry a steel top rule.
 
-## Type
+## Type: declared and measured
+The name means *the trust of one's word*, so the voice is that of a written undertaking.
+
 | Role | Latin | Arabic |
 | --- | --- | --- |
-| Display (h1/h2) | Archivo Variable, 112% width, weight 460 (hero) / 500 (sections) | Noto Kufi Arabic 500 |
-| Text | IBM Plex Sans | IBM Plex Sans Arabic |
-| Labels, data, codes | IBM Plex Sans (tabular figures) | IBM Plex Sans Arabic |
+| Declared — display and headings | Newsreader Variable (optical sizes on), 380 hero / 410 sections / 500 titles | Markazi Text Variable (a contemporary Naskh, the hand of contracts), 500 / 600 |
+| Measured — body, interface | IBM Plex Sans Variable | IBM Plex Sans Arabic 400 / 500 / 600 |
+| Labels, data, codes | IBM Plex Sans, lining tabular figures — never a monospace | IBM Plex Sans Arabic |
+
+- Display weight falls as size rises (`--w-display` < `--w-heading` < `--w-title`), so every heading carries the same colour on the page.
+- Serif headings get a touch more leading than a grotesk (`--lh-display` 1.02, `--lh-heading` 1.08); Naskh needs room for its marks (`--lh-arabic-display` 1.42, body `--lh-arabic-text` 1.85).
+- Long-form reading (`.longform`): `--fs-article` 17–19px at `--lh-article` 1.72 on a `--measure-text` of 66 characters.
+- Labels are sentence case. Arabic copy uses Western digits, as the rest of the site does.
 
 ## Files (import order = cascade order)
 1. `tokens.css`: colour, type, space, layout, motion and photo-grade tokens, with contrast notes.
@@ -40,6 +46,7 @@ The palette is the official logo, extended. Both scales sit on the mark's own hu
 5. `components/overlays.css`: contact concierge and quote dialog.
 6. `components/home.css`: statement hero, assay register, capability index, method, sectors, company register, closing, service card.
 7. `pages/pages.css`: interior page hero and page-specific compositions.
+8. `pages/guides.css`: the reading layout shared by material guides, sector guides, articles and *How we work* — "in brief", the margin column (contents and register), long-form body, tables, sources, onward links — plus the article header and the Insights reading room.
 
 ## Rules
 - Square corners. Use hairlines and the navy/white contrast for depth; shadows only on floating panels.

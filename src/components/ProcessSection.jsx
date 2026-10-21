@@ -1,4 +1,6 @@
+import { LuArrowRight } from "react-icons/lu";
 import { processSteps } from "../data/siteContent.jsx";
+import { Link } from "../lib/router.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { SectionHeading } from "./SectionHeading.jsx";
 
@@ -11,6 +13,7 @@ export function ProcessSection({
   title = "A clear route from requirement to completion",
   copy,
   surface = "surface-mist",
+  more = true,
 }) {
   const { t } = useLanguage();
   return (
@@ -30,6 +33,11 @@ export function ProcessSection({
             ))}
           </ol>
         </div>
+        {more && (
+          <Link className="inline-action method-more" to="/process">
+            {t("See every stage in detail")} <LuArrowRight className="directional-icon" />
+          </Link>
+        )}
       </div>
     </section>
   );

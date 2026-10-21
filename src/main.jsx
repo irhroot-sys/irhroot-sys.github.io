@@ -1,22 +1,21 @@
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
-// Display: Archivo (variable, with its width axis — set expanded for
-// headlines). Text: IBM Plex Sans with its Arabic partner, one family across
-// both scripts. Data: IBM Plex Mono. Arabic display: Noto Kufi Arabic.
-// Every face is subset by unicode-range, so a page only downloads the
-// scripts it renders.
-import "@fontsource-variable/archivo/wdth.css";
-import "@fontsource/ibm-plex-sans/latin-400.css";
-import "@fontsource/ibm-plex-sans/latin-500.css";
-import "@fontsource/ibm-plex-sans/latin-600.css";
+// Display: Newsreader (variable, with optical sizes, so headlines get the
+// fine display cut) and, for Arabic, Markazi Text — a contemporary Naskh,
+// the hand of written agreements, which carries the company's name, "the
+// trust of one's word". Text and data: IBM Plex Sans (variable) with its
+// Arabic partner. Every face is subset by unicode-range, so a page only
+// downloads the scripts it renders.
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/markazi-text/wght.css";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
-import "@fontsource/noto-kufi-arabic/arabic-500.css";
-import "@fontsource/noto-kufi-arabic/arabic-600.css";
-import "@fontsource/noto-kufi-arabic/arabic-700.css";
 import { App } from "./App.jsx";
-import { renderKeyFor } from "./routes.jsx";
+import { findRoute, renderKeyFor } from "./routes.jsx";
+import { loadKnowledge } from "./lib/knowledge.jsx";
+import { splitLocalePath } from "./lib/i18n.js";
 import "./styles/index.css";
 
 const container = document.getElementById("root");
@@ -31,8 +30,18 @@ const app = (
 // they hydrate too). Anything else — e.g. an older edge Worker that answers
 // every route with the homepage document — is rendered fresh, so React never
 // hydrates against markup for a different page.
-if (container.hasChildNodes() && container.dataset.prerendered === renderKeyFor(window.location.pathname)) {
-  hydrateRoot(container, app);
+function start() {
+  if (container.hasChildNodes() && container.dataset.prerendered === renderKeyFor(window.location.pathname)) {
+    hydrateRoot(container, app);
+  } else {
+    createRoot(container).render(app);
+  }
+}
+
+// A guide's prerendered markup is only adopted once the guide's own code has
+// arrived; the page is already readable while it loads.
+if (findRoute(splitLocalePath(window.location.pathname).route)?.knowledge) {
+  loadKnowledge().then(start, start);
 } else {
-  createRoot(container).render(app);
+  start();
 }

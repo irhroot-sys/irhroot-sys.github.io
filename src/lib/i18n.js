@@ -8,9 +8,31 @@ export const LANGUAGE_STORAGE_KEY = "aalkc-language";
 // keeps the unprefixed URLs it has always had, so no existing link breaks.
 const ARABIC_PREFIX = "/ar";
 
+// Two shapes of copy are supported. Short interface strings are written in
+// English and looked up in the Arabic dictionary. Long-form content (guides
+// and articles) is written as a pair, { en, ar }, so each paragraph keeps its
+// translation beside it.
+export function isLocalized(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value) && "en" in value;
+}
+
 export function translate(value, language) {
+  if (isLocalized(value)) return value[language] ?? value.en;
   if (language !== "ar" || typeof value !== "string") return value;
   return arabicTranslations[value] || value;
+}
+
+// Builds a localized pair. A small helper so content files stay readable.
+export const L = (en, ar) => ({ en, ar });
+
+// Long-form copy marks inline links as [label](/path) or [label](https://…).
+export const LINK_PATTERN = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+
+// The text of a value in one language with any link markup removed, for
+// places that cannot hold markup: structured data, meta tags, reading time.
+export function plainText(value, language) {
+  const text = translate(value, language);
+  return typeof text === "string" ? text.replace(LINK_PATTERN, "$1") : "";
 }
 
 export function directionFor(language) {

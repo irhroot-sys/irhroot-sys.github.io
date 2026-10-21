@@ -5,7 +5,7 @@ import { Link } from "../lib/router.jsx";
 import { SectionHeading } from "./SectionHeading.jsx";
 
 // Sectors as a typographic register on ink: the sector, what it produces,
-// and the materials it typically sends.
+// and the materials it typically sends. Each row opens the sector guide.
 export function IndustriesPreview() {
   const { t } = useLanguage();
   return (
@@ -13,7 +13,6 @@ export function IndustriesPreview() {
       <div className="container">
         <SectionHeading
           id="sectors-title"
-         
           eyebrow="Industries"
           title="Built around the sectors that generate scrap"
           copy="From active construction sites to plant shutdowns, collection and grading are planned around how each sector works."
@@ -21,7 +20,7 @@ export function IndustriesPreview() {
         <ul className="sector-list">
           {industries.map(({ slug, title, copy, materials }) => (
             <li key={slug}>
-              <Link className="sector-row" to={`/industries#${slug}`}>
+              <Link className="sector-row" to={`/industries/${slug}`}>
                 <span className="sector-title">{t(title)}</span>
                 <span className="sector-copy">{t(copy)}</span>
                 <span className="sector-materials">{materials.slice(0, 3).map((material) => t(material)).join(", ")}</span>

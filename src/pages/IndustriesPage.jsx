@@ -27,9 +27,12 @@ export function IndustriesPage() {
             <article className="industry-row" id={slug} key={slug}>
               <div className="industry-row-title">
                 <Icon aria-hidden="true" />
-                <h2>{t(title)}</h2>
+                <h2><Link to={`/industries/${slug}`}>{t(title)}</Link></h2>
               </div>
-              <p>{t(copy)}</p>
+              <div className="industry-row-copy">
+                <p>{t(copy)}</p>
+                <Link className="inline-action" to={`/industries/${slug}`}>{t("Read the sector guide")} <LuArrowRight className="directional-icon" /></Link>
+              </div>
               <div className="industry-row-meta">
                 <div>
                   <h3>{t("Typical materials")}</h3>
