@@ -399,7 +399,6 @@ export const arabicTranslations = {
   "Processing procedures follow the ISO 14001 environmental-management standard.": "تتبع إجراءات المعالجة معيار الإدارة البيئية ISO 14001.",
   "Efficient logistics": "خدمات لوجستية فعّالة",
   "Collections are planned around each site, with container swaps that avoid unnecessary trips.": "يُخطط الجمع حول كل موقع، مع تبديل الحاويات بما يجنب الرحلات غير الضرورية.",
-  "Aluminium": "الألمنيوم",
   "less energy is needed to recycle aluminium than to produce it from ore.": "طاقة أقل تلزم لإعادة تدوير الألمنيوم مقارنة بإنتاجه من الخام.",
   "1.5 t": "1.5 طن",
   "of CO₂ emissions are avoided for every tonne of scrap used to make steel.": "من انبعاثات ثاني أكسيد الكربون تُتجنب مقابل كل طن من الخردة يُستخدم في صناعة الفولاذ.",
