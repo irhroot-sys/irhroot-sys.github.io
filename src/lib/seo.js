@@ -1,5 +1,6 @@
 import { contactDetails, frequentlyAskedQuestions, services } from "../data/siteContent.jsx";
-import { LANGUAGES, DEFAULT_LANGUAGE, directionFor, localizePath, translate } from "./i18n.js";
+import { LANGUAGES, DEFAULT_LANGUAGE, directionFor, localizePath, plainText, translate } from "./i18n.js";
+import { knowledgeFaq } from "./knowledge.jsx";
 
 export const SITE_URL = "https://aalkc.com";
 const LOGO_PATH = "/assets/aalkc-logo-official-9233f531.svg";
@@ -47,20 +48,48 @@ function organizationNode() {
   };
 }
 
+function faqNode(items, language, canonical) {
+  return {
+    "@type": "FAQPage",
+    "@id": `${canonical}#faq`,
+    inLanguage: language,
+    mainEntity: items.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: plainText(question, language),
+      acceptedAnswer: { "@type": "Answer", text: plainText(answer, language) },
+    })),
+  };
+}
+
+// An article names its publisher as author: the company stands behind what
+// it publishes, and no individual byline is claimed.
+function articleNode(route, language, canonical) {
+  const { article } = route;
+  return {
+    "@type": "Article",
+    "@id": `${canonical}#article`,
+    headline: plainText(article.title, language),
+    description: plainText(article.description, language),
+    articleSection: plainText(article.category, language),
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
+    inLanguage: language,
+    image: absoluteUrl(route.image),
+    mainEntityOfPage: { "@id": `${canonical}#webpage` },
+    author: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
+    citation: article.citations,
+  };
+}
+
 function pageSpecificNodes(route, language, canonical) {
   const t = (value) => translate(value, language);
-  if (route.path === "/faq") {
-    return [{
-      "@type": "FAQPage",
-      "@id": `${canonical}#faq`,
-      inLanguage: language,
-      mainEntity: frequentlyAskedQuestions.map(({ question, answer }) => ({
-        "@type": "Question",
-        name: t(question),
-        acceptedAnswer: { "@type": "Answer", text: t(answer) },
-      })),
-    }];
-  }
+  if (route.path === "/faq") return [faqNode(frequentlyAskedQuestions, language, canonical)];
+  const nodes = [];
+  if (route.article) nodes.push(articleNode(route, language, canonical));
+  const faq = knowledgeFaq(route.knowledge);
+  if (faq.length) nodes.push(faqNode(faq, language, canonical));
+  if (nodes.length) return nodes;
   if (route.service) {
     return [{
       "@type": "Service",
@@ -150,6 +179,7 @@ export function buildPageHead({ route, language = DEFAULT_LANGUAGE }) {
   }
 
   return {
+    type: route.article ? "article" : "website",
     lang: language,
     dir: directionFor(language),
     title,
@@ -185,7 +215,7 @@ export function renderHeadTags(head) {
     `<meta name="robots" content="${escapeAttribute(head.robots)}" />`,
     ...(head.canonical ? [`<link rel="canonical" href="${escapeAttribute(head.canonical)}" />`] : []),
     ...head.alternates.map(({ hreflang, href }) => `<link rel="alternate" hreflang="${hreflang}" href="${escapeAttribute(href)}" />`),
-    `<meta property="og:type" content="website" />`,
+    `<meta property="og:type" content="${head.type}" />`,
     `<meta property="og:site_name" content="${escapeAttribute(head.siteName)}" />`,
     `<meta property="og:title" content="${escapeAttribute(head.title)}" />`,
     `<meta property="og:description" content="${escapeAttribute(head.description)}" />`,

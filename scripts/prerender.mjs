@@ -6,7 +6,7 @@
 //   dist/about.html            /about       dist/ar/about.html      /ar/about
 //   dist/404.html              (noindex)    dist/ar/404.html        (noindex)
 //
-// Also writes sitemap.xml (with hreflang alternates) and
+// Also writes sitemap.xml (with hreflang alternates), llms.txt and
 // .well-known/security.txt. Run after `vite build` and the SSR build; see the
 // "build" script in package.json.
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -19,7 +19,7 @@ const distDir = path.join(root, "dist");
 const ssrDir = path.join(root, "dist-ssr");
 
 const {
-  render, routes, notFoundRoute, renderKeyFor, buildPageHead, renderHeadTags, absoluteUrl, LANGUAGES, localizePath,
+  render, routes, notFoundRoute, renderKeyFor, buildPageHead, renderHeadTags, absoluteUrl, LANGUAGES, localizePath, plainText, contactDetails,
 } = await import(pathToFileURL(path.join(ssrDir, "entry-server.js")).href);
 
 const template = await readFile(path.join(distDir, "index.html"), "utf8");
@@ -27,9 +27,9 @@ for (const marker of ["<!--app-head-->", '<div id="root"><!--app-html--></div>',
   if (!template.includes(marker)) throw new Error(`index.html is missing the prerender marker ${marker}`);
 }
 
-// The fonts that paint the first screen: body copy and the bold display
-// headline, per script. Preloading them lets the browser fetch them alongside
-// the stylesheet instead of after it has been parsed.
+// The fonts that paint the first screen: body copy and the display headline,
+// per script. Preloading them lets the browser fetch them alongside the
+// stylesheet instead of after it has been parsed.
 const assetFiles = await readdir(path.join(distDir, "assets"));
 function fontAsset(prefix) {
   const file = assetFiles.find((name) => name.startsWith(prefix) && name.endsWith(".woff2"));
@@ -37,12 +37,17 @@ function fontAsset(prefix) {
   return `/assets/${file}`;
 }
 const criticalFonts = {
-  en: [fontAsset("ibm-plex-sans-latin-400-normal-"), fontAsset("archivo-latin-wdth-normal-")],
-  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("noto-kufi-arabic-arabic-700-normal-")],
+  en: [fontAsset("ibm-plex-sans-latin-wght-normal-"), fontAsset("newsreader-latin-opsz-normal-")],
+  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("markazi-text-arabic-wght-normal-")],
 };
+
+// The guide pages hydrate from their own chunk; fetch it with the entry.
+const knowledgeChunk = assetFiles.find((name) => /^knowledge-[\w-]+\.js$/.test(name));
+if (!knowledgeChunk) throw new Error("Expected a built knowledge-*.js chunk");
 
 function preloadTags(route, language) {
   const tags = criticalFonts[language].map((href) => `<link rel="preload" as="font" type="font/woff2" href="${href}" crossorigin />`);
+  if (route.knowledge) tags.push(`<link rel="modulepreload" href="/assets/${knowledgeChunk}" />`);
   // The hero photograph is the largest element on every page that has one.
   // Preload exactly the AVIF candidates the <picture> will choose from, so the
   // browser starts the download before React renders and never fetches twice.
@@ -98,7 +103,7 @@ const sitemapEntries = routes.flatMap((route) => LANGUAGES.map((language) => {
   ].join("\n");
   return `  <url>
     <loc>${absoluteUrl(localizePath(route.path, language))}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${route.article?.dateModified ?? today}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
 ${alternates}
@@ -108,6 +113,38 @@ await write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${sitemapEntries.join("\n")}
 </urlset>
+`);
+
+// llms.txt (llmstxt.org): a plain index of the site for language models and
+// answer engines — what the company is, then every page grouped by kind, each
+// with its one-line description. Generated from the same route list as the
+// sitemap, so it can never point at a page that does not exist.
+const llmsGroups = [
+  ["Company", (p) => ["/", "/about", "/process", "/sustainability", "/faq", "/contact"].includes(p)],
+  ["Services", (p) => p === "/services" || p.startsWith("/services/")],
+  ["Materials", (p) => p === "/materials" || p.startsWith("/materials/")],
+  ["Industries", (p) => p === "/industries" || p.startsWith("/industries/")],
+  ["Insights", (p) => p === "/insights" || p.startsWith("/insights/")],
+];
+const llmsSections = llmsGroups.map(([heading, belongs]) => {
+  const lines = routes
+    .filter((route) => belongs(route.path))
+    .map((route) => `- [${plainText(route.title, "en")}](${absoluteUrl(route.path)}): ${plainText(route.description, "en")}`);
+  return `## ${heading}\n\n${lines.join("\n")}`;
+});
+await write("llms.txt", `# AALKC — Amanat Al-Kalima Company
+
+> Licensed scrap metal dealer in Dammam, Eastern Province, Saudi Arabia, established in 2017. AALKC buys, collects, sorts, grades and trades ferrous and non-ferrous scrap metal for industrial, construction and commercial suppliers. Every page is published in English and in Arabic (Arabic URLs are prefixed with /ar).
+
+Commercial Registration ${contactDetails.commercialRegistration}. Contact: ${contactDetails.email}, ${contactDetails.phoneLabel}. Address: ${contactDetails.address}.
+
+${llmsSections.join("\n\n")}
+
+## Optional
+
+- [Privacy Policy](${absoluteUrl("/privacy")})
+- [Terms of Service](${absoluteUrl("/terms")})
+- [Sitemap](${absoluteUrl("/sitemap.xml")})
 `);
 
 // RFC 9116 requires an Expires date no more than a year out; regenerating it
@@ -120,4 +157,4 @@ Canonical: https://aalkc.com/.well-known/security.txt
 `);
 
 await rm(ssrDir, { recursive: true, force: true });
-console.log(`prerendered ${written.length} documents, sitemap.xml and security.txt`);
+console.log(`prerendered ${written.length} documents, sitemap.xml, llms.txt and security.txt`);

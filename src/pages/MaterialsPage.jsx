@@ -6,7 +6,7 @@ import { CtaBand } from "../components/CtaBand.jsx";
 import { gradingStandards, materials } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
-
+import { Link } from "../lib/router.jsx";
 
 // The three detail lines every material carries, in order.
 const SPEC_LABELS = ["Grade / form", "Specification", "Typical use"];
@@ -91,16 +91,19 @@ export function MaterialsPage() {
                   </span>
                 </header>
                 <div className="product-copy">
-                  <h2>{t(name)}</h2>
+                  <h2><Link to={`/materials/${id}`}>{t(name)}</Link></h2>
                   <p>{t(summary)}</p>
                   <dl className="product-spec">
                     {details.map((detail, index) => (
                       <div key={detail}><dt>{t(SPEC_LABELS[index])}</dt><dd>{t(detail)}</dd></div>
                     ))}
                   </dl>
+                  <div className="product-actions">
+                  <Link className="inline-action" to={`/materials/${id}`}>{t("Read the material guide")} <LuArrowRight className="directional-icon" /></Link>
                   <button type="button" className="inline-action" onClick={() => openQuote({ kind: "material", contextId: id, service: name, title: "Request a spot quote", prompt: "Share the estimated quantity, condition, site location, and collection requirements." })}>
                     {t("Request a spot quote")} <LuArrowRight className="directional-icon" />
                   </button>
+                  </div>
                 </div>
               </article>
             ))}

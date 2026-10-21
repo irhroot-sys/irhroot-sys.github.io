@@ -55,8 +55,8 @@ html[dir="rtl"] .concierge-panel { transform-origin: bottom left; }
   border-bottom: 1px solid var(--rule);
 }
 .concierge-mark { width: 40px; height: 40px; }
-.concierge-title { color: var(--heading); font-family: var(--font-display); font-stretch: var(--display-stretch); font-size: var(--fs-18); font-weight: var(--w-title); line-height: 1.2; }
-html[lang="ar"] .concierge-title { font-family: var(--font-arabic-display); font-stretch: 100%; }
+.concierge-title { color: var(--heading); font-family: var(--font-display); font-size: var(--fs-18); font-weight: var(--w-title); line-height: 1.2; }
+html[lang="ar"] .concierge-title { font-family: var(--font-arabic-display); }
 .concierge-sub { margin-top: 2px; color: var(--text-muted); font-size: var(--fs-13); line-height: 1.4; }
 .concierge-close { width: 44px; height: 44px; display: grid; place-items: center; border: 0; color: var(--text-muted); background: transparent; font-size: 18px; }
 .concierge-close:hover, .concierge-close:focus-visible { color: var(--text-strong); background: var(--surface-alt); }

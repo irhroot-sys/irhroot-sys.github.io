@@ -10,7 +10,9 @@ import { NotFoundPage } from "./pages/NotFoundPage.jsx";
 import { ServiceDetailPage } from "./pages/ServiceDetailPage.jsx";
 import { IndustriesPage } from "./pages/IndustriesPage.jsx";
 import { SustainabilityPage } from "./pages/SustainabilityPage.jsx";
-import { legalContent, services } from "./data/siteContent.jsx";
+import { industries, legalContent, materials, services } from "./data/siteContent.jsx";
+import { ARTICLE_IMAGE, industryImages, industryMeta, insightMeta, materialMeta, processMeta, resolveSources } from "./data/knowledge/index.js";
+import { KnowledgePage } from "./lib/knowledge.jsx";
 import { splitLocalePath } from "./lib/i18n.js";
 import { HOME_HERO_SIZES, PAGE_HERO_SIZES } from "./data/imageSizes.js";
 
@@ -73,6 +75,30 @@ export const routes = [
     changefreq: "monthly",
     priority: "0.8",
   },
+  // One guide per sector.
+  ...industries.map(({ slug }) => ({
+    path: `/industries/${slug}`,
+    element: () => <KnowledgePage name="IndustryDetailPage" slug={slug} />,
+    knowledge: { kind: "industry", key: slug },
+    title: industryMeta[slug].title,
+    description: industryMeta[slug].description,
+    image: industryImages[slug].image,
+    heroImage: industryImages[slug].image,
+    parent: { title: "Industries", path: "/industries" },
+    changefreq: "yearly",
+    priority: "0.7",
+  })),
+  {
+    path: "/process",
+    element: () => <KnowledgePage name="ProcessPage" />,
+    knowledge: { kind: "process" },
+    title: processMeta.title,
+    description: processMeta.description,
+    image: "/assets/service-metal-sorting.webp",
+    heroImage: "/assets/service-metal-sorting.webp",
+    changefreq: "yearly",
+    priority: "0.8",
+  },
   {
     path: "/sustainability",
     element: () => <SustainabilityPage />,
@@ -87,12 +113,49 @@ export const routes = [
     path: "/materials",
     element: () => <MaterialsPage />,
     title: "Materials",
-    description: "Review the ferrous and non-ferrous materials AALKC purchases, including copper, steel, aluminum, brass, cast iron, stainless steel, and structural plate.",
+    description: "Review the ferrous and non-ferrous materials AALKC purchases, including copper, steel, aluminium, brass, cast iron, stainless steel, and structural plate.",
     image: "/assets/service-construction-materials.webp",
     heroImage: "/assets/service-construction-materials.webp",
     changefreq: "monthly",
     priority: "0.9",
   },
+  // One guide per material family.
+  ...materials.map(({ id, image }) => ({
+    path: `/materials/${id}`,
+    element: () => <KnowledgePage name="MaterialDetailPage" id={id} />,
+    knowledge: { kind: "material", key: id },
+    title: materialMeta[id].title,
+    description: materialMeta[id].description,
+    image,
+    heroImage: image,
+    parent: { title: "Materials", path: "/materials" },
+    changefreq: "yearly",
+    priority: "0.8",
+  })),
+  {
+    path: "/insights",
+    element: () => <KnowledgePage name="InsightsPage" />,
+    knowledge: { kind: "hub" },
+    title: "Insights",
+    description: "Articles and guides on the scrap metal trade: grades and specifications, how metal is recycled, Saudi Arabia's scrap industry and circular economy, and practical advice for suppliers.",
+    image: ARTICLE_IMAGE,
+    heroImage: ARTICLE_IMAGE,
+    changefreq: "monthly",
+    priority: "0.8",
+  },
+  // Articles open on type, so they carry no hero image to preload.
+  ...insightMeta.map((article) => ({
+    path: `/insights/${article.slug}`,
+    element: () => <KnowledgePage name="ArticlePage" slug={article.slug} />,
+    knowledge: { kind: "insight", key: article.slug },
+    title: article.title,
+    description: article.description,
+    image: ARTICLE_IMAGE,
+    parent: { title: "Insights", path: "/insights" },
+    article: { ...article, citations: resolveSources(article.sources).map(({ url }) => url) },
+    changefreq: "yearly",
+    priority: "0.7",
+  })),
   {
     path: "/faq",
     element: () => <FaqPage />,

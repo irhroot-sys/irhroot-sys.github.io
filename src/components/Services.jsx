@@ -38,7 +38,6 @@ export function Capabilities({ services }) {
       <div className="container">
         <SectionHeading
           id="capabilities-title"
-         
           eyebrow="What we do"
           title="Six capabilities, one accountable counterpart."
           copy="Comprehensive scrap management tailored to industrial-scale operations, from collection and sorting to purchasing and global trade."

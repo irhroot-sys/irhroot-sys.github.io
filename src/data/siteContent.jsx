@@ -6,14 +6,16 @@ export const navigation = [
   { label: "Services", to: "/services" },
   { label: "Industries", to: "/industries" },
   { label: "Materials", to: "/materials" },
-  { label: "Sustainability", to: "/sustainability" },
+  { label: "Insights", to: "/insights" },
   { label: "Contact", to: "/contact" },
 ];
 
 export const footerCompanyLinks = [
   { label: "About Us", to: "/about" },
+  { label: "How we work", to: "/process" },
   { label: "Industries", to: "/industries" },
   { label: "Materials", to: "/materials" },
+  { label: "Insights", to: "/insights" },
   { label: "Sustainability", to: "/sustainability" },
   { label: "FAQ", to: "/faq" },
   { label: "Contact", to: "/contact" },
@@ -133,7 +135,7 @@ export const industries = [
     icon: LuCog,
     title: "Manufacturing & Fabrication",
     copy: "Production offcuts, turnings, sheet skeletons and rejected parts, kept separate by alloy so they are graded and valued correctly.",
-    materials: ["Stainless Steel", "Aluminum", "Brass", "Copper"],
+    materials: ["Stainless Steel", "Aluminium", "Brass", "Copper"],
     services: ["scrap-purchasing", "metal-sorting", "container-service"],
   },
   {
@@ -149,7 +151,7 @@ export const industries = [
     icon: LuZap,
     title: "Electrical & Cabling",
     copy: "Cable, wire, busbar and conductor scrap, with copper and aluminium separated from insulated material for accurate grading.",
-    materials: ["Copper", "Aluminum", "Brass"],
+    materials: ["Copper", "Aluminium", "Brass"],
     services: ["scrap-purchasing", "metal-sorting"],
   },
   {
@@ -157,7 +159,7 @@ export const industries = [
     icon: LuBuilding2,
     title: "Commercial & Facilities Management",
     copy: "Fit-out strip-outs, building-services metals and end-of-life equipment from offices, retail and warehousing, cleared with minimal disruption.",
-    materials: ["Aluminum", "Copper", "Stainless Steel", "Plate & Structural"],
+    materials: ["Aluminium", "Copper", "Stainless Steel", "Plate & Structural"],
     services: ["container-service", "scrap-purchasing"],
   },
 ];
@@ -205,8 +207,8 @@ export const materials = [
     image: "/assets/service-scrap-metal.webp",
     alt: "Copper and non-ferrous recyclable metal",
     icon: LuZap,
-    summary: "Premium copper material for electrical and power applications.",
-    details: ["Grade #1 Millberry", "≥ 99.9% purity", "Electrical & Power"],
+    summary: "Bare and insulated wire, busbar and tube, graded by purity.",
+    details: ["Bare bright & No. 1 wire", "No. 1 heavy copper", "Electrical & Power"],
   },
   {
     id: "heavy-melt-steel",
@@ -217,20 +219,20 @@ export const materials = [
     image: "/assets/service-scrap-metal.webp",
     alt: "Heavy melt steel scrap ready for industrial recycling",
     icon: LuRecycle,
-    summary: "Industrial-grade heavy melting steel for infrastructure and casting.",
-    details: ["HMS 1 & 2 (80:20)", "Industrial grade", "Infrastructure & Casting"],
+    summary: "Heavy obsolete steel cut to size and graded as HMS 1 and HMS 2.",
+    details: ["HMS 1 & 2 (80:20)", "Steel ≥ 3.175 mm thick", "Steelmaking feed"],
   },
   {
     id: "aluminum",
     symbol: "Al",
     atomicNumber: 13,
-    name: "Aluminum",
+    name: "Aluminium",
     category: "Non-ferrous",
     image: "/assets/service-scrap-metal.webp",
-    alt: "Sorted aluminum recyclable material",
+    alt: "Sorted aluminium recyclable material",
     icon: LuBox,
-    summary: "Aluminum alloy material used across aerospace and automotive applications.",
-    details: ["6061 / 6063 alloys", "≥ 99.5% purity", "Aerospace & Automotive"],
+    summary: "Extrusions, sheet, castings and wire, graded by alloy family.",
+    details: ["6063 extrusions & old sheet", "Wrought, cast & wire grades", "Building & Electrical"],
   },
   {
     id: "rebar",
@@ -253,8 +255,8 @@ export const materials = [
     image: "/assets/service-scrap-metal.webp",
     alt: "Brass and mixed non-ferrous recyclable metal",
     icon: LuCog,
-    summary: "Copper-zinc alloy material for marine and plumbing use.",
-    details: ["Honey brass & shells", "Cu-Zn alloy", "Marine & Plumbing"],
+    summary: "Yellow and red brass solids, fittings and turnings, sorted by type.",
+    details: ["Honey (yellow) brass", "Cu-Zn alloy", "Valves & Plumbing"],
   },
   {
     id: "cast-iron",
@@ -306,9 +308,9 @@ export const gradingStandards = [
     downgrades: ["Sealed tanks or cylinders", "Excessive rust or corrosion", "Non-depleted hazardous containers"],
   },
   {
-    material: "Aluminum",
-    acceptable: ["Clean extruded aluminum", "Clean aluminum rims without tires", "Clean sheet aluminum"],
-    downgrades: ["Die cast with steel attachments", "Irony aluminum with excessive screws or bolts", "Litho plates with paper"],
+    material: "Aluminium",
+    acceptable: ["Clean extruded aluminium", "Clean aluminium rims without tires", "Clean sheet aluminium"],
+    downgrades: ["Die cast with steel attachments", "Irony aluminium with excessive screws or bolts", "Litho plates with paper"],
   },
 ];
 
@@ -322,7 +324,7 @@ export const certifications = [
 export const frequentlyAskedQuestions = [
   {
     question: "What types of scrap metal do you accept?",
-    answer: "We purchase a wide variety of ferrous and non-ferrous metals including copper, aluminum, brass, stainless steel, cast iron, heavy melt steel, and structural steel. If you have a specific material, contact us for verification.",
+    answer: "We purchase a wide variety of ferrous and non-ferrous metals including copper, aluminium, brass, stainless steel, cast iron, heavy melt steel, and structural steel. If you have a specific material, contact us for verification.",
   },
   {
     question: "Do you offer collection services from industrial sites?",
@@ -354,7 +356,7 @@ export const companyServices = [
   "Ferrous and Non-Ferrous Scrap Trading",
   "Industrial Scrap Collection and Sorting",
   "Large-Scale Recycling Support",
-  "Purchasing of Copper, Aluminum, and Steel",
+  "Purchasing of Copper, Aluminium, and Steel",
   "Purchasing of Iron, Brass, and Stainless Steel",
 ];
 

@@ -60,13 +60,14 @@ html[lang="ar"] .utility-bar { font-family: var(--font-arabic); letter-spacing: 
 .brand { flex: 0 0 auto; display: flex; align-items: center; gap: var(--s-3); min-height: 56px; }
 .brand-mark { width: 52px; height: 52px; flex: 0 0 auto; }
 .brand-wordmark { display: grid; gap: 2px; line-height: 1; }
+/* The official mark has no wordmark; the name is set in the measured face,
+   spaced like an engraved plate, so it never competes with the mark. */
 .brand-wordmark strong {
   color: var(--navy-800);
-  font-family: var(--font-display);
-  font-stretch: 125%;
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: .06em;
+  font-family: var(--font-text);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .2em;
 }
 .brand-wordmark span { color: var(--steel-600); font-size: 10px; font-weight: 500; letter-spacing: .03em; white-space: nowrap; }
 .brand-wordmark span[lang="ar"] { font-family: var(--font-arabic); font-size: 11px; letter-spacing: 0; }
@@ -150,7 +151,6 @@ html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var
     border-bottom: 1px solid var(--rule-ink);
     color: var(--on-ink-body);
     font-family: var(--font-display);
-    font-stretch: var(--display-stretch);
     font-size: var(--fs-24);
     font-weight: var(--w-heading);
     letter-spacing: -.015em;
@@ -169,7 +169,7 @@ html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var
   .primary-nav a.active::after { opacity: 1; transform: none; }
   .primary-nav a:hover, .primary-nav a:focus-visible { color: var(--white); }
   .primary-nav a.active { color: var(--white); }
-  html[lang="ar"] .primary-nav a { font-family: var(--font-arabic-display); font-size: var(--fs-20); }
+  html[lang="ar"] .primary-nav a { font-family: var(--font-arabic-display); font-size: var(--fs-32); font-weight: var(--w-arabic-display); }
   .mobile-nav-quote {
     display: inline-flex;
     min-height: 56px;

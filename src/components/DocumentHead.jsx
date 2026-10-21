@@ -31,6 +31,7 @@ export function DocumentHead({ route, language }) {
     document.title = head.title;
     setMeta("description", head.description);
     setMeta("robots", head.robots);
+    setMeta("og:type", head.type, "property");
     setMeta("og:site_name", head.siteName, "property");
     setMeta("og:title", head.title, "property");
     setMeta("og:description", head.description, "property");

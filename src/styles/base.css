@@ -27,13 +27,14 @@ h1, h2, h3, h4 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-display);
-  font-stretch: var(--display-stretch);
   font-weight: var(--w-heading);
+  font-optical-sizing: auto;
+  font-variant-numeric: lining-nums;
   line-height: var(--lh-heading);
   letter-spacing: var(--track-heading);
   text-wrap: balance;
 }
-h3, h4 { font-stretch: 104%; font-weight: var(--w-title); letter-spacing: -.012em; line-height: var(--lh-snug); }
+h3, h4 { font-weight: var(--w-title); letter-spacing: -.006em; line-height: var(--lh-snug); }
 p { margin: 0; text-wrap: pretty; }
 ul, ol { margin: 0; padding: 0; }
 img, svg, video { display: block; max-width: 100%; }
@@ -48,17 +49,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .on-ink :focus-visible,
 .site-footer :focus-visible { outline-color: var(--focus-on-ink); }
 
-/* Arabic: Kufi for display, Plex Sans Arabic for text. Latin tracking is
-   cancelled because Arabic letters join. */
-html[lang="ar"] body { font-family: var(--font-arabic); line-height: 1.8; }
+/* Arabic: Markazi Text (Naskh) for display, Plex Sans Arabic for text.
+   Latin tracking is cancelled because Arabic letters join. */
+html[lang="ar"] body { font-family: var(--font-arabic); line-height: var(--lh-arabic-text); }
 html[lang="ar"] :is(h1, h2, h3, h4) {
   font-family: var(--font-arabic-display);
-  font-stretch: 100%;
   font-weight: var(--w-arabic-display);
   letter-spacing: 0;
-  line-height: 1.32;
+  line-height: var(--lh-arabic-display);
 }
-html[lang="ar"] :is(h3, h4) { font-family: var(--font-arabic); font-weight: 600; }
+html[lang="ar"] :is(h3, h4) { font-weight: var(--w-arabic-title); line-height: 1.4; }
 
 /* Line icons draw at a finer stroke than the library default. */
 svg[stroke-linecap="round"] { stroke-width: 1.6; }

@@ -171,7 +171,7 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
   expect(englishFonts.body).toContain('IBM Plex Sans');
-  expect(englishFonts.heading).toContain('Archivo');
+  expect(englishFonts.heading).toContain('Newsreader');
 
   // The bar is white, so the active page is set in brand navy (#0E335C); in
   // the compact menu the links sit on a navy sheet and the active one is white.
@@ -192,7 +192,7 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
   }));
   expect(arabicFonts.body).toContain('IBM Plex Sans Arabic');
-  expect(arabicFonts.heading).toContain('Noto Kufi Arabic');
+  expect(arabicFonts.heading).toContain('Markazi Text');
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -591,14 +591,85 @@ test('keeps the hero ledger inside the hero at phone width', async ({ page }) =>
   }
 });
 
-test('links each assay tile to its material in the catalogue', async ({ page }) => {
+test('links each assay tile to the guide for its material', async ({ page }) => {
   await page.goto('/');
   const tiles = page.locator('.assay-tile');
   await expect(tiles).toHaveCount(8);
   await tiles.filter({ hasText: 'Copper' }).click();
-  await expect(page).toHaveURL(/\/materials#copper$/);
-  await expect(page.locator('#copper')).toBeInViewport();
-  await expect(page.locator('#copper .product-symbol')).toHaveText('Cu');
+  await expect(page).toHaveURL(/\/materials\/copper$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Copper scrap' })).toBeVisible();
+  await expect(page.locator('.page-breadcrumb')).toContainText('Materials');
+  await expect(page.locator('.in-brief li')).toHaveCount(4);
+
+  // The guide's quote request arrives with the material already chosen.
+  await page.locator('.guide-action').getByRole('button', { name: /Request a spot quote/i }).click();
+  await expect(page.getByRole('dialog')).toContainText('Copper');
+});
+
+test('prerenders every guide and article with its structured data', async ({ request }) => {
+  const jsonLd = (html: string) => JSON.parse(html.match(/<script type="application\/ld\+json" data-page-jsonld>(.*?)<\/script>/)![1])['@graph'];
+  const types = (html: string) => jsonLd(html).map((node: { '@type': string | string[] }) => node['@type']);
+
+  for (const [path, lang, title] of [
+    ['/materials/copper', 'en', 'Copper scrap | AALKC'],
+    ['/ar/materials/heavy-melt-steel', 'ar', 'الفولاذ الثقيل للصهر (HMS 1 و2) | أمانة الكلمة'],
+    ['/industries/construction', 'en', 'Scrap metal from construction and contracting | AALKC'],
+    ['/process', 'en', 'How we work | AALKC'],
+    ['/ar/process', 'ar', 'كيف نعمل | أمانة الكلمة'],
+    ['/insights', 'en', 'Insights | AALKC'],
+    ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: how ferrous and non-ferrous scrap is classified | AALKC'],
+    ['/ar/insights/saudi-arabia-scrap-metal-industry', 'ar', 'صناعة الخردة المعدنية في المملكة العربية السعودية: التاريخ والجغرافيا والسوق اليوم | أمانة الكلمة'],
+  ]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(200);
+    const html = await response.text();
+    expect(html, path).toContain(`<html lang="${lang}"`);
+    expect(html, path).toContain(`<title>${title}</title>`);
+    expect(html, path).toContain(`<link rel="canonical" href="https://aalkc.com${path}" />`);
+    // The body is in the document itself, not fetched after load.
+    if (path !== '/insights') expect(html, path).toContain('class="in-brief"');
+  }
+
+  // Guides answer their questions as FAQPage data; articles are Articles,
+  // published by the company, citing their sources.
+  expect(types(await (await request.get('/materials/copper')).text())).toContain('FAQPage');
+  const article = await (await request.get('/insights/saudi-arabia-scrap-metal-industry')).text();
+  expect(article).toContain('<meta property="og:type" content="article" />');
+  const articleNode = jsonLd(article).find((node: { '@type': string }) => node['@type'] === 'Article');
+  expect(articleNode.headline).toBe("Saudi Arabia's scrap metal industry: history, geography and the market today");
+  expect(articleNode.author['@id']).toBe('https://aalkc.com/#organization');
+  expect(articleNode.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  expect(articleNode.citation.length).toBeGreaterThan(5);
+  const breadcrumb = jsonLd(article).find((node: { '@type': string }) => node['@type'] === 'BreadcrumbList');
+  expect(breadcrumb.itemListElement.map((item: { name: string }) => item.name)).toEqual(['Home', 'Insights', "Saudi Arabia's scrap metal industry: history, geography and the market today"]);
+
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  for (const loc of ['/materials/copper', '/ar/materials/rebar', '/industries/electrical', '/process', '/insights', '/ar/insights/preparing-scrap-for-grading']) {
+    expect(sitemap, loc).toContain(`<loc>https://aalkc.com${loc}</loc>`);
+  }
+
+  const llms = await (await request.get('/llms.txt')).text();
+  expect(llms).toContain('# AALKC');
+  expect(llms).toContain('(https://aalkc.com/insights/scrap-metal-in-saudi-circular-economy)');
+  expect(llms).toContain('(https://aalkc.com/materials/stainless-steel)');
+});
+
+test('loads a guide when navigating to it inside the app', async ({ page }) => {
+  await page.goto('/materials');
+  await page.locator('.product-card').filter({ hasText: 'Brass' }).getByRole('link', { name: /Read the material guide/i }).click();
+  await expect(page).toHaveURL(/\/materials\/brass$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Brass scrap' })).toBeVisible();
+  await expect(page).toHaveTitle('Brass scrap | AALKC');
+  // Contents links jump to their section.
+  const firstEntry = page.locator('.toc a').first();
+  const target = (await firstEntry.getAttribute('href'))!;
+  await firstEntry.click();
+  await expect(page.locator(target)).toBeInViewport();
+
+  await page.goto('/insights');
+  await page.getByRole('link', { name: /How to prepare industrial scrap/ }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /How to prepare industrial scrap/ })).toBeVisible();
+  await expect(page.locator('.sources li').first()).toBeVisible();
 });
 
 test('prerenders the service, industries and sustainability pages in both languages', async ({ request }) => {
@@ -636,7 +707,7 @@ test('prerenders the service, industries and sustainability pages in both langua
 
 test('has no serious or critical axe findings on the new company pages', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing']) {
+  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
     await page.goto(path);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();

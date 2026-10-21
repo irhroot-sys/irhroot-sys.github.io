@@ -43,7 +43,7 @@ export function ServiceDetailPage({ slug }) {
             <>
               <h3 className="service-page-subheading">{t("Suited to")}</h3>
               <ul className="chip-list">
-                {suitedTo.map((industry) => <li key={industry.slug}><Link to={`/industries#${industry.slug}`}>{t(industry.title)}</Link></li>)}
+                {suitedTo.map((industry) => <li key={industry.slug}><Link to={`/industries/${industry.slug}`}>{t(industry.title)}</Link></li>)}
               </ul>
             </>
           )}
