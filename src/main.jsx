@@ -31,7 +31,7 @@ const app = (
 // every route with the homepage document — is rendered fresh, so React never
 // hydrates against markup for a different page.
 function start() {
-  if (container.hasChildNodes() && container.dataset.prerendered === renderKeyFor(window.location.pathname)) {
+  if (hasOwnMarkup()) {
     hydrateRoot(container, app);
   } else {
     createRoot(container).render(app);
@@ -39,9 +39,14 @@ function start() {
 }
 
 // A guide's prerendered markup is only adopted once the guide's own code has
-// arrived; the page is already readable while it loads.
+// arrived; the page is already readable while it loads. If that code cannot
+// be fetched, the prerendered page stays as it is — readable, with working
+// links — rather than being replaced by a page that cannot render.
+const hasOwnMarkup = () => container.hasChildNodes() && container.dataset.prerendered === renderKeyFor(window.location.pathname);
 if (findRoute(splitLocalePath(window.location.pathname).route)?.knowledge) {
-  loadKnowledge().then(start, start);
+  loadKnowledge().then(start, () => {
+    if (!hasOwnMarkup()) start();
+  });
 } else {
   start();
 }

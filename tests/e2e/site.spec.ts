@@ -654,6 +654,23 @@ test('prerenders every guide and article with its structured data', async ({ req
   expect(llms).toContain('(https://aalkc.com/materials/stainless-steel)');
 });
 
+test('keeps a guide readable when its code cannot be fetched', async ({ page }) => {
+  await page.route(/\/assets\/knowledge-[\w-]+\.js$/, (route) => route.abort());
+
+  // First visit: the prerendered page stays as it is.
+  await page.goto('/materials/copper');
+  await page.waitForTimeout(500);
+  await expect(page.getByRole('heading', { level: 1, name: 'Copper scrap' })).toBeVisible();
+  await expect(page.locator('.in-brief li')).toHaveCount(4);
+
+  // In-app navigation: the guide opens with a full page load instead.
+  await page.goto('/materials');
+  await page.locator('.product-card').filter({ hasText: 'Brass' }).getByRole('link', { name: /Read the material guide/i }).click();
+  await expect(page).toHaveURL(/\/materials\/brass$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Brass scrap' })).toBeVisible();
+  await expect(page.locator('.in-brief li').first()).toBeVisible();
+});
+
 test('loads a guide when navigating to it inside the app', async ({ page }) => {
   await page.goto('/materials');
   await page.locator('.product-card').filter({ hasText: 'Brass' }).getByRole('link', { name: /Read the material guide/i }).click();
