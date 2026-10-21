@@ -68,7 +68,7 @@ export function MaterialsPage() {
       />
 
       <section className="content-section container">
-        <SectionHeading index="01" eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families AALKC purchases. Final acceptance and value are confirmed after inspection and weighing." />
+        <SectionHeading eyebrow="Material catalogue" title="Materials purchased by AALKC" copy="Specifications describe the core material families AALKC purchases. Final acceptance and value are confirmed after inspection and weighing." />
         <div className="catalog-tools" aria-label={t("Material filters")}>
           <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (
@@ -111,7 +111,7 @@ export function MaterialsPage() {
       </section>
       <section className="content-section surface-white">
         <div className="container">
-          <SectionHeading index="02" eyebrow="Quality standards" title="Grading and acceptance" copy="Review these common acceptance conditions before arranging collection. Final safety, grade, and value decisions are made after physical inspection." />
+          <SectionHeading eyebrow="Quality standards" title="Grading and acceptance" copy="Review these common acceptance conditions before arranging collection. Final safety, grade, and value decisions are made after physical inspection." />
           <div className="grading-grid">
             {gradingStandards.map((standard) => (
               <article className="grading-card" key={standard.material}>

@@ -7,12 +7,12 @@ import { SectionHeading } from "./SectionHeading.jsx";
 // Published industry figures about metal recycling in general, each credited
 // to its source — never presented as AALKC's own results. Set as a data
 // plate: the figure, the metal, the statement and its source.
-export function RecyclingFacts({ withLink = false, index }) {
+export function RecyclingFacts({ withLink = false }) {
   const { t } = useLanguage();
   return (
     <section className="facts content-section surface-ink on-ink" aria-labelledby="facts-title">
       <div className="container">
-        <SectionHeading id="facts-title" index={index} eyebrow="Why metal recycling matters" title="Recycled metal saves energy and raw materials" />
+        <SectionHeading id="facts-title" eyebrow="Why metal recycling matters" title="Recycled metal saves energy and raw materials" />
         <div className="facts-grid">
           {recyclingFacts.map(({ figure, metal, copy, source }) => (
             <figure key={metal}>

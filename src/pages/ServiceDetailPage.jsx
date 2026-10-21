@@ -33,7 +33,7 @@ export function ServiceDetailPage({ slug }) {
 
       <section className="content-section container service-page-layout">
         <div className="service-page-main">
-          <SectionHeading index="01" eyebrow="Service overview" title={title} compact />
+          <SectionHeading eyebrow="Service overview" title={title} compact />
           <p className="service-page-lede">{t(overview)}</p>
           <h3 className="service-page-subheading">{t("What this service covers")}</h3>
           <ul className="check-list service-page-capabilities">
@@ -49,7 +49,7 @@ export function ServiceDetailPage({ slug }) {
           )}
         </div>
         <aside className="service-page-aside on-ink" aria-label={t("Talk to our team")}>
-          <span className="label"><span className="label-index">→</span>{t("Talk to AALKC")}</span>
+          <span className="label">{t("Talk to AALKC")}</span>
           <h2>{t("Talk to our team")}</h2>
           <p>{t("Share the material, estimated quantity and site location. Our Dammam team will come back with the next step.")}</p>
           <button type="button" className="primary-button" onClick={() => openQuote({ service: title })}>
@@ -60,12 +60,12 @@ export function ServiceDetailPage({ slug }) {
         </aside>
       </section>
 
-      <ProcessSection index="02" />
+      <ProcessSection />
 
       <section className="content-section container related-services" aria-labelledby="related-services-title">
-        <SectionHeading id="related-services-title" index="03" eyebrow="Related services" title="Often combined with" compact />
+        <SectionHeading id="related-services-title" eyebrow="Related services" title="Often combined with" compact />
         <div className="service-cards">
-          {relatedServices(slug).map((related) => <ServiceCard key={related.slug} service={related} index={services.indexOf(related)} />)}
+          {relatedServices(slug).map((related) => <ServiceCard key={related.slug} service={related} />)}
         </div>
       </section>
 

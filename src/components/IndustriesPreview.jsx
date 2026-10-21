@@ -13,19 +13,18 @@ export function IndustriesPreview() {
       <div className="container">
         <SectionHeading
           id="sectors-title"
-          index="04"
+         
           eyebrow="Industries"
           title="Built around the sectors that generate scrap"
           copy="From active construction sites to plant shutdowns, collection and grading are planned around how each sector works."
         />
         <ul className="sector-list">
-          {industries.map(({ slug, title, copy, materials }, index) => (
+          {industries.map(({ slug, title, copy, materials }) => (
             <li key={slug}>
               <Link className="sector-row" to={`/industries#${slug}`}>
-                <span className="sector-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 <span className="sector-title">{t(title)}</span>
                 <span className="sector-copy">{t(copy)}</span>
-                <span className="sector-materials">{materials.slice(0, 3).map((material) => t(material)).join(" · ")}</span>
+                <span className="sector-materials">{materials.slice(0, 3).map((material) => t(material)).join(", ")}</span>
                 <LuArrowRight className="directional-icon sector-arrow" aria-hidden="true" />
               </Link>
             </li>

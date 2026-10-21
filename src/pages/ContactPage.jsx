@@ -22,7 +22,7 @@ export function ContactPage() {
       />
       <section className="content-section container contact-layout">
         <div className="contact-details">
-          <SectionHeading index="01" eyebrow="Official contact details" title="Direct access to AALKC" copy="Reach our Dammam headquarters directly using the official phone, email, and address below." />
+          <SectionHeading eyebrow="Official contact details" title="Direct access to AALKC" copy="Reach our Dammam headquarters directly using the official phone, email, and address below." />
           <div className="contact-methods">
             <a href={contactDetails.phoneHref}><LuPhone /><div><span>{t("Phone")}</span><strong><PhoneNumber>{contactDetails.phoneLabel}</PhoneNumber></strong></div></a>
             <a href={`mailto:${contactDetails.email}`}><LuMail /><div><span>{t("Email")}</span><strong>{contactDetails.email}</strong></div></a>

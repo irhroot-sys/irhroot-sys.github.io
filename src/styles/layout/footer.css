@@ -28,14 +28,13 @@
 .footer-main h2 {
   margin: 0 0 var(--s-4);
   color: var(--white);
-  font-family: var(--font-mono);
+  font-family: var(--font-text);
   font-stretch: 100%;
-  font-size: var(--fs-12);
-  font-weight: 500;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
+  font-size: var(--fs-14);
+  font-weight: 600;
+  letter-spacing: 0;
 }
-html[lang="ar"] .footer-main h2 { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
+html[lang="ar"] .footer-main h2 { font-family: var(--font-arabic); }
 .footer-links, .footer-contact { display: flex; flex-direction: column; align-items: flex-start; }
 .footer-links a,
 .footer-contact a,
@@ -123,7 +122,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
 }
 .site-footer { isolation: isolate; overflow: clip; }
 .footer-legal { display: flex; align-items: center; gap: var(--s-5); }
-.footer-legal span { font-family: var(--font-mono); font-size: var(--fs-12); letter-spacing: .04em; }
+.footer-legal span { font-size: var(--fs-13); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
 
 @media (max-width: 1020px) {
   .footer-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }

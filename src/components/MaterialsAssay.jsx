@@ -14,7 +14,7 @@ export function MaterialsAssay() {
       <div className="container">
         <SectionHeading
           id="assay-title"
-          index="01"
+         
           eyebrow="What we buy"
           title="Ferrous and non-ferrous, graded at source."
           copy="Eight material families form the core of what AALKC purchases. Every load is inspected and weighed before its grade and value are confirmed."

@@ -21,12 +21,11 @@ export function IndustriesPage() {
         trail="Industries"
       />
       <section className="content-section container">
-        <SectionHeading index="01" eyebrow="Sectors" title="Who we work with" copy="Manufacturers, fabricators, contractors and facility operators across the Eastern Province rely on AALKC to recover the value in their scrap." />
+        <SectionHeading eyebrow="Sectors" title="Who we work with" copy="Manufacturers, fabricators, contractors and facility operators across the Eastern Province rely on AALKC to recover the value in their scrap." />
         <div className="industry-list">
-          {industries.map(({ slug, icon: Icon, title, copy, materials, services: serviceSlugs }, index) => (
+          {industries.map(({ slug, icon: Icon, title, copy, materials, services: serviceSlugs }) => (
             <article className="industry-row" id={slug} key={slug}>
               <div className="industry-row-title">
-                <span className="industry-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 <Icon aria-hidden="true" />
                 <h2>{t(title)}</h2>
               </div>
