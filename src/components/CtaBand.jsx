@@ -16,7 +16,7 @@ export function CtaBand({ title = "Have an industrial requirement to discuss?", 
     <section className="cta-band closing on-ink" aria-labelledby="closing-title">
       <div className="container closing-layout">
         <div className="closing-copy">
-          <span className="label"><span className="label-index">→</span>{t("Talk to AALKC")}</span>
+          <span className="label">{t("Talk to AALKC")}</span>
           <h2 id="closing-title">{t(title)}</h2>
           <p>{t(copy)}</p>
           {action === "contact" ? (

@@ -2,44 +2,45 @@
    Primitives — the small vocabulary every page is composed from.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Label ────────────────────────────────────────────────────────────────
-   The technical voice: monospaced, small, tracked. An optional index (01,
-   02…) sits in cobalt before the text, the way a drawing numbers its
-   sheets. In Arabic, Plex Sans Arabic replaces the mono face. */
+/* ── Kicker ───────────────────────────────────────────────────────────────
+   The quiet line above a title: sentence case, the text face, set small and
+   firm. It is marked by two bars taken from the mark itself — the A's navy
+   stroke and one shorter steel bar of its skyline — so the device belongs
+   to AALKC rather than to a template. Sections are not numbered. */
 .label,
 .section-heading > span,
 .page-kicker,
 .panel-kicker,
 .modal-kicker {
+  --kicker-tall: var(--navy-800);
+  --kicker-short: var(--metal);
   display: inline-flex;
   align-items: center;
-  gap: var(--s-3);
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--fs-12);
-  font-weight: 500;
-  letter-spacing: var(--track-label);
+  gap: 10px;
+  color: var(--steel-700);
+  font-family: var(--font-text);
+  font-size: var(--fs-14);
+  font-weight: 600;
+  letter-spacing: .005em;
   line-height: 1.4;
-  text-transform: uppercase;
 }
-.label-index { color: var(--signal); }
-.label-index::after {
+:is(.label, .section-heading > span, .page-kicker, .panel-kicker, .modal-kicker)::before {
   content: "";
-  display: inline-block;
-  width: 22px;
-  height: 1px;
-  margin-inline-start: var(--s-3);
-  vertical-align: middle;
-  background: currentColor;
+  flex: 0 0 auto;
+  width: 8px;
+  height: 14px;
+  background:
+    linear-gradient(var(--kicker-tall), var(--kicker-tall)) left bottom / 3px 100% no-repeat,
+    linear-gradient(var(--kicker-short), var(--kicker-short)) right bottom / 3px 62% no-repeat;
 }
-.on-ink .label,
-.on-ink .section-heading > span,
-.surface-ink .section-heading > span { color: var(--on-ink-muted); }
-.on-ink .label-index,
-.surface-ink .label-index { color: var(--signal-on-ink); }
+.on-ink :is(.label, .section-heading > span),
+.surface-ink .section-heading > span {
+  --kicker-tall: var(--platinum);
+  color: var(--on-ink-muted);
+}
 html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker, .modal-kicker) {
   font-family: var(--font-arabic);
-  font-size: var(--fs-13);
+  font-size: var(--fs-14);
   letter-spacing: 0;
 }
 
@@ -57,10 +58,10 @@ html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker
 .section-heading > span { grid-column: 1 / -1; margin-bottom: var(--s-5); }
 .section-heading h2 {
   grid-column: 1;
-  max-width: 22ch;
+  max-width: 20ch;
   font-size: var(--fs-60);
   letter-spacing: var(--track-display);
-  line-height: 1.02;
+  line-height: 1.04;
 }
 .section-heading p {
   grid-column: 2;
@@ -102,9 +103,11 @@ html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: 1.3; }
 .scale-rule.is-signal { color: var(--signal); }
 
 /* ── Plate ────────────────────────────────────────────────────────────────
-   Photographs are presented as captioned plates with registration corners,
-   not dropped in as backgrounds. The caption numbers the figure. */
-.plate { margin: 0; }
+   Photographs sit in clean, square-cut frames with one shared grade. No
+   registration marks or figure numbers: the photograph is the subject, not
+   an exhibit in a report. */
+.plate,
+:is(.hero-plate, .page-hero-plate, .service-detail-plate) { margin: 0; }
 .plate-frame {
   position: relative;
   overflow: hidden;
@@ -119,33 +122,6 @@ html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: 1.3; }
   filter: var(--photo-grade);
   transition: filter var(--t-slow) var(--ease-out), scale var(--t-slow) var(--ease-out);
 }
-.plate-frame::before,
-.plate-frame::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  width: 18px;
-  height: 18px;
-  pointer-events: none;
-  border-color: rgba(255, 255, 255, .85);
-  border-style: solid;
-}
-.plate-frame::before { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
-.plate-frame::after { right: 12px; bottom: 12px; border-width: 0 1px 1px 0; }
-.plate figcaption {
-  display: flex;
-  gap: var(--s-3);
-  margin-top: var(--s-3);
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--fs-12);
-  letter-spacing: .02em;
-  line-height: 1.5;
-}
-.plate figcaption b { flex: 0 0 auto; color: var(--signal); font-weight: 500; }
-.on-ink .plate figcaption { color: var(--on-ink-muted); }
-.on-ink .plate figcaption b { color: var(--signal-on-ink); }
-html[lang="ar"] .plate figcaption { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
 
 /* ── Buttons ──────────────────────────────────────────────────────────────
    Sentence case, medium weight, square. The primary action is the logo's
@@ -254,8 +230,22 @@ html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
 .check-list svg { flex: 0 0 auto; margin-top: 3px; color: var(--signal); font-size: 16px; }
 @media (max-width: 620px) { .check-list { grid-template-columns: minmax(0, 1fr); } }
 
+/* ── Caption ──────────────────────────────────────────────────────────────
+   The small data voice — keys in a register, meta on a tile, the name of a
+   field. Sentence case in the text face; monospace is kept for values that
+   are genuinely codes (a registration number, a standard). */
+.caption {
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-size: var(--fs-13);
+  font-weight: 500;
+  letter-spacing: .005em;
+  line-height: 1.45;
+}
+html[lang="ar"] .caption { font-family: var(--font-arabic); letter-spacing: 0; }
+
 /* ── Register (definition table) ──────────────────────────────────────────
-   Key facts as a register: a mono key, a set value, a hairline between. */
+   Key facts as a register: a quiet key, a set value, a hairline between. */
 .register { margin: 0; border-top: 1px solid var(--rule-strong); }
 .register > div {
   display: grid;
@@ -266,16 +256,14 @@ html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
 }
 .register dt {
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--fs-12);
-  letter-spacing: var(--track-label);
-  line-height: 1.9;
-  text-transform: uppercase;
+  font-size: var(--fs-14);
+  font-weight: 500;
+  line-height: 1.6;
 }
 .register dd { margin: 0; color: var(--text-strong); font-size: var(--fs-16); font-weight: 500; line-height: 1.55; }
 .register dd small { display: block; color: var(--text-muted); font-size: var(--fs-14); font-weight: 400; }
 html[dir="ltr"] .register dd small[dir="rtl"] { text-align: left; }
-html[lang="ar"] .register dt { font-family: var(--font-arabic); font-size: var(--fs-13); letter-spacing: 0; }
+html[lang="ar"] .register dt { font-family: var(--font-arabic); }
 @media (max-width: 620px) { .register > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); } }
 
 /* ── Form fields (quote dialog and contact form) ─────────────────────────── */
@@ -315,13 +303,9 @@ html[lang="ar"] .register dt { font-family: var(--font-arabic); font-size: var(-
 .field-status {
   margin-inline-start: var(--s-2);
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--fs-11);
+  font-size: var(--fs-13);
   font-weight: 400;
-  letter-spacing: .06em;
-  text-transform: uppercase;
 }
-html[lang="ar"] .field-status { font-family: var(--font-arabic); font-size: var(--fs-12); letter-spacing: 0; }
 :is(.quote-modal, .contact-form) .consent-field {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);

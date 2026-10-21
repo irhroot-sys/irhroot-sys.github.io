@@ -6,10 +6,8 @@ import { CARD_SIZES, PLATE_SIZES } from "../data/imageSizes.js";
 import { ResponsiveImage } from "./ResponsiveImage.jsx";
 import { SectionHeading } from "./SectionHeading.jsx";
 
-const pad = (number) => String(number).padStart(2, "0");
-
-// A service as a card: plate, index and category, title, summary.
-export function ServiceCard({ service, headingLevel = 3, index }) {
+// A service as a card: photograph, category, title, summary.
+export function ServiceCard({ service, headingLevel = 3 }) {
   const { t } = useLanguage();
   const { slug, title, copy, image, alt, focalPosition, category } = service;
   const Heading = `h${headingLevel}`;
@@ -19,7 +17,7 @@ export function ServiceCard({ service, headingLevel = 3, index }) {
         <ResponsiveImage src={image} sizes={CARD_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} />
       </div>
       <div className="service-copy">
-        <span className="label">{index !== undefined && <span className="label-index">{pad(index + 1)}</span>}{t(category)}</span>
+        <span className="label">{t(category)}</span>
         <Heading>{t(title)}</Heading>
         <p>{t(copy)}</p>
         <span className="service-more">{t("View service")} <LuArrowRight className="directional-icon" aria-hidden="true" /></span>
@@ -40,7 +38,7 @@ export function Capabilities({ services }) {
       <div className="container">
         <SectionHeading
           id="capabilities-title"
-          index="02"
+         
           eyebrow="What we do"
           title="Six capabilities, one accountable counterpart."
           copy="Comprehensive scrap management tailored to industrial-scale operations, from collection and sorting to purchasing and global trade."
@@ -55,7 +53,6 @@ export function Capabilities({ services }) {
                   onMouseEnter={() => setActive(index)}
                   onFocus={() => setActive(index)}
                 >
-                  <span className="capability-no" aria-hidden="true">{pad(index + 1)}</span>
                   <span className="capability-text">
                     <span className="capability-cat">{t(service.category)}</span>
                     <span className="capability-title">{t(service.title)}</span>
@@ -72,7 +69,6 @@ export function Capabilities({ services }) {
                 <div className="plate-frame">
                   <ResponsiveImage src={service.image} sizes={PLATE_SIZES} alt="" loading="lazy" decoding="async" style={{ objectPosition: service.focalPosition || "center" }} />
                 </div>
-                <figcaption><b>{t("Fig.")} {pad(index + 2)}</b>{t(service.title)}</figcaption>
               </figure>
             ))}
           </div>

@@ -6,8 +6,9 @@
    double as the graduations of a measuring scale — the instrument the
    business actually runs on (certified weighing, grading). The name, أمانة
    الكلمة, means "the trust of one's word". Precision is how that trust is
-   shown, so the system borrows the vocabulary of technical documents:
-   registers, plates, scale rules and monospaced data.
+   shown, so the system borrows the discipline of technical documents —
+   registers, measured spacing, one scale rule where something is weighed —
+   set with the restraint of an established house.
 
    Colour: Navy · Steel · Platinum
    The palette is the logo, extended — nothing is imported from outside it.
@@ -103,18 +104,25 @@
   --ring: 0 0 0 3px rgba(45, 99, 160, .2);
 
   /* ── Typography ──────────────────────────────────────────────────────────
-     Display: Archivo at an expanded width — broad, stable letterforms with
-     the stance of the mark's A. Text: IBM Plex Sans and its Arabic partner,
-     drawn as one family so both languages share proportions. Data: Plex
-     Mono, the voice of every reference number, weight and grade. Arabic
-     display: Noto Kufi Arabic, whose geometric construction matches the
-     expanded Latin. */
+     Display: Archivo at an expanded width and a light-to-book weight — broad,
+     stable letterforms with the stance of the mark's A, set with the restraint
+     of an established house rather than the volume of a start-up. Weight
+     rises slightly as size falls, so every heading carries the same colour on
+     the page. Text: IBM Plex Sans and its Arabic partner,
+     drawn as one family so both languages share proportions; reference
+     numbers and grades use its tabular figures rather than a monospace.
+     Arabic display: Noto Kufi Arabic at 500, whose geometric construction
+     matches the expanded Latin. Labels are sentence case — no tracked
+     capitals. */
   --font-display: "Archivo Variable", "Archivo", "IBM Plex Sans", system-ui, sans-serif;
   --font-text: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --font-arabic: "IBM Plex Sans Arabic", "IBM Plex Sans", Tahoma, sans-serif;
   --font-arabic-display: "Noto Kufi Arabic", "IBM Plex Sans Arabic", Tahoma, sans-serif;
-  --display-stretch: 116%;
+  --display-stretch: 112%;
+  --w-display: 460;            /* hero statement */
+  --w-heading: 500;            /* section titles */
+  --w-title: 560;              /* card and row titles */
+  --w-arabic-display: 500;     /* Noto Kufi Arabic */
 
   --fs-11: .6875rem;
   --fs-12: .75rem;
@@ -130,12 +138,12 @@
   --fs-60: clamp(2.25rem, 1.55rem + 3.1vw, 3.75rem);
   --fs-display: clamp(2.6rem, 1.45rem + 5.1vw, 6rem);
 
-  --lh-display: .98;
-  --lh-heading: 1.08;
+  --lh-display: 1.0;
+  --lh-heading: 1.06;
   --lh-snug: 1.3;
   --lh-text: 1.65;
-  --track-display: -.035em;
-  --track-heading: -.022em;
+  --track-display: -.032em;
+  --track-heading: -.024em;
   --track-label: .08em;
 
   /* ── Space (4px base) ──────────────────────────────────────────────────── */

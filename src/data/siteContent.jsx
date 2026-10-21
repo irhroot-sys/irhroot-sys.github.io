@@ -180,10 +180,10 @@ export const recyclingFacts = [
 export const collectionTimings = ["Flexible", "Within a week", "Within a month", "Recurring collections"];
 
 export const statistics = [
-  { icon: LuAward, label: "Year Established", value: "2017" },
+  { icon: LuAward, label: "Year established", value: "2017" },
   { icon: LuMapPin, label: "Headquarters", value: "Dammam, KSA" },
-  { icon: LuBadgeCheck, label: "Operating Status", value: "Licensed Dealer" },
-  { icon: LuTruck, label: "Service Coverage", value: "Eastern Province" },
+  { icon: LuBadgeCheck, label: "Operating status", value: "Licensed Dealer" },
+  { icon: LuTruck, label: "Service coverage", value: "Eastern Province" },
 ];
 
 export const values = [
@@ -201,7 +201,7 @@ export const materials = [
     symbol: "Cu",
     atomicNumber: 29,
     name: "Copper",
-    category: "Non-Ferrous",
+    category: "Non-ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Copper and non-ferrous recyclable metal",
     icon: LuZap,
@@ -225,7 +225,7 @@ export const materials = [
     symbol: "Al",
     atomicNumber: 13,
     name: "Aluminum",
-    category: "Non-Ferrous",
+    category: "Non-ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Sorted aluminum recyclable material",
     icon: LuBox,
@@ -249,7 +249,7 @@ export const materials = [
     symbol: "Cu–Zn",
     atomicNumber: null,
     name: "Brass",
-    category: "Non-Ferrous",
+    category: "Non-ferrous",
     image: "/assets/service-scrap-metal.webp",
     alt: "Brass and mixed non-ferrous recyclable metal",
     icon: LuCog,

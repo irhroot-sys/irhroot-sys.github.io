@@ -6,6 +6,7 @@ import { useQuote } from "../context/QuoteContext.jsx";
 import { contactDetails } from "../data/siteContent.jsx";
 import { HOME_HERO_SIZES } from "../data/imageSizes.js";
 import { ResponsiveImage } from "./ResponsiveImage.jsx";
+import { SkylineGraphic } from "./SkylineGraphic.jsx";
 
 export const HERO_IMAGE = "/assets/service-metal-sorting.webp";
 
@@ -90,10 +91,6 @@ export function Hero() {
     <section ref={heroRef} className="hero on-ink" aria-labelledby="hero-title">
       <div className="hero-grid container">
         <div className="hero-copy">
-          <p className="label hero-label">
-            <span className="label-index">AALKC</span>
-            {t("Amanat Al-Kalima Company")}
-          </p>
           <h1 id="hero-title">
             <span className="hero-line hero-line-1">{t("Integrity,")}</span>{" "}
             <span className="hero-line hero-line-2">{t("weighed in every tonne.")}</span>
@@ -110,8 +107,8 @@ export function Hero() {
             </Link>
           </div>
         </div>
-        <figure className="plate hero-plate">
-          <div className="plate-frame hero-media">
+        <figure className="hero-plate">
+          <div className="hero-media">
             <ResponsiveImage
               className="hero-media-image"
               src={HERO_IMAGE}
@@ -122,12 +119,11 @@ export function Hero() {
               decoding="async"
             />
           </div>
-          <figcaption><b>{t("Fig.")} 01</b>{t("Grapple loading recovered scrap metal")}</figcaption>
         </figure>
+        <SkylineGraphic className="hero-skyline" />
       </div>
-      <div className="hero-ledger container">
-        <span className="scale-rule" aria-hidden="true" />
-        <dl aria-label={t("Company credentials")}>
+      <div className="hero-ledger">
+        <dl className="container" aria-label={t("Company credentials")}>
           {LEDGER.map(({ label, value, mono, note }) => (
             <div key={label}>
               <dt>{t(label)}</dt>

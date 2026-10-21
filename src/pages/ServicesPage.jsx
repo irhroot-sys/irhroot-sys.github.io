@@ -27,16 +27,15 @@ export function ServicesPage() {
       />
 
       <section className="content-section container">
-        <SectionHeading index="01" eyebrow="What we do" title="Six connected service lines" copy="Choose a service below or send the full requirement and our team will coordinate the right operational route." />
+        <SectionHeading eyebrow="What we do" title="Six connected service lines" copy="Choose a service below or send the full requirement and our team will coordinate the right operational route." />
         <div className="service-detail-list">
           {services.map(({ slug, title, copy, image, alt, capabilities, focalPosition, category }, index) => (
             <article className={`service-detail ${index % 2 ? "is-reversed" : ""}`} id={slug} key={slug}>
-              <figure className="plate service-detail-plate">
+              <figure className="service-detail-plate">
                 <div className="plate-frame service-detail-media"><ResponsiveImage src={image} sizes={PLATE_SIZES} alt={t(alt)} loading="lazy" decoding="async" style={{ objectPosition: focalPosition || "center" }} /></div>
-                <figcaption><b>{t("Fig.")} {String(index + 2).padStart(2, "0")}</b>{t(alt)}</figcaption>
               </figure>
               <div className="service-detail-copy">
-                <span className="label"><span className="label-index">{String(index + 1).padStart(2, "0")}</span>{t(category)}</span>
+                <span className="label">{t(category)}</span>
                 <h2>{t(title)}</h2>
                 <p>{t(copy)}</p>
                 <ul className="check-list">{capabilities.map((capability) => <li key={capability}><LuCheck aria-hidden="true" />{t(capability)}</li>)}</ul>
@@ -54,7 +53,7 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <ProcessSection index="02" />
+      <ProcessSection />
       <CtaBand />
     </>
   );

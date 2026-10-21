@@ -28,12 +28,12 @@ h1, h2, h3, h4 {
   color: var(--heading);
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
-  font-weight: 640;
+  font-weight: var(--w-heading);
   line-height: var(--lh-heading);
   letter-spacing: var(--track-heading);
   text-wrap: balance;
 }
-h3, h4 { font-stretch: 100%; font-weight: 600; letter-spacing: -.012em; line-height: var(--lh-snug); }
+h3, h4 { font-stretch: 104%; font-weight: var(--w-title); letter-spacing: -.012em; line-height: var(--lh-snug); }
 p { margin: 0; text-wrap: pretty; }
 ul, ol { margin: 0; padding: 0; }
 img, svg, video { display: block; max-width: 100%; }
@@ -54,7 +54,7 @@ html[lang="ar"] body { font-family: var(--font-arabic); line-height: 1.8; }
 html[lang="ar"] :is(h1, h2, h3, h4) {
   font-family: var(--font-arabic-display);
   font-stretch: 100%;
-  font-weight: 700;
+  font-weight: var(--w-arabic-display);
   letter-spacing: 0;
   line-height: 1.32;
 }

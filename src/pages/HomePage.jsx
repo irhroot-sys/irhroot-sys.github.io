@@ -16,9 +16,9 @@ export function HomePage() {
       <Hero />
       <MaterialsAssay />
       <Capabilities services={services} />
-      <ProcessSection index="03" eyebrow="How it works" title="From enquiry to settlement in four steps" copy="A documented process keeps every load transparent, from the first enquiry to the final payment." />
+      <ProcessSection eyebrow="How it works" title="From enquiry to settlement in four steps" copy="A documented process keeps every load transparent, from the first enquiry to the final payment." />
       <IndustriesPreview />
-      <CompanyRegister index="05" commitments={features.slice(0, 3)} />
+      <CompanyRegister commitments={features.slice(0, 3)} />
       <CtaBand />
     </>
   );
