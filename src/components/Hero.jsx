@@ -7,8 +7,9 @@ import { contactDetails } from "../data/siteContent.jsx";
 import { HOME_HERO_SIZES } from "../data/imageSizes.js";
 import { ResponsiveImage } from "./ResponsiveImage.jsx";
 import { SkylineGraphic } from "./SkylineGraphic.jsx";
+import { photos } from "../data/photos.js";
 
-export const HERO_IMAGE = "/assets/service-metal-sorting.webp";
+export const HERO_IMAGE = photos.yardEntrance.src;
 
 // The ledger under the statement: facts the company states elsewhere on the
 // site and in its registration, set the way a register would set them.
@@ -113,7 +114,8 @@ export function Hero() {
               className="hero-media-image"
               src={HERO_IMAGE}
               sizes={HOME_HERO_SIZES}
-              alt={t("Grapple loading sorted scrap metal at an industrial recycling yard")}
+              alt={t(photos.yardEntrance.alt)}
+              style={{ objectPosition: photos.yardEntrance.focus }}
               loading="eager"
               fetchPriority="high"
               decoding="async"

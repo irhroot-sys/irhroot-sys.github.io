@@ -6,6 +6,8 @@ import { CompanyRegister } from "../components/CompanyRegister.jsx";
 import { companyServices, values } from "../data/siteContent.jsx";
 import { CertificationList } from "../components/CertificationList.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { photos } from "../data/photos.js";
+import { YardGallery } from "../components/YardGallery.jsx";
 
 export function AboutPage() {
   const { t } = useLanguage();
@@ -16,8 +18,9 @@ export function AboutPage() {
         eyebrow="Built on integrity"
         title="A trusted industrial recycling partner since 2017."
         copy="Amanat Al-Kalima Company provides professional metal recycling services for industrial, commercial, and construction businesses."
-        image="/assets/service-industrial-dismantling.webp"
-        alt={t("Industrial material recovery and dismantling operation")}
+        image={photos.cableReelLoading.src}
+        alt={photos.cableReelLoading.alt}
+        focus={photos.cableReelLoading.focus}
         trail="About Us"
       />
 
@@ -59,6 +62,8 @@ export function AboutPage() {
           ))}
         </ol>
       </section>
+
+      <YardGallery surface="surface-mist" />
 
       <CompanyRegister id="credentials" />
 

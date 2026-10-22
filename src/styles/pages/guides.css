@@ -97,7 +97,7 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
 .guide-action .primary-button { width: 100%; }
 
 /* ── Long-form body ──────────────────────────────────────────────────────
-   17–19px Mona Sans at 1.72 on a 66-character measure. Headings are set a
+   17–19px General Sans at 1.72 on a 66-character measure. Headings are set a
    step below section titles so the body, not the headings, leads. */
 .longform { color: var(--text); font-size: var(--fs-article); line-height: var(--lh-article); }
 .longform > * + * { margin-top: var(--s-5); }
@@ -159,7 +159,7 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
 }
 .longform-definitions dt {
   color: var(--heading);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: var(--fs-20);
   font-weight: var(--w-title);
   line-height: 1.4;
@@ -221,7 +221,7 @@ html[dir="rtl"] .sources a:hover svg { translate: -2px -2px; }
 }
 .related-links li { display: grid; }
 .related-links a { display: grid; align-content: start; gap: var(--s-2); padding: var(--s-5) 0 var(--s-6); border-bottom: 1px solid var(--rule); }
-.related-links strong { color: var(--heading); font-family: var(--font-display); font-size: var(--fs-20); font-weight: var(--w-title); line-height: 1.3; text-wrap: balance; }
+.related-links strong { color: var(--heading); font-family: var(--font-title); font-size: var(--fs-20); font-weight: var(--w-title); line-height: 1.3; text-wrap: balance; }
 .related-links span { color: var(--text-muted); font-size: var(--fs-14); line-height: 1.5; }
 .related-links a:hover strong { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 
@@ -244,9 +244,9 @@ html[dir="rtl"] .sources a:hover svg { translate: -2px -2px; }
   max-width: 44ch;
   margin-top: var(--s-5);
   color: var(--text);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: var(--fs-24);
-  font-weight: 360;
+  font-weight: 400;
   line-height: 1.45;
   text-wrap: pretty;
 }
@@ -327,7 +327,7 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
   padding: var(--s-2) 0;
   border-bottom: 1px solid var(--rule);
   color: var(--heading);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: var(--fs-18);
   font-weight: var(--w-title);
   line-height: 1.35;
@@ -350,11 +350,10 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
   grid-column: 1 / span 2;
   color: var(--metal);
   font-family: var(--font-figures);
-  font-stretch: var(--stretch-figures);
   font-size: var(--fs-60);
   font-weight: 300;
   font-variant-numeric: lining-nums;
-  letter-spacing: -.03em;
+  letter-spacing: 0;
   line-height: .9;
 }
 .process-stage h3 { grid-column: 3 / span 4; font-size: var(--fs-32); }
@@ -370,7 +369,7 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
 
 /* ── Arabic ──────────────────────────────────────────────────────────────
    The families switch through the role tokens; what is left here is the
-   Arabic calibration: a slightly larger body, taller leading, and Alexandria
+   Arabic calibration: a slightly larger body, taller leading, and AALKC Kufi
    titles set a step larger than the Latin they replace. */
 html[lang="ar"] .longform { font-size: calc(var(--fs-article) * 1.03); line-height: 1.95; }
 html[lang="ar"] .in-brief li { line-height: 1.85; }

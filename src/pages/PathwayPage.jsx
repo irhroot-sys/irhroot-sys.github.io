@@ -7,6 +7,7 @@ import { FaqBlock, RichText } from "../components/LongForm.jsx";
 import { IntentPaths, MaterialIndex } from "../components/Pathways.jsx";
 import { buyGuide, sellGuide } from "../data/pathways.js";
 import { contactDetails } from "../data/siteContent.jsx";
+import { photos } from "../data/photos.js";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
@@ -18,8 +19,7 @@ const PATHWAYS = {
   sell: {
     guide: sellGuide,
     eyebrow: "For suppliers",
-    image: "/assets/service-scrap-metal.webp",
-    alt: "Sorted ferrous and non-ferrous scrap metal",
+    photo: photos.ferrousYard,
     handlesTitle: "What we buy",
     handlesCopy: "Eight material families, each with a guide to how it is graded.",
     sendTitle: "What to send us",
@@ -31,8 +31,7 @@ const PATHWAYS = {
   buy: {
     guide: buyGuide,
     eyebrow: "For mills, foundries and traders",
-    image: "/assets/service-global-trade.webp",
-    alt: "Industrial recovery yard supporting regional and global trade",
+    photo: photos.foundry,
     handlesTitle: "What we supply",
     handlesCopy: "Graded scrap from the same eight families AALKC buys. Availability depends on the material collected and is confirmed for each enquiry.",
     sendTitle: "What to include in your enquiry",
@@ -52,7 +51,7 @@ export function PathwayPage({ id }) {
 
   return (
     <>
-      <PageHero eyebrow={config.eyebrow} title={guide.heading} copy={guide.standfirst} image={config.image} alt={config.alt} trail={guide.title} />
+      <PageHero eyebrow={config.eyebrow} title={guide.heading} copy={guide.standfirst} image={config.photo.src} alt={config.photo.alt} focus={config.photo.focus} trail={guide.title} />
 
       <section className="content-section container pathway-brief" aria-label={t(guide.title)}>
         <div className="pathway-handles">

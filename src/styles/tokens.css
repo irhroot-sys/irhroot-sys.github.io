@@ -7,10 +7,10 @@
    business actually runs on (certified weighing, grading). The name, أمانة
    الكلمة, means "the trust of one's word". Precision is how that trust is
    shown, so the system borrows the discipline of engineering documents and
-   equipment plates — one grotesk used along its width axis (expanded for
-   what is declared, normal for what is read), registers set on steel,
-   measured spacing, one scale rule where something is weighed — with the
-   restraint of an established house.
+   equipment plates — a squared, engineered grotesk for what is declared, a
+   clear one for what is read, registers set on steel, measured spacing, one
+   scale rule where something is weighed — with the restraint of an
+   established house.
 
    Colour: Navy · Steel · Platinum
    The palette is the logo, extended — nothing is imported from outside it.
@@ -139,61 +139,58 @@
   --engraving-on-ink: #677C97;             /* decorative display text on navy-900 only, 3.5:1 */
 
   /* ── Typography ──────────────────────────────────────────────────────────
-     Stamped and measured. One Latin family, Mona Sans, used along its width
-     axis the way a fabricator uses one alloy in several gauges:
-       · Declared — expanded and heavy, the stance of a nameplate stamped
-         into steel and of the mark's own broad A. The homepage statement is
-         set widest and heaviest; section titles a step narrower and lighter.
-       · Measured — normal width for reading, interface and labels.
-       · Figures — expanded and light, like the engraved graduations of a
-         scale: chemical symbols, grade codes, step numbers, large numerals
-         (lining and proportional: Mona Sans draws its tabular figures as a
-         monospace set, which reads as code).
-     Arabic follows the same three voices with faces drawn for Arabic:
-       · Alexandria for headings — geometric, upright, its tall verticals
-         answering the skyline bars of the mark.
-       · Reem Kufi for the few signature lines (the homepage statement, the
-         Arabic name) — Kufic, the angular hand of inscriptions cut in stone
-         and metal.
-       · IBM Plex Sans Arabic for reading.
-     Labels are sentence case — no tracked capitals. */
+     AALKC's own typefaces first, then its Adobe Fonts web project:
+       · Brand — AALKC (office typeface): wide, squared capitals drawn to the
+         company's lettering. The homepage statement, page titles and the
+         wordmark. Capitals only, so it is never used for chemical symbols
+         (Cu, Fe) or running text.
+       · Declared — Sweet Square Pro Medium (Adobe Fonts): the same squared
+         construction with a lowercase, for section and card titles.
+       · Figures — Sweet Square Pro Extra Light: hairline numerals and
+         symbols, the graduations of a scale.
+       · Measured — Futura PT Book / Medium / Demi (Adobe Fonts) for reading,
+         interface and labels.
+       · Arabic — Mawzoon (Adobe Fonts), a heavy square Kufic, for the
+         statement and titles; AALKC Kufi (office typeface, Noto Kufi Arabic)
+         for card titles and reading.
+     Weights are never synthesised (base.css): each face ships only the
+     weights in use. Figures are lining and proportional. Labels are
+     sentence case. */
   /* Families. Components never name these directly: they use the roles
-     below, which switch script wherever lang="ar" is set (a whole Arabic page,
-     or one Arabic phrase on an English page). To change typeface, change these
-     lines. */
-  --family-latin: "Mona Sans Variable", "Mona Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --family-arabic-heading: "Alexandria Variable", "Alexandria", "IBM Plex Sans Arabic", Tahoma, sans-serif;
-  --family-arabic-signature: "Reem Kufi Variable", "Reem Kufi", "Alexandria Variable", Tahoma, sans-serif;
-  --family-arabic-text: "IBM Plex Sans Arabic", "Mona Sans Variable", Tahoma, sans-serif;
+     below, which switch script wherever lang="ar" is set. Later names in
+     each stack are fallbacks, used only if a face cannot load. */
+  --family-brand: "AALKC", "sweet-square-pro", "Cabinet Grotesk", system-ui, sans-serif;
+  --family-display: "sweet-square-pro", "Cabinet Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --family-text: "futura-pt", "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* The Arabic stacks lead with the Latin face, which has no Arabic glyphs:
+     Arabic letters fall through to the Arabic face, while digits, codes and
+     Latin names inside Arabic text stay in the Latin face. */
+  --family-arabic-display: "sweet-square-pro", "mawzoon", "AALKC Kufi", Tahoma, sans-serif;
+  --family-arabic: "futura-pt", "General Sans", "AALKC Kufi", Tahoma, sans-serif;
 
-  /* Roles. Statement = the homepage headline; display = headings; text =
-     reading and interface; figures = symbols, codes and numerals, which are
-     Latin in both languages and so keep the Latin face. */
-  --font-statement: var(--family-latin);
-  --font-display: var(--family-latin);
-  --font-text: var(--family-latin);
-  --font-figures: var(--family-latin);
+  /* Roles. Statement = the homepage headline; brand = page titles and the
+     wordmark; display = section titles; title = card and row titles; text =
+     reading and interface; figures = symbols, codes and numerals. */
+  --font-statement: var(--family-brand);
+  --font-brand: var(--family-brand);
+  --font-display: var(--family-display);
+  --font-title: var(--family-display);
+  --font-text: var(--family-text);
+  --font-figures: var(--family-display);
   /* The Arabic faces by name, for Arabic set inside the Latin interface
      (the wordmark, the footer signature, the name on the About page). */
-  --font-arabic: var(--family-arabic-text);
-  --font-arabic-display: var(--family-arabic-signature);
+  --font-arabic: var(--family-arabic);
+  --font-arabic-display: var(--family-arabic-display);
 
-  /* Width (font-stretch) per voice. Faces without a width axis ignore it. */
-  --stretch-statement: 125%;
-  --stretch-heading: 112.5%;
-  --stretch-title: 100%;
-  --stretch-figures: 125%;
-
-  /* Weight per voice: the statement carries the most colour on the page,
-     section titles less, row titles least among headings. */
-  --w-statement: 760;          /* the homepage statement */
-  --w-display: 720;            /* page titles */
-  --w-heading: 620;            /* section titles */
-  --w-title: 600;              /* card and row titles */
-  --w-figures: 300;            /* engraved numerals */
-  --w-arabic-display: 600;     /* Alexandria */
-  --w-arabic-title: 560;
-  --w-arabic-statement: 700;   /* Reem Kufi */
+  --w-statement: 700;          /* AALKC Bold */
+  --w-display: 700;            /* AALKC Bold / Sweet Square Pro Medium */
+  --w-heading: 700;
+  --w-title: 700;
+  --w-figures: 400;            /* Sweet Square Pro Extra Light */
+  --w-arabic-display: 700;     /* Mawzoon (single weight; never synthesised) */
+  --w-arabic-title: 700;       /* AALKC Kufi Bold */
+  --w-arabic-statement: 700;
+  --track-brand: .015em;       /* wide capitals want a little air */
 
   --fs-11: .6875rem;
   --fs-12: .75rem;
@@ -207,22 +204,24 @@
   --fs-32: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);
   --fs-44: clamp(2rem, 1.45rem + 2.4vw, 3.125rem);
   --fs-60: clamp(2.375rem, 1.5rem + 3.7vw, 4.375rem);
-  --fs-display: clamp(2.75rem, 1.5rem + 4.6vw, 5.75rem);   /* expanded heavy reads larger than its size */
+  --fs-display: clamp(3rem, 1.5rem + 5vw, 6.25rem);
+  --fs-statement: clamp(2.5rem, 1.1rem + 4.2vw, 4.75rem);   /* AALKC capitals are wide */
+  --fs-page-title: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
 
-  /* Expanded heavy type is set tight; Arabic needs room for its ascenders,
-     descenders and dots. */
-  --lh-display: .98;
-  --lh-heading: 1.06;
-  --lh-snug: 1.24;
+  /* Heavy grotesk display is set tight; Naskh needs room for its
+     ascenders, descenders and dots. */
+  --lh-display: .96;
+  --lh-heading: 1.04;
+  --lh-snug: 1.2;
   --lh-text: 1.65;
-  --lh-arabic-display: 1.45;
-  --lh-arabic-text: 1.85;
-  --track-display: -.026em;
-  --track-heading: -.018em;
-  --track-title: -.008em;
+  --lh-arabic-display: 1.3;   /* Mawzoon is compact vertically */
+  --lh-arabic-text: 1.9;
+  --track-display: -.012em;    /* a squared face needs little tightening */
+  --track-heading: -.006em;
+  --track-title: 0;
   --track-label: .08em;
 
-  /* Long-form reading: 17–19px Mona Sans at a 66-character measure. */
+  /* Long-form reading: 17–19px General Sans at a 66-character measure. */
   --fs-article: clamp(1.0625rem, 1rem + .28vw, 1.1875rem);
   --lh-article: 1.72;
   --measure-text: 66ch;
@@ -282,24 +281,24 @@
 
 /* ── Arabic ────────────────────────────────────────────────────────────────
    The same roles, calibrated for Arabic rather than copied from the Latin:
-   Alexandria headings, Reem Kufi for the statement, Plex Sans Arabic for
+   Mawzoon for the statement and titles, AALKC Kufi for card titles and
    reading, taller leading for ascenders and dots, and no tracking, because
    Arabic letters join. Set on any element with lang="ar", so a whole Arabic
    page and an Arabic phrase on an English page follow the same rules. */
 [lang="ar"] {
-  --font-statement: var(--family-arabic-signature);
-  --font-display: var(--family-arabic-heading);
-  --font-text: var(--family-arabic-text);
-  --stretch-statement: 100%;
-  --stretch-heading: 100%;
-  --stretch-title: 100%;
+  --font-statement: var(--family-arabic-display);
+  --font-brand: var(--family-arabic-display);
+  --track-brand: 0;
+  --font-display: var(--family-arabic-display);
+  --font-title: var(--family-arabic);
+  --font-text: var(--family-arabic);
   --w-statement: var(--w-arabic-statement);
   --w-display: var(--w-arabic-display);
   --w-heading: var(--w-arabic-display);
   --w-title: var(--w-arabic-title);
   --lh-display: var(--lh-arabic-display);
   --lh-heading: var(--lh-arabic-display);
-  --lh-snug: 1.5;
+  --lh-snug: 1.55;
   --lh-text: var(--lh-arabic-text);
   --track-display: 0;
   --track-heading: 0;
@@ -309,22 +308,22 @@
 /* A Latin name set inside Arabic (the AALKC wordmark) is marked lang="en"
    and takes the Latin roles back. */
 [lang="ar"] [lang="en"] {
-  --font-statement: var(--family-latin);
-  --font-display: var(--family-latin);
-  --font-text: var(--family-latin);
-  --stretch-statement: 125%;
-  --stretch-heading: 112.5%;
-  --stretch-title: 100%;
-  --w-statement: 760;
-  --w-display: 720;
-  --w-heading: 620;
-  --w-title: 600;
-  --lh-display: .98;
-  --lh-heading: 1.06;
-  --lh-snug: 1.24;
+  --font-statement: var(--family-brand);
+  --font-brand: var(--family-brand);
+  --track-brand: .015em;
+  --font-display: var(--family-display);
+  --font-title: var(--family-display);
+  --font-text: var(--family-text);
+  --w-statement: 700;
+  --w-display: 700;
+  --w-heading: 700;
+  --w-title: 700;
+  --lh-display: .96;
+  --lh-heading: 1.04;
+  --lh-snug: 1.2;
   --lh-text: 1.65;
-  --track-display: -.026em;
-  --track-heading: -.018em;
-  --track-title: -.008em;
+  --track-display: -.012em;
+  --track-heading: -.006em;
+  --track-title: 0;
   --track-label: .08em;
 }

@@ -40,17 +40,21 @@
 .hero h1 {
   color: var(--white);
   font-family: var(--font-statement);
-  font-size: var(--fs-display);
-  font-stretch: var(--stretch-statement);
+  font-size: var(--fs-statement);
   font-weight: var(--w-statement);
-  letter-spacing: var(--track-display);
+  letter-spacing: var(--track-brand);
   line-height: var(--lh-display);
 }
+/* The statement is unveiled line by line: each line rises out from behind
+   its own baseline, as if lifted from a die, while the mark assembles in the
+   header. Visible at once with reduced motion. */
 .hero-line { display: block; }
-.hero-line-1 { animation: rise .7s var(--ease-out) .1s both; }
-.hero-line-2 { animation: rise .7s var(--ease-out) .18s both; }
-.hero-lede { max-width: 46ch; margin-top: var(--s-6); color: var(--on-ink-body); font-size: var(--fs-18); animation: rise .6s var(--ease-out) .26s both; }
-.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-6); margin-top: var(--s-7); animation: rise .6s var(--ease-out) .34s both; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line-1 { animation: line-unveil 1s var(--ease-out) .12s both; }
+  .hero-line-2 { animation: line-unveil 1s var(--ease-out) .26s both; }
+}
+.hero-lede { max-width: 46ch; margin-top: var(--s-6); color: var(--on-ink-body); font-size: var(--fs-18); animation: rise .7s var(--ease-out) .5s both; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-6); margin-top: var(--s-7); animation: rise .7s var(--ease-out) .62s both; }
 @keyframes rise { from { opacity: .82; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
 
 /* The photograph: from the header to the credentials band, from column 8 to
@@ -147,10 +151,9 @@ html[lang="ar"] .hero h1 { font-size: calc(var(--fs-display) * 1.08); font-weigh
   align-self: center;
   color: var(--navy-800);
   font-family: var(--font-figures);
-  font-stretch: var(--stretch-figures);
   font-size: clamp(3.25rem, 1.5rem + 4.6vw, 6.5rem);
   font-weight: 300;
-  letter-spacing: -.03em;
+  letter-spacing: 0;
   line-height: 1;
   transition: color var(--t-mid) var(--ease-std);
 }
@@ -198,9 +201,8 @@ html[dir="rtl"] .assay-tile::after { transform-origin: right center; }
   color: var(--steel-500);
   font-family: var(--font-display);
   font-size: var(--fs-32);
-  font-stretch: var(--stretch-heading);
   font-weight: var(--w-heading);
-  letter-spacing: -.022em;
+  letter-spacing: var(--track-heading);
   line-height: 1.15;
   transition: color var(--t-fast) var(--ease-std);
 }
@@ -262,7 +264,7 @@ html[dir="rtl"] .capability-row:hover .capability-arrow { translate: -4px 0; }
 }
 .sector-row:hover, .sector-row:focus-visible { background: linear-gradient(90deg, rgba(201, 218, 238, .06), transparent 70%); }
 html[dir="rtl"] .sector-row:hover, html[dir="rtl"] .sector-row:focus-visible { background: linear-gradient(270deg, rgba(201, 218, 238, .06), transparent 70%); }
-.sector-title { color: var(--white); font-family: var(--font-display); font-size: var(--fs-32); font-stretch: var(--stretch-heading); font-weight: var(--w-heading); letter-spacing: -.022em; line-height: 1.12; transition: color var(--t-fast) var(--ease-std); }
+.sector-title { color: var(--white); font-family: var(--font-display); font-size: var(--fs-32); font-weight: var(--w-heading); letter-spacing: var(--track-heading); line-height: 1.12; transition: color var(--t-fast) var(--ease-std); }
 html[lang="ar"] .sector-title { letter-spacing: 0; line-height: 1.45; }
 .sector-copy { color: var(--on-ink-body); font-size: var(--fs-15); }
 .sector-materials { color: var(--signal-on-ink); font-size: var(--fs-14); line-height: 1.6; }
@@ -308,7 +310,7 @@ html[dir="rtl"] .register dd[dir="ltr"] { text-align: right; }
 }
 .closing-key { grid-area: key; display: inline-flex; align-items: center; gap: var(--s-2); color: var(--on-ink-muted); font-size: var(--fs-14); font-weight: 500; }
 .closing-key svg { color: var(--signal-on-ink); font-size: 15px; }
-.closing-value { grid-area: value; color: var(--white); font-family: var(--font-figures); font-stretch: var(--stretch-figures); font-size: var(--fs-24); font-weight: 400; font-variant-numeric: lining-nums; letter-spacing: -.01em; transition: color var(--t-fast) var(--ease-std); }
+.closing-value { grid-area: value; color: var(--white); font-family: var(--font-figures); font-size: var(--fs-24); font-weight: 400; font-variant-numeric: lining-nums; letter-spacing: 0; transition: color var(--t-fast) var(--ease-std); }
 html[dir="rtl"] .closing-value { text-align: right; }
 .closing-arrow { grid-area: arrow; align-self: center; color: var(--rule-ink-strong); font-size: 22px; transition: color var(--t-fast) var(--ease-std), translate var(--t-fast) var(--ease-soft); }
 html[dir="rtl"] .closing-arrow { transform: scaleX(-1); }

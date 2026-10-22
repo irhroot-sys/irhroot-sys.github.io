@@ -30,7 +30,7 @@ test('loads the cinematic hero as high-priority media without hiding conversion 
   const heading = hero.getByRole('heading', { level: 1 });
   const actions = hero.locator('.hero-actions');
 
-  await expect(image).toHaveAttribute('src', '/assets/service-metal-sorting.webp');
+  await expect(image).toHaveAttribute('src', '/assets/yard/aalkc-yard-entrance-night.webp');
   await expect(image).toHaveAttribute('fetchpriority', 'high');
   await expect(image).toHaveJSProperty('complete', true);
   await expect(heading).toBeVisible();
@@ -166,25 +166,34 @@ test('grades every capability photograph the same way', async ({ page }) => {
 test('uses the premium bilingual body fonts and interactive link states', async ({ page }) => {
   await page.goto('/');
 
-  // One Latin family along its width axis: expanded for the statement and
-  // section titles, normal width for reading.
+  // The office face AALKC sets the statement and wordmark; the Adobe Fonts
+  // project supplies Sweet Square Pro for titles and Futura PT for text.
+  await expect(page.locator('link[rel="stylesheet"][href="https://use.typekit.net/jrz4pqn.css"]')).toHaveCount(1);
   const englishFonts = await page.evaluate(() => ({
     body: getComputedStyle(document.body).fontFamily,
-    bodyStretch: getComputedStyle(document.body).fontStretch,
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
-    headingStretch: getComputedStyle(document.querySelector('h1')!).fontStretch,
-    sectionStretch: getComputedStyle(document.querySelector('main h2')!).fontStretch,
+    wordmark: getComputedStyle(document.querySelector('.brand-wordmark strong')!).fontFamily,
+    section: getComputedStyle(document.querySelector('main h2')!).fontFamily,
+    figure: getComputedStyle(document.querySelector('.assay-symbol')!).fontFamily,
+    synthesis: getComputedStyle(document.body).fontSynthesisWeight,
   }));
-  expect(englishFonts.body).toContain('Mona Sans');
-  expect(englishFonts.heading).toContain('Mona Sans');
-  expect(englishFonts.bodyStretch).toBe('100%');
-  expect(englishFonts.headingStretch).toBe('125%');
-  expect(englishFonts.sectionStretch).toBe('112.5%');
+  expect(englishFonts.body).toMatch(/^"?futura-pt"?, "?General Sans/);
+  expect(englishFonts.heading).toMatch(/^"?AALKC"?,/);
+  expect(englishFonts.wordmark).toMatch(/^"?AALKC"?,/);
+  expect(englishFonts.section).toMatch(/^"?sweet-square-pro/);
+  expect(englishFonts.figure).toMatch(/^"?sweet-square-pro/);
+  // The project ships two weights of Sweet Square Pro and one of Mawzoon;
+  // the browser must never fake the others.
+  expect(englishFonts.synthesis).toBe('none');
+  // The self-hosted office face is actually served, not just named.
+  await page.evaluate(() => document.fonts.ready);
+  const loaded = await page.evaluate(() => [...document.fonts].filter((face) => face.status === 'loaded').map((face) => face.family.replaceAll('"', '')));
+  expect(loaded).toContain('AALKC');
 
   // The bar is white, so the active page is set in brand navy (#0E335C); in
   // the compact menu the links sit on a navy sheet and the active one is white.
   const activeNav = page.locator('.primary-nav a.active');
-  const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1240px)').matches);
+  const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1279px)').matches);
   await expect(activeNav).toHaveCSS('color', compactMenu ? 'rgb(255, 255, 255)' : 'rgb(14, 51, 92)');
 
   const footerLink = page.locator('.footer-links a').first();
@@ -199,13 +208,21 @@ test('uses the premium bilingual body fonts and interactive link states', async 
     body: getComputedStyle(document.body).fontFamily,
     statement: getComputedStyle(document.querySelector('h1')!).fontFamily,
     heading: getComputedStyle(document.querySelector('main h2')!).fontFamily,
+    title: getComputedStyle(document.querySelector('main h3')!).fontFamily,
     wordmark: getComputedStyle(document.querySelector('.brand-wordmark strong')!).fontFamily,
   }));
-  expect(arabicFonts.body).toContain('IBM Plex Sans Arabic');
-  expect(arabicFonts.statement).toMatch(/^"?Reem Kufi/);
-  expect(arabicFonts.heading).toMatch(/^"?Alexandria/);
+  // Arabic stacks lead with the Latin face (no Arabic glyphs), so Arabic
+  // letters fall through to the Arabic face and digits stay Latin. Mawzoon
+  // sets the statement and titles; AALKC Kufi the card titles and reading.
+  expect(arabicFonts.statement).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
+  expect(arabicFonts.heading).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
+  expect(arabicFonts.title).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
+  expect(arabicFonts.body).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
+  await page.evaluate(() => document.fonts.ready);
+  const arabicLoaded = await page.evaluate(() => [...document.fonts].filter((face) => face.status === 'loaded').map((face) => face.family.replaceAll('"', '')));
+  expect(arabicLoaded).toContain('AALKC Kufi');
   // The Latin name inside the Arabic header keeps the Latin face.
-  expect(arabicFonts.wordmark).toMatch(/^"?Mona Sans/);
+  expect(arabicFonts.wordmark).toMatch(/^"?AALKC"?,/);
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -815,7 +832,7 @@ test('links every service card to its own page and opens the quote dialog from i
 
 test('keeps the full menu on one line wherever it is shown', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop header only');
-  for (const width of [1440, 1280, 1241]) {
+  for (const width of [1600, 1440, 1366, 1280]) {
     for (const path of ['/', '/ar']) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto(path);

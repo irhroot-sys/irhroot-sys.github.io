@@ -43,7 +43,7 @@
   transition: background var(--t-fast) var(--ease-std);
 }
 .material-index a:hover, .material-index a:focus-visible { background: var(--state-hover); }
-.material-index-symbol { padding-inline-start: var(--s-2); color: var(--navy-800); font-family: var(--font-figures); font-stretch: var(--stretch-figures); font-size: var(--fs-24); font-weight: 400; line-height: 1; white-space: nowrap; }
+.material-index-symbol { padding-inline-start: var(--s-2); color: var(--navy-800); font-family: var(--font-figures); font-size: var(--fs-24); font-weight: 400; line-height: 1; white-space: nowrap; }
 .material-index-symbol[data-alloy] { font-size: var(--fs-18); }
 html[dir="rtl"] .material-index-symbol { text-align: right; }
 .material-index-name { color: var(--text-strong); font-weight: 600; }
@@ -63,7 +63,7 @@ html[dir="rtl"] .material-index-symbol { text-align: right; }
 /* ── What happens next: a true sequence, so it is numbered ───────────────── */
 .pathway-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7) var(--gutter); list-style: none; }
 .pathway-steps li { padding-top: var(--s-5); border-top: 1px solid var(--rule-strong); }
-.pathway-step-number { display: block; color: var(--metal); font-family: var(--font-figures); font-stretch: var(--stretch-figures); font-size: var(--fs-44); font-weight: 300; font-variant-numeric: lining-nums; line-height: 1; }
+.pathway-step-number { display: block; color: var(--metal); font-family: var(--font-figures); font-size: var(--fs-44); font-weight: 300; font-variant-numeric: lining-nums; line-height: 1; }
 .pathway-steps h3 { margin-top: var(--s-4); font-size: var(--fs-24); }
 .pathway-steps p { margin-top: var(--s-3); max-width: 42ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.65; }
 .pathway-more { margin-top: var(--s-7); }

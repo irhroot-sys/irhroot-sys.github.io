@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run images && vite",
+    "dev": "npm run fonts && npm run images && vite",
+    "fonts": "node scripts/fetch-fonts.mjs",
     "images": "node scripts/build-images.mjs",
-    "build": "npm run images && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build": "npm run fonts && npm run images && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -p worker/tsconfig.json --noEmit",
     "test": "vitest run",
@@ -14,10 +15,6 @@
     "check": "npm run typecheck && npm test && npm run build && npm run test:e2e"
   },
   "dependencies": {
-    "@fontsource-variable/alexandria": "^5.3.0",
-    "@fontsource-variable/mona-sans": "^5.3.0",
-    "@fontsource-variable/reem-kufi": "^5.3.0",
-    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-icons": "^5.7.0"

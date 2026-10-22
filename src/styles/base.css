@@ -22,19 +22,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* The web project ships only the weights it uses; never fake the rest. */
+  font-synthesis-weight: none;
 }
 h1, h2, h3, h4 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-display);
-  font-stretch: var(--stretch-heading);
   font-weight: var(--w-heading);
   font-variant-numeric: lining-nums;
   line-height: var(--lh-heading);
   letter-spacing: var(--track-heading);
   text-wrap: balance;
 }
-h3, h4 { font-stretch: var(--stretch-title); font-weight: var(--w-title); letter-spacing: var(--track-title); line-height: var(--lh-snug); }
+h3, h4 { font-family: var(--font-title); font-weight: var(--w-title); letter-spacing: var(--track-title); line-height: var(--lh-snug); }
 /* The families switch through the role tokens. On an Arabic page every
    heading also takes the Arabic weight, leading and zero tracking, even
    where a component sets Latin values for its own titles. */
@@ -154,13 +155,37 @@ html[dir="rtl"] .scroll-progress span { transform-origin: right center; }
 
 /* Photographs open behind a mask rather than fading, which reads as a cut
    instead of a slow image load. Only inside staged elements. */
-[data-motion="reveal"] :is(.plate-frame, .service-media, .product-media, .service-detail-media) { clip-path: inset(0 0 100% 0); }
-[data-motion="reveal"].is-revealed :is(.plate-frame, .service-media, .product-media, .service-detail-media) {
+[data-motion="reveal"] :is(.plate-frame, .service-media, .product-media, .service-detail-media, .yard-frame) { clip-path: inset(0 0 100% 0); }
+[data-motion="reveal"].is-revealed :is(.plate-frame, .service-media, .product-media, .service-detail-media, .yard-frame) {
   animation: media-wipe var(--t-slow) var(--ease-out) both;
   animation-delay: calc(var(--motion-order, 0) * 40ms);
 }
-[data-motion="reveal"].is-revealed.is-immediate :is(.plate-frame, .service-media, .product-media, .service-detail-media) { animation-duration: var(--t-mid); animation-delay: 0ms; }
+[data-motion="reveal"].is-revealed.is-immediate :is(.plate-frame, .service-media, .product-media, .service-detail-media, .yard-frame) { animation-duration: var(--t-mid); animation-delay: 0ms; }
 @keyframes media-wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Display lines — the homepage statement, section titles, the footer
+   signature — are unveiled rather than faded: each rises out from behind its
+   own baseline. The resting clip is pushed well outside the box, so
+   ascenders, descenders and Arabic marks are never cut. */
+@keyframes line-unveil {
+  from { clip-path: inset(0 -.2em 100% -.2em); translate: 0 .5em; }
+  to { clip-path: inset(-.5em -.2em -.5em -.2em); translate: 0 0; }
+}
+:is(.section-heading > h2, .footer-signature > span)[data-motion="reveal"] { opacity: 1; translate: 0 .5em; clip-path: inset(0 -.2em 100% -.2em); }
+:is(.section-heading > h2, .footer-signature > span)[data-motion="reveal"].is-revealed {
+  translate: 0 0;
+  clip-path: inset(-.5em -.2em -.5em -.2em);
+  animation: line-unveil 900ms var(--ease-out) both;
+  animation-delay: calc(var(--motion-order, 0) * 90ms);
+}
+:is(.section-heading > h2, .footer-signature > span)[data-motion="reveal"].is-revealed.is-immediate { animation-duration: var(--t-mid); animation-delay: 0ms; }
+
+/* The weighing scale draws itself across the process track, the way a
+   gauge sweeps to its reading. */
+@keyframes rule-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes rule-draw-rtl { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+[data-motion="reveal"].is-revealed .scale-rule { animation: rule-draw 1.4s var(--ease-soft) .15s both; }
+html[dir="rtl"] [data-motion="reveal"].is-revealed .scale-rule { animation-name: rule-draw-rtl; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

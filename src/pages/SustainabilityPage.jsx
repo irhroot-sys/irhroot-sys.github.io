@@ -6,6 +6,7 @@ import { RecyclingFacts } from "../components/RecyclingFacts.jsx";
 import { InsightsTeaser } from "../components/InsightsTeaser.jsx";
 import { sustainabilityPillars } from "../data/siteContent.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { photos } from "../data/photos.js";
 
 export function SustainabilityPage() {
   const { t } = useLanguage();
@@ -15,8 +16,9 @@ export function SustainabilityPage() {
         eyebrow="Sustainability"
         title="Keeping valuable metal in productive use."
         copy="Every load AALKC collects is graded and returned to the supply chain, so metal already in circulation is used again instead of being wasted."
-        image="/assets/service-metal-sorting.webp"
-        alt="Industrial metal stock prepared for sorting and grading"
+        image={photos.sortedCopper.src}
+        alt={photos.sortedCopper.alt}
+        focus={photos.sortedCopper.focus}
         trail="Sustainability"
       />
       <section className="content-section container">

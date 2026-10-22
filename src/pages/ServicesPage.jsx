@@ -9,6 +9,7 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
 import { ResponsiveImage } from "../components/ResponsiveImage.jsx";
 import { PLATE_SIZES } from "../data/imageSizes.js";
+import { photos } from "../data/photos.js";
 
 
 export function ServicesPage() {
@@ -21,8 +22,9 @@ export function ServicesPage() {
         eyebrow="Industrial recycling services"
         title="Scrap management built for industrial scale."
         copy="From site collection and dismantling to grading, logistics, purchasing, and global trade, AALKC coordinates the complete material-recovery process."
-        image="/assets/service-scrap-metal.webp"
-        alt={t("Industrial scrap metal ready for recovery")}
+        image={photos.cableReelTrucks.src}
+        alt={photos.cableReelTrucks.alt}
+        focus={photos.cableReelTrucks.focus}
         trail="Services"
       />
 

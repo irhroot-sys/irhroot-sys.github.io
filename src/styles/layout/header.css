@@ -91,10 +91,10 @@ html[lang="ar"] .utility-bar { letter-spacing: 0; }
    spaced like an engraved plate, so it never competes with the mark. */
 .brand-wordmark strong {
   color: var(--navy-800);
-  font-family: var(--font-text);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: .2em;
+  font-family: var(--font-brand);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .12em;
 }
 .brand-wordmark span { color: var(--steel-600); font-size: 10px; font-weight: 500; letter-spacing: .03em; white-space: nowrap; }
 .brand-wordmark span[lang="ar"] { font-family: var(--font-arabic); font-size: 11px; letter-spacing: 0; }
@@ -126,9 +126,9 @@ html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
 .primary-nav a:hover, .primary-nav a:focus-visible, .primary-nav a.active { color: var(--navy-800); }
 .primary-nav a:hover::after, .primary-nav a.active::after { transform: scaleX(1); }
 .mobile-nav-quote, .nav-scrim { display: none; }
-/* Eight destinations in Mona Sans need about 1370px at full spacing; on
-   narrower desktops the menu tightens instead of collapsing early. */
-@media (max-width: 1365px) {
+/* Eight destinations need about 1480px at full spacing; on narrower
+   desktops the menu tightens instead of collapsing early. */
+@media (max-width: 1480px) {
   .primary-nav { gap: 16px; padding-inline-start: 16px; }
   .primary-nav a { font-size: var(--fs-14); }
 }
@@ -154,9 +154,9 @@ html[lang="ar"] .primary-nav a { font-size: var(--fs-16); }
 .menu-button { display: none; }
 
 /* ── Compact header and menu ──────────────────────────────────────────────
-   Eight destinations need about 1240px beside the brand and actions. Below
+   Eight destinations need about 1280px beside the brand and actions. Below
    that the menu becomes a full-height sheet: numbered, large, unhurried. */
-@media (max-width: 1240px) {
+@media (max-width: 1279px) {
   :root { --header-h: 72px; }
   .site-header { top: 0; }
   .utility-bar { display: none; }
@@ -183,9 +183,8 @@ html[lang="ar"] .primary-nav a { font-size: var(--fs-16); }
     gap: var(--s-5);
     border-bottom: 1px solid var(--rule-ink);
     color: var(--on-ink-body);
-    font-family: var(--font-display);
+    font-family: var(--font-title);
     font-size: var(--fs-24);
-    font-stretch: var(--stretch-heading);
     font-weight: var(--w-heading);
     letter-spacing: -.015em;
   }

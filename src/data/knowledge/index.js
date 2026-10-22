@@ -1,22 +1,24 @@
 import { industries, materials, services } from "../siteContent.jsx";
 import { industryMeta, insightMeta, materialMeta, processMeta, PUBLISHED } from "./meta.js";
 import { sources } from "./sources.js";
+import { photos } from "../photos.js";
 
 // The light half of the knowledge base: everything the route list, the head,
 // navigation and onward links need. The guide and article bodies are not
 // imported here — they load with the pages that show them (lib/knowledge.jsx).
 export { industryMeta, insightMeta, materialMeta, processMeta, PUBLISHED, sources };
 
-// Photographs for the sector guides, chosen from the site's own library.
+// Photographs for the sector guides, from AALKC's own photographs.
+const sectorPhoto = ({ src, alt, focus }) => ({ image: src, alt, focus });
 export const industryImages = {
-  construction: { image: "/assets/service-construction-materials.webp", alt: "Steel construction materials ready for supply" },
-  manufacturing: { image: "/assets/service-metal-sorting.webp", alt: "Industrial metal stock prepared for sorting and grading" },
-  "industrial-plants": { image: "/assets/service-industrial-dismantling.webp", alt: "Industrial material recovery and dismantling operation" },
-  electrical: { image: "/assets/service-scrap-metal.webp", alt: "Sorted ferrous and non-ferrous scrap metal" },
-  commercial: { image: "/assets/service-container-handling.webp", alt: "Scrap metal collection and container service at an industrial yard" },
+  construction: sectorPhoto(photos.beamsContainers),
+  manufacturing: sectorPhoto(photos.cableTrays),
+  "industrial-plants": sectorPhoto(photos.generatorStator),
+  electrical: sectorPhoto(photos.gatedTransformers),
+  commercial: sectorPhoto(photos.truckGrapple),
 };
 
-export const ARTICLE_IMAGE = "/assets/service-metal-sorting.webp";
+export const ARTICLE_IMAGE = photos.grappleSteel.src;
 
 export function resolveSources(keys = []) {
   return keys.map((key) => {

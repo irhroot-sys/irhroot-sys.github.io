@@ -8,7 +8,7 @@ import { ResponsiveImage } from "./ResponsiveImage.jsx";
 // measure and the photograph runs from the header to the edge of the screen
 // beside it, so every page opens on the yard itself while the homepage's
 // navy statement stays the one dark opening on the site.
-export function PageHero({ eyebrow, title, copy, image, alt, trail, parent }) {
+export function PageHero({ eyebrow, title, copy, image, alt, focus, trail, parent }) {
   const { t } = useLanguage();
   return (
     <section className="page-hero" aria-labelledby="page-title">
@@ -25,7 +25,7 @@ export function PageHero({ eyebrow, title, copy, image, alt, trail, parent }) {
         </div>
         <figure className="page-hero-plate">
           <div className="page-hero-media">
-            <ResponsiveImage className="page-hero-image" data-parallax="0.05" src={image} sizes={PAGE_HERO_SIZES} alt={t(alt)} loading="eager" fetchPriority="high" decoding="async" />
+            <ResponsiveImage className="page-hero-image" data-parallax="0.05" src={image} sizes={PAGE_HERO_SIZES} alt={t(alt)} style={focus ? { objectPosition: focus } : undefined} loading="eager" fetchPriority="high" decoding="async" />
           </div>
         </figure>
       </div>

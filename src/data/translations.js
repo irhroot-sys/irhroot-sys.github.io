@@ -556,4 +556,7 @@ export const arabicTranslations = {
   "Requirement details": "تفاصيل المتطلبات",
   "Grade or specification, quantity, destination, timing and inspection requirements": "الدرجة أو المواصفة، والكمية، والوجهة، والتوقيت، ومتطلبات الفحص",
   "Get a quote": "اطلب عرض سعر",
+  "The yard": "الساحة",
+  "Our operation, in pictures.": "أعمالنا بالصور.",
+  "AALKC's own photographs of its yard, its equipment and the material it handles.": "صور أمانة الكلمة لساحتها ومعدّاتها والمواد التي تتعامل معها.",
 };

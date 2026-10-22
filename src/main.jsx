@@ -1,16 +1,8 @@
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
-// One Latin family, used along its width axis: Mona Sans (variable, width
-// 75–125, weight 200–900) — expanded for what is declared and for figures,
-// normal width for reading. Arabic: Alexandria for headings, Reem Kufi for
-// the few signature lines, IBM Plex Sans Arabic for reading. Every face is
-// subset by unicode-range, so a page only downloads the scripts it renders.
-import "@fontsource-variable/mona-sans/standard.css";
-import "@fontsource-variable/alexandria/wght.css";
-import "@fontsource-variable/reem-kufi/wght.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
-import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";
+// Typefaces: AALKC's Adobe Fonts web project (Sweet Square Pro, Futura PT,
+// Mawzoon) is linked in index.html; the office faces (AALKC, AALKC Kufi) and
+// the fallbacks are declared in styles/fonts.css.
 import { App } from "./App.jsx";
 import { findRoute, renderKeyFor } from "./routes.jsx";
 import { loadKnowledge } from "./lib/knowledge.jsx";

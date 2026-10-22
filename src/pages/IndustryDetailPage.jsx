@@ -36,7 +36,7 @@ function streamBlocks(streams) {
 export function IndustryDetailPage({ slug }) {
   const industry = findIndustry(slug);
   const guide = { ...industryMeta[slug], ...industryGuides[slug] };
-  const { image, alt } = industryImages[slug];
+  const { image, alt, focus } = industryImages[slug];
   const { t } = useLanguage();
 
   return (
@@ -47,6 +47,7 @@ export function IndustryDetailPage({ slug }) {
         copy={guide.standfirst}
         image={image}
         alt={alt}
+        focus={focus}
         trail={industry.title}
         parent={{ label: "Industries", to: "/industries" }}
       />
