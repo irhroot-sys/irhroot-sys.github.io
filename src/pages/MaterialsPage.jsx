@@ -7,6 +7,7 @@ import { gradingStandards, materials } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
+import { photos } from "../data/photos.js";
 
 // The three detail lines every material carries, in order.
 const SPEC_LABELS = ["Grade / form", "Specification", "Typical use"];
@@ -62,8 +63,9 @@ export function MaterialsPage() {
         eyebrow="What we buy"
         title="Ferrous and non-ferrous materials."
         copy="Our analysis and certified weighing process supports precise grading and transparent, market-aware quotations for every accepted load."
-        image="/assets/service-construction-materials.webp"
-        alt={t("Steel construction materials ready for supply")}
+        image={photos.steelSections.src}
+        alt={photos.steelSections.alt}
+        focus={photos.steelSections.focus}
         trail="Materials"
       />
 
@@ -72,7 +74,7 @@ export function MaterialsPage() {
         <div className="catalog-tools" aria-label={t("Material filters")}>
           <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (
-              <button type="button" className={category === item ? "active" : ""} onClick={() => setCategory(item)} key={item}>{t(item)}</button>
+              <button type="button" aria-pressed={category === item} onClick={() => setCategory(item)} key={item}>{t(item)}</button>
             ))}
           </div>
           <label className="search-control"><LuSearch /><span className="sr-only">{t("Search materials")}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search materials")} /></label>

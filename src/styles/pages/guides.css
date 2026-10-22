@@ -97,8 +97,8 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
 .guide-action .primary-button { width: 100%; }
 
 /* ── Long-form body ──────────────────────────────────────────────────────
-   17–19px Plex at 1.72 on a 66-character measure. Headings are the serif,
-   set a step below section titles so the body, not the headings, leads. */
+   17–19px General Sans at 1.72 on a 66-character measure. Headings are set a
+   step below section titles so the body, not the headings, leads. */
 .longform { color: var(--text); font-size: var(--fs-article); line-height: var(--lh-article); }
 .longform > * + * { margin-top: var(--s-5); }
 .longform > :is(p, .longform-list, .longform-definitions, .longform-note) { max-width: var(--measure-text); }
@@ -146,7 +146,7 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
   background: none;
   color: var(--signal);
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums;
 }
 
 .longform-definitions { border-top: 1px solid var(--rule-strong); }
@@ -159,7 +159,7 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
 }
 .longform-definitions dt {
   color: var(--heading);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: var(--fs-20);
   font-weight: var(--w-title);
   line-height: 1.4;
@@ -167,11 +167,11 @@ html[dir="rtl"] .toc a { padding: 7px var(--s-4) 7px 0; }
 .longform-definitions dd { margin: 0; }
 
 /* Tables are the data of the page: a navy rule above, hairlines between
-   rows, figures lining and tabular. Wide tables scroll inside their frame
+   rows, figures lining. Wide tables scroll inside their frame
    on a phone rather than squeezing the text. */
 .longform-table { overflow-x: auto; border-top: 2px solid var(--navy-800); }
 .longform-table:focus-visible { outline-offset: 4px; }
-.longform-table table { width: 100%; border-collapse: collapse; font-size: var(--fs-15); line-height: 1.55; font-variant-numeric: lining-nums tabular-nums; }
+.longform-table table { width: 100%; border-collapse: collapse; font-size: var(--fs-15); line-height: 1.55; font-variant-numeric: lining-nums; }
 .longform-table table:has(th:nth-child(3)) { min-width: 36rem; }
 .longform-table caption { padding: var(--s-3) 0 0; caption-side: bottom; color: var(--text-muted); font-size: var(--fs-13); text-align: start; }
 .longform-table :is(th, td) { padding: var(--s-4) var(--s-5) var(--s-4) 0; border-bottom: 1px solid var(--rule); text-align: start; vertical-align: top; }
@@ -221,7 +221,7 @@ html[dir="rtl"] .sources a:hover svg { translate: -2px -2px; }
 }
 .related-links li { display: grid; }
 .related-links a { display: grid; align-content: start; gap: var(--s-2); padding: var(--s-5) 0 var(--s-6); border-bottom: 1px solid var(--rule); }
-.related-links strong { color: var(--heading); font-family: var(--font-display); font-size: var(--fs-20); font-weight: var(--w-title); line-height: 1.3; text-wrap: balance; }
+.related-links strong { color: var(--heading); font-family: var(--font-title); font-size: var(--fs-20); font-weight: var(--w-title); line-height: 1.3; text-wrap: balance; }
 .related-links span { color: var(--text-muted); font-size: var(--fs-14); line-height: 1.5; }
 .related-links a:hover strong { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 
@@ -244,9 +244,9 @@ html[dir="rtl"] .sources a:hover svg { translate: -2px -2px; }
   max-width: 44ch;
   margin-top: var(--s-5);
   color: var(--text);
-  font-family: var(--font-display);
+  font-family: var(--font-text);
   font-size: var(--fs-24);
-  font-weight: 360;
+  font-weight: 400;
   line-height: 1.45;
   text-wrap: pretty;
 }
@@ -327,7 +327,7 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
   padding: var(--s-2) 0;
   border-bottom: 1px solid var(--rule);
   color: var(--heading);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: var(--fs-18);
   font-weight: var(--w-title);
   line-height: 1.35;
@@ -349,11 +349,11 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
 .process-stage-number {
   grid-column: 1 / span 2;
   color: var(--metal);
-  font-family: var(--font-display);
+  font-family: var(--font-figures);
   font-size: var(--fs-60);
   font-weight: 300;
-  font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: -.03em;
+  font-variant-numeric: lining-nums;
+  letter-spacing: 0;
   line-height: .9;
 }
 .process-stage h3 { grid-column: 3 / span 4; font-size: var(--fs-32); }
@@ -368,20 +368,17 @@ html[dir="rtl"] .article-index-link:hover .directional-icon { translate: -4px 0;
 
 
 /* ── Arabic ──────────────────────────────────────────────────────────────
-   Plex Sans Arabic for the body at a slightly larger size and Naskh
-   leading; Markazi Text wherever the Latin uses the serif. */
+   The families switch through the role tokens; what is left here is the
+   Arabic calibration: a slightly larger body, taller leading, and AALKC Kufi
+   titles set a step larger than the Latin they replace. */
 html[lang="ar"] .longform { font-size: calc(var(--fs-article) * 1.03); line-height: 1.95; }
 html[lang="ar"] .in-brief li { line-height: 1.85; }
-html[lang="ar"] :is(.in-brief-title, .toc-title, .guide-register-title, .sources-title, .guide-index-group h3) { font-family: var(--font-arabic); letter-spacing: 0; }
-html[lang="ar"] :is(.longform-definitions dt, .related-links strong, .guide-index-group a, .article-standfirst) {
-  font-family: var(--font-arabic-display);
-  font-weight: var(--w-arabic-display);
-  letter-spacing: 0;
-}
-html[lang="ar"] .longform-definitions dt { font-size: calc(var(--fs-20) * 1.12); line-height: 1.55; }
-html[lang="ar"] .related-links strong { font-size: calc(var(--fs-20) * 1.12); line-height: 1.5; }
-html[lang="ar"] .guide-index-group a { font-size: calc(var(--fs-18) * 1.15); line-height: 1.5; }
-html[lang="ar"] .article-standfirst { font-size: calc(var(--fs-24) * 1.12); line-height: 1.65; }
+html[lang="ar"] :is(.in-brief-title, .toc-title, .guide-register-title, .sources-title) { letter-spacing: 0; }
+html[lang="ar"] :is(.longform-definitions dt, .related-links strong, .guide-index-group a) { font-weight: var(--w-arabic-title); }
+html[lang="ar"] .longform-definitions dt { font-size: calc(var(--fs-20) * 1.04); line-height: 1.55; }
+html[lang="ar"] .related-links strong { font-size: calc(var(--fs-20) * 1.04); line-height: 1.5; }
+html[lang="ar"] .guide-index-group a { font-size: calc(var(--fs-18) * 1.04); line-height: 1.5; }
+html[lang="ar"] .article-standfirst { font-size: calc(var(--fs-24) * 1.04); font-weight: 400; line-height: 1.65; }
 html[lang="ar"] .article-header h1 { max-width: 28ch; line-height: 1.32; }
 html[lang="ar"] .longform-h2 { max-width: 34ch; }
 html[lang="ar"] .longform-table table { line-height: 1.75; }
@@ -411,10 +408,10 @@ html[lang="ar"] .longform-table table { line-height: 1.75; }
   .toc ol { columns: 1; }
   .longform-definitions > div { grid-template-columns: minmax(0, 1fr); }
   .longform-h2 { font-size: var(--fs-24); }
-  html[lang="ar"] .longform-h2 { font-size: calc(var(--fs-24) * 1.1); }
+  html[lang="ar"] .longform-h2 { font-size: calc(var(--fs-24) * 1.04); }
   .in-brief li { font-size: var(--fs-16); }
   .article-standfirst { font-size: var(--fs-20); }
-  html[lang="ar"] .article-standfirst { font-size: calc(var(--fs-20) * 1.12); }
+  html[lang="ar"] .article-standfirst { font-size: calc(var(--fs-20) * 1.04); }
   .article-index-title { font-size: var(--fs-24); }
   .process-stage { grid-template-columns: 56px minmax(0, 1fr); column-gap: var(--s-4); padding: var(--s-6) 0; }
   .process-stage-number { grid-column: 1; font-size: var(--fs-32); line-height: 1.1; }

@@ -1,0 +1,53 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   The yard, in pictures
+   A contact sheet of AALKC's own photographs: one lead frame across seven
+   columns and two rows, the rest in a measured run beside and below it.
+   Square-cut frames, the shared photo grade, captions set small beneath —
+   the way a site report shows its evidence.
+   ══════════════════════════════════════════════════════════════════════════ */
+.yard-gallery {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-6) var(--gutter);
+  list-style: none;
+}
+.yard-gallery > li { grid-column: span 4; }
+.yard-gallery > li.is-lead { grid-column: 1 / span 7; grid-row: span 2; }
+.yard-gallery > li:nth-child(2),
+.yard-gallery > li:nth-child(3) { grid-column: 8 / span 5; }
+.yard-gallery figure { display: grid; grid-template-rows: 1fr auto; height: 100%; margin: 0; }
+.yard-frame { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--surface-sunk); }
+.yard-gallery > li.is-lead .yard-frame { aspect-ratio: auto; min-height: 100%; }
+.yard-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: var(--photo-grade);
+  transition: filter var(--t-slow) var(--ease-out), scale var(--t-slow) var(--ease-out);
+}
+.yard-gallery figure:hover .yard-frame img { scale: 1.03; filter: var(--photo-grade-hover); }
+.yard-gallery figcaption {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+  color: var(--text-muted);
+  font-size: var(--fs-14);
+  line-height: 1.5;
+}
+.surface-ink .yard-gallery figcaption { color: var(--on-ink-muted); border-color: var(--rule-ink); }
+
+@media (max-width: 900px) {
+  .yard-gallery > li,
+  .yard-gallery > li:nth-child(2),
+  .yard-gallery > li:nth-child(3) { grid-column: span 6; }
+  .yard-gallery > li.is-lead { grid-column: 1 / -1; grid-row: auto; }
+  .yard-gallery > li.is-lead .yard-frame { aspect-ratio: 4 / 3; min-height: 0; }
+}
+@media (max-width: 620px) {
+  .yard-gallery { gap: var(--s-5); }
+  .yard-gallery > li,
+  .yard-gallery > li:nth-child(2),
+  .yard-gallery > li:nth-child(3) { grid-column: 1 / -1; }
+}

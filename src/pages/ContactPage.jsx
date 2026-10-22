@@ -6,6 +6,7 @@ import { EnquiryForm } from "../components/EnquiryForm.jsx";
 import { contactDetails } from "../data/siteContent.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { PhoneNumber } from "../components/PhoneNumber.jsx";
+import { photos } from "../data/photos.js";
 
 export function ContactPage() {
   const { t, isArabic } = useLanguage();
@@ -16,8 +17,9 @@ export function ContactPage() {
         eyebrow="Start a conversation"
         title="Maximize the value of your scrap."
         copy="Share the material, estimated quantity, site location, and collection needs. Our Dammam team will review the requirement and respond with the next step."
-        image="/assets/service-container-handling.webp"
-        alt={t("Scrap-handling crane loading recovered metal at an industrial yard")}
+        image={photos.yardEntrance.src}
+        alt={photos.yardEntrance.alt}
+        focus={photos.yardEntrance.focus}
         trail="Contact"
       />
       <section className="content-section container contact-layout">

@@ -5,6 +5,7 @@ import { CtaBand } from "../components/CtaBand.jsx";
 import { industries, services } from "../data/siteContent.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
+import { photos } from "../data/photos.js";
 
 const serviceTitles = Object.fromEntries(services.map((service) => [service.slug, service.title]));
 
@@ -16,8 +17,9 @@ export function IndustriesPage() {
         eyebrow="Industries we serve"
         title="Scrap programmes built around your sector."
         copy="Every sector produces scrap differently. Collection, sorting and grading are planned around how your operation works."
-        image="/assets/service-construction-materials.webp"
-        alt="Steel construction materials ready for supply"
+        image={photos.transformers.src}
+        alt={photos.transformers.alt}
+        focus={photos.transformers.focus}
         trail="Industries"
       />
       <section className="content-section container">

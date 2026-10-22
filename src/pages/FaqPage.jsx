@@ -3,6 +3,7 @@ import { SectionHeading } from "../components/SectionHeading.jsx";
 import { CtaBand } from "../components/CtaBand.jsx";
 import { frequentlyAskedQuestions } from "../data/siteContent.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { photos } from "../data/photos.js";
 
 export function FaqPage() {
   const { t } = useLanguage();
@@ -13,8 +14,9 @@ export function FaqPage() {
         eyebrow="Knowledge base"
         title="Frequently asked questions."
         copy="Essential information about accepted materials, collection, grading, pricing, compliance, and supplier payments."
-        image="/assets/service-scrap-metal.webp"
-        alt={t("Sorted scrap metal at an industrial recycling yard")}
+        image={photos.flatbedCable.src}
+        alt={photos.flatbedCable.alt}
+        focus={photos.flatbedCable.focus}
         trail="FAQ"
       />
       <section className="content-section container faq-section">

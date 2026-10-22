@@ -1,5 +1,20 @@
 # AALKC photography sources
 
+## AALKC's own photographs — `public/assets/yard/`
+
+Supplied by AALKC (October 2026) from the company's own photograph library ("WEBSITE IMAGES"): its yard, fleet, equipment and handled material. Used throughout the site — the homepage hero, page heroes, services, material families, sector guides and "The yard" gallery — with captions and alt text that describe only what is visible. Resized to at most 1920 px and re-encoded as WebP; no other alterations. The table of where each is used is `src/data/photos.js`.
+
+- `aalkc-yard-entrance-night.webp` — the AALKC yard entrance at night, company sign on the gate wall (homepage hero, Contact).
+- `cable-reel-loading`, `cable-reel-trucks`, `crane-cable-reels`, `flatbed-cable-loops`, `cable-drums-grapple` — cable reels and cable handling and transport.
+- `cast-metal-components`, `structural-scrap-yard`, `ferrous-scrap-yard`, `grapple-steel-piles`, `steel-channels-pipes`, `steel-plates`, `steel-beams-containers`, `galvanized-cable-trays` — ferrous and structural material.
+- `used-transformers`, `transformers-safety-gates`, `switchgear-dismantling`, `generator-stator`, `stator-interior` — electrical equipment recovery and dismantling.
+- `sorted-copper-container` — sorted copper scrap in a shipping container.
+- `yard-weighbridge`, `scrap-trailer`, `truck-grapple-loading` — the weighbridge, haulage and loading.
+
+## Licensed photographs
+
+- `yard/foundry-pour.webp` — Yasin Hemmati, Unsplash (file `yasin-hemmati-zHK__gTTTds-unsplash.jpg`, photo ID zHK__gTTTds), used under the Unsplash License. Supplied by AALKC with its photographs; shows a foundry, not an AALKC facility. Used on the "Buy from AALKC" page, which addresses mills and foundries.
+
 The photographs below are used as licensed, representative industrial imagery. They do not depict AALKC facilities unless explicitly stated.
 
 - `service-industrial-dismantling.webp` — Yasin Hemmati, [Unsplash](https://unsplash.com/photos/lp6CBQSr1Ek), used under the Unsplash License. Also used as the homepage hero image.

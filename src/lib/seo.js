@@ -87,7 +87,7 @@ function pageSpecificNodes(route, language, canonical) {
   if (route.path === "/faq") return [faqNode(frequentlyAskedQuestions, language, canonical)];
   const nodes = [];
   if (route.article) nodes.push(articleNode(route, language, canonical));
-  const faq = knowledgeFaq(route.knowledge);
+  const faq = route.faq ?? knowledgeFaq(route.knowledge);
   if (faq.length) nodes.push(faqNode(faq, language, canonical));
   if (nodes.length) return nodes;
   if (route.service) {

@@ -27,9 +27,9 @@ for (const marker of ["<!--app-head-->", '<div id="root"><!--app-html--></div>',
   if (!template.includes(marker)) throw new Error(`index.html is missing the prerender marker ${marker}`);
 }
 
-// The fonts that paint the first screen: body copy and the display headline,
-// per script. Preloading them lets the browser fetch them alongside the
-// stylesheet instead of after it has been parsed.
+// The self-hosted face that paints the first screen, per script: the AALKC
+// capitals of the statement and page titles in English, AALKC Kufi for Arabic
+// reading. The Adobe Fonts faces load from the project index.html links to.
 const assetFiles = await readdir(path.join(distDir, "assets"));
 function fontAsset(prefix) {
   const file = assetFiles.find((name) => name.startsWith(prefix) && name.endsWith(".woff2"));
@@ -37,8 +37,8 @@ function fontAsset(prefix) {
   return `/assets/${file}`;
 }
 const criticalFonts = {
-  en: [fontAsset("ibm-plex-sans-latin-wght-normal-"), fontAsset("newsreader-latin-opsz-normal-")],
-  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("markazi-text-arabic-wght-normal-")],
+  en: [fontAsset("AALKC-Bold-")],
+  ar: [fontAsset("AALKCKufi-Regular-")],
 };
 
 // The guide pages hydrate from their own chunk; fetch it with the entry.
@@ -121,6 +121,7 @@ ${sitemapEntries.join("\n")}
 // sitemap, so it can never point at a page that does not exist.
 const llmsGroups = [
   ["Company", (p) => ["/", "/about", "/process", "/sustainability", "/faq", "/contact"].includes(p)],
+  ["Working with AALKC", (p) => ["/sell", "/buy"].includes(p)],
   ["Services", (p) => p === "/services" || p.startsWith("/services/")],
   ["Materials", (p) => p === "/materials" || p.startsWith("/materials/")],
   ["Industries", (p) => p === "/industries" || p.startsWith("/industries/")],

@@ -7,6 +7,7 @@ import { guideLinks, processMeta } from "../data/knowledge/index.js";
 import { processGuide } from "../data/knowledge/process.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
+import { photos } from "../data/photos.js";
 
 // The stages are a true sequence — each depends on the one before — so this is
 // the one place on the site where they are numbered.
@@ -20,8 +21,9 @@ export function ProcessPage() {
         eyebrow="From enquiry to onward supply"
         title={title}
         copy={standfirst}
-        image="/assets/service-metal-sorting.webp"
-        alt="Industrial metal stock prepared for sorting and grading"
+        image={photos.weighbridge.src}
+        alt={photos.weighbridge.alt}
+        focus={photos.weighbridge.focus}
         trail={title}
       />
 

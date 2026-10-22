@@ -30,7 +30,7 @@ test('loads the cinematic hero as high-priority media without hiding conversion 
   const heading = hero.getByRole('heading', { level: 1 });
   const actions = hero.locator('.hero-actions');
 
-  await expect(image).toHaveAttribute('src', '/assets/service-metal-sorting.webp');
+  await expect(image).toHaveAttribute('src', '/assets/yard/aalkc-yard-entrance-night.webp');
   await expect(image).toHaveAttribute('fetchpriority', 'high');
   await expect(image).toHaveJSProperty('complete', true);
   await expect(heading).toBeVisible();
@@ -166,17 +166,34 @@ test('grades every capability photograph the same way', async ({ page }) => {
 test('uses the premium bilingual body fonts and interactive link states', async ({ page }) => {
   await page.goto('/');
 
+  // The office face AALKC sets the statement and wordmark; the Adobe Fonts
+  // project supplies Sweet Square Pro for titles and Futura PT for text.
+  await expect(page.locator('link[rel="stylesheet"][href="https://use.typekit.net/jrz4pqn.css"]')).toHaveCount(1);
   const englishFonts = await page.evaluate(() => ({
     body: getComputedStyle(document.body).fontFamily,
     heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+    wordmark: getComputedStyle(document.querySelector('.brand-wordmark strong')!).fontFamily,
+    section: getComputedStyle(document.querySelector('main h2')!).fontFamily,
+    figure: getComputedStyle(document.querySelector('.assay-symbol')!).fontFamily,
+    synthesis: getComputedStyle(document.body).fontSynthesisWeight,
   }));
-  expect(englishFonts.body).toContain('IBM Plex Sans');
-  expect(englishFonts.heading).toContain('Newsreader');
+  expect(englishFonts.body).toMatch(/^"?futura-pt"?, "?General Sans/);
+  expect(englishFonts.heading).toMatch(/^"?AALKC"?,/);
+  expect(englishFonts.wordmark).toMatch(/^"?AALKC"?,/);
+  expect(englishFonts.section).toMatch(/^"?sweet-square-pro/);
+  expect(englishFonts.figure).toMatch(/^"?sweet-square-pro/);
+  // The project ships two weights of Sweet Square Pro and one of Mawzoon;
+  // the browser must never fake the others.
+  expect(englishFonts.synthesis).toBe('none');
+  // The self-hosted office face is actually served, not just named.
+  await page.evaluate(() => document.fonts.ready);
+  const loaded = await page.evaluate(() => [...document.fonts].filter((face) => face.status === 'loaded').map((face) => face.family.replaceAll('"', '')));
+  expect(loaded).toContain('AALKC');
 
   // The bar is white, so the active page is set in brand navy (#0E335C); in
   // the compact menu the links sit on a navy sheet and the active one is white.
   const activeNav = page.locator('.primary-nav a.active');
-  const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1240px)').matches);
+  const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1279px)').matches);
   await expect(activeNav).toHaveCSS('color', compactMenu ? 'rgb(255, 255, 255)' : 'rgb(14, 51, 92)');
 
   const footerLink = page.locator('.footer-links a').first();
@@ -189,10 +206,23 @@ test('uses the premium bilingual body fonts and interactive link states', async 
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   const arabicFonts = await page.evaluate(() => ({
     body: getComputedStyle(document.body).fontFamily,
-    heading: getComputedStyle(document.querySelector('h1')!).fontFamily,
+    statement: getComputedStyle(document.querySelector('h1')!).fontFamily,
+    heading: getComputedStyle(document.querySelector('main h2')!).fontFamily,
+    title: getComputedStyle(document.querySelector('main h3')!).fontFamily,
+    wordmark: getComputedStyle(document.querySelector('.brand-wordmark strong')!).fontFamily,
   }));
-  expect(arabicFonts.body).toContain('IBM Plex Sans Arabic');
-  expect(arabicFonts.heading).toContain('Markazi Text');
+  // Arabic stacks lead with the Latin face (no Arabic glyphs), so Arabic
+  // letters fall through to the Arabic face and digits stay Latin. Mawzoon
+  // sets the statement and titles; AALKC Kufi the card titles and reading.
+  expect(arabicFonts.statement).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
+  expect(arabicFonts.heading).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
+  expect(arabicFonts.title).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
+  expect(arabicFonts.body).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
+  await page.evaluate(() => document.fonts.ready);
+  const arabicLoaded = await page.evaluate(() => [...document.fonts].filter((face) => face.status === 'loaded').map((face) => face.family.replaceAll('"', '')));
+  expect(arabicLoaded).toContain('AALKC Kufi');
+  // The Latin name inside the Arabic header keeps the Latin face.
+  expect(arabicFonts.wordmark).toMatch(/^"?AALKC"?,/);
 });
 
 test('switches the full interface between English and Arabic', async ({ page }) => {
@@ -295,6 +325,46 @@ test('filters and searches the material catalogue', async ({ page }) => {
   await expect(catalogue.getByRole('heading', { name: 'Steel' })).toHaveCount(0);
   await page.getByPlaceholder('Search materials').fill('brass');
   await expect(catalogue.getByRole('heading', { name: 'Brass' })).toBeVisible();
+  // The chosen filter is announced as pressed, not shown by colour alone.
+  await expect(page.getByRole('button', { name: 'Non-Ferrous' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'All' })).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('routes each kind of visitor from the homepage to their own page', async ({ page }) => {
+  await page.goto('/');
+  const routes = page.locator('.pathways .pathway');
+  await expect(routes).toHaveCount(3);
+  await routes.filter({ hasText: 'Sell scrap' }).getByRole('link').click();
+  await expect(page).toHaveURL(/\/sell$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Sell your scrap to AALKC.' })).toBeVisible();
+  await expect(page.locator('.material-index a')).toHaveCount(8);
+  await expect(page.locator('.pathway-checklist.is-excluded li')).toHaveCount(3);
+  await expect(page.locator('.pathway-steps li')).toHaveCount(6);
+  // The other two routes are offered at the foot of the page, not this one.
+  await expect(page.locator('.pathways .pathway')).toHaveCount(2);
+  await expect(page.locator('.pathways')).not.toContainText('Sell scrap');
+
+  // The credentials link lands on the company register.
+  await page.getByRole('link', { name: 'company register and certifications' }).click();
+  await expect(page).toHaveURL(/\/about#credentials$/);
+  await expect(page.locator('#credentials')).toBeInViewport();
+});
+
+test('asks buyers for their requirement, not a collection site', async ({ page }) => {
+  await page.goto('/buy');
+  await expect(page.getByRole('heading', { level: 1, name: 'Source graded scrap from AALKC.' })).toBeVisible();
+  await page.locator('.pathway-actions').getByRole('button', { name: 'Request supply' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('heading', { name: 'Request supply' })).toBeVisible();
+  await expect(dialog).toContainText('Buy materials from AALKC');
+  await expect(dialog.locator('[name="material"]')).toHaveCount(1);
+  for (const name of ['location', 'timing', 'weightTons']) await expect(dialog.locator(`[name="${name}"]`), name).toHaveCount(0);
+  await expect(dialog.locator('textarea[name="message"]')).toHaveAttribute('placeholder', /destination/);
+
+  // A supplier's quote still asks where and when to collect.
+  await page.goto('/sell');
+  await page.locator('.pathway-actions').getByRole('button', { name: 'Get a quote' }).click();
+  for (const name of ['location', 'timing', 'weightTons']) await expect(page.getByRole('dialog').locator(`[name="${name}"]`), name).toHaveCount(1);
 });
 
 test('serves a useful 404 fallback', async ({ page }) => {
@@ -384,6 +454,14 @@ test('shows the official mark in its own navy and steel on the white header', as
     bars: getComputedStyle(svg.querySelector(':scope > g path')!).fill,
   }));
   expect(fills).toEqual({ a: 'rgb(14, 51, 92)', bars: 'rgb(125, 131, 137)' });
+  // The mark assembles on load, and once its motion has finished every
+  // reveal clip sits at rest over the whole mark: the approved artwork, intact.
+  const rest = await mark.evaluate(async (svg) => {
+    await Promise.all(svg.getAnimations({ subtree: true }).map((animation) => animation.finished));
+    return [...svg.querySelectorAll('.mark-reveal')].map((rect) => getComputedStyle(rect).transform);
+  });
+  expect(rest).toHaveLength(3);
+  for (const transform of rest) expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(transform);
   const headerSurface = await page.evaluate(() => getComputedStyle(document.querySelector('.site-header')!, '::before').backgroundColor);
   expect(headerSurface).toBe('rgb(255, 255, 255)');
 });
@@ -615,6 +693,8 @@ test('prerenders every guide and article with its structured data', async ({ req
     ['/ar/materials/heavy-melt-steel', 'ar', 'الفولاذ الثقيل للصهر (HMS 1 و2) | أمانة الكلمة'],
     ['/industries/construction', 'en', 'Scrap metal from construction and contracting | AALKC'],
     ['/process', 'en', 'How we work | AALKC'],
+    ['/sell', 'en', 'Sell your scrap | AALKC'],
+    ['/ar/buy', 'ar', 'اشترِ من أمانة الكلمة | أمانة الكلمة'],
     ['/ar/process', 'ar', 'كيف نعمل | أمانة الكلمة'],
     ['/insights', 'en', 'Insights | AALKC'],
     ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: how ferrous and non-ferrous scrap is classified | AALKC'],
@@ -627,12 +707,14 @@ test('prerenders every guide and article with its structured data', async ({ req
     expect(html, path).toContain(`<title>${title}</title>`);
     expect(html, path).toContain(`<link rel="canonical" href="https://aalkc.com${path}" />`);
     // The body is in the document itself, not fetched after load.
-    if (path !== '/insights') expect(html, path).toContain('class="in-brief"');
+    if (!['/insights', '/sell', '/ar/buy'].includes(path)) expect(html, path).toContain('class="in-brief"');
   }
 
   // Guides answer their questions as FAQPage data; articles are Articles,
   // published by the company, citing their sources.
   expect(types(await (await request.get('/materials/copper')).text())).toContain('FAQPage');
+  expect(types(await (await request.get('/sell')).text())).toContain('FAQPage');
+  expect(types(await (await request.get('/ar/buy')).text())).toContain('FAQPage');
   const article = await (await request.get('/insights/saudi-arabia-scrap-metal-industry')).text();
   expect(article).toContain('<meta property="og:type" content="article" />');
   const articleNode = jsonLd(article).find((node: { '@type': string }) => node['@type'] === 'Article');
@@ -644,7 +726,7 @@ test('prerenders every guide and article with its structured data', async ({ req
   expect(breadcrumb.itemListElement.map((item: { name: string }) => item.name)).toEqual(['Home', 'Insights', "Saudi Arabia's scrap metal industry: history, geography and the market today"]);
 
   const sitemap = await (await request.get('/sitemap.xml')).text();
-  for (const loc of ['/materials/copper', '/ar/materials/rebar', '/industries/electrical', '/process', '/insights', '/ar/insights/preparing-scrap-for-grading']) {
+  for (const loc of ['/sell', '/ar/buy', '/materials/copper', '/ar/materials/rebar', '/industries/electrical', '/process', '/insights', '/ar/insights/preparing-scrap-for-grading']) {
     expect(sitemap, loc).toContain(`<loc>https://aalkc.com${loc}</loc>`);
   }
 
@@ -724,7 +806,7 @@ test('prerenders the service, industries and sustainability pages in both langua
 
 test('has no serious or critical axe findings on the new company pages', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
+  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/sell', '/ar/buy', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
     await page.goto(path);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();
@@ -750,7 +832,7 @@ test('links every service card to its own page and opens the quote dialog from i
 
 test('keeps the full menu on one line wherever it is shown', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop header only');
-  for (const width of [1440, 1280, 1241]) {
+  for (const width of [1600, 1440, 1366, 1280]) {
     for (const path of ['/', '/ar']) {
       await page.setViewportSize({ width, height: 800 });
       await page.goto(path);

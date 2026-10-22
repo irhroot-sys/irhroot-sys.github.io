@@ -1,6 +1,6 @@
 # AALKC design system
 
-**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, a set serif for what is declared and a clear grotesk for what is measured, generous space, and the photography of the yard. One bold gesture — the homepage hero, where the skyline bars of the mark rise out of the credentials band into the photograph — and everything else stays quiet.
+**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, a firm contemporary grotesk for what is declared and an open one for what is read, records on steel plate, generous space, and the photography of the yard. One orchestrated moment — on load the mark assembles in the header while the homepage statement rises and the skyline bars climb out of the credentials band into the photograph — and everything else stays quiet.
 
 ## Colour: Navy · Steel · Platinum
 The palette is the official logo, extended. Both scales sit on the mark's own hue (≈211°), so the whole site reads as one material family.
@@ -24,21 +24,39 @@ The palette is the official logo, extended. Both scales sit on the mark's own hu
 - **The scale rule** (minor tick every 8px, major every 80px) appears only where something is weighed: the four-step process track, and the 404 page. It sits under heroes, the process track and the 404 page.
 - **Navy-to-steel** is the system's quiet motion: capability titles rest in steel and turn navy when chosen; navy panels carry a steel top rule.
 
-## Type: declared and measured
-The name means *the trust of one's word*, so the voice is that of a written undertaking.
+## Type: brand, declared and measured
+AALKC's own office typefaces lead; the rest come from its Adobe Fonts web project `jrz4pqn` (linked in `index.html`, served by Adobe under AALKC's Creative Cloud licence, every family set to `font-display: swap`).
 
-| Role | Latin | Arabic |
+| Voice | Latin | Arabic |
 | --- | --- | --- |
-| Declared — display and headings | Newsreader Variable (optical sizes on), 380 hero / 410 sections / 500 titles | Markazi Text Variable (a contemporary Naskh, the hand of contracts), 500 / 600 |
-| Measured — body, interface | IBM Plex Sans Variable | IBM Plex Sans Arabic 400 / 500 / 600 |
-| Labels, data, codes | IBM Plex Sans, lining tabular figures — never a monospace | IBM Plex Sans Arabic |
+| Brand — homepage statement, page titles, wordmark, footer signature | **AALKC** (office face; capitals only) | **Mawzoon** (Adobe; single weight) |
+| Section titles | **Sweet Square Pro** Medium (Adobe) | Mawzoon |
+| Card and row titles | Sweet Square Pro Medium | **AALKC Kufi** Bold (office face; Noto Kufi Arabic, OFL) |
+| Body, interface, labels | **Futura PT** Book / Medium / Demi (Adobe) | AALKC Kufi Regular |
+| Figures — symbols, codes, step numbers, large numerals | Sweet Square Pro Extra Light | — (Latin in both languages) |
 
-- Display weight falls as size rises (`--w-display` < `--w-heading` < `--w-title`), so every heading carries the same colour on the page.
-- Serif headings get a touch more leading than a grotesk (`--lh-display` 1.02, `--lh-heading` 1.08); Naskh needs room for its marks (`--lh-arabic-display` 1.42, body `--lh-arabic-text` 1.85).
-- Long-form reading (`.longform`): `--fs-article` 17–19px at `--lh-article` 1.72 on a `--measure-text` of 66 characters.
-- Labels are sentence case. Arabic copy uses Western digits, as the rest of the site does.
+- **AALKC is capitals only**, so it never sets chemical symbols (Cu, Fe), long titles or running text. Files, licence and provenance: `src/assets/fonts/aalkc/`.
+- **Weights are never synthesised** (`font-synthesis-weight: none` on `body`): each face ships only the weights in use.
+- **Fallbacks**: General Sans and Cabinet Grotesk (ITF Free Font License), fetched unaltered at build time by `scripts/fetch-fonts.mjs` into `src/fonts/` (gitignored — the licence forbids committing them), used only if Adobe Fonts cannot be reached.
+- Roles, not families: `--font-statement`, `--font-brand`, `--font-display`, `--font-title`, `--font-text`, `--font-figures`; each switches script under `[lang="ar"]`, and a Latin name inside Arabic (`lang="en"`) takes the Latin values back.
+- The Arabic stacks lead with the Latin face (no Arabic glyphs), so Arabic letters fall through to Mawzoon or AALKC Kufi while digits, ISO codes and names stay Latin.
+- Preloads: AALKC Bold on English pages, AALKC Kufi Regular on Arabic pages; Adobe Fonts is preconnected.
+- Long-form reading: `--fs-article` 17–19px at `--lh-article` 1.72 on a 66-character measure. Labels are sentence case. Arabic copy uses Western digits.
+
+## Materials: paper, steel plate, navy
+- **Paper** (`--surface`, `--surface-alt`) for reading.
+- **Steel plate** (`--surface-plate` `#E6EAEF`, rules `--plate-rule`) for records — `.register.is-plate`: the company register and the buyer quality facts, set like the data plate riveted to a machine, with a navy top edge. Body text 8.7:1, muted 5.1:1.
+- **Navy** for statements only: hero, sectors, closing, footer.
+- No textures, gradients-as-decoration or brushed-metal effects: the material is suggested by colour and edge alone.
+
+## Motion: one orchestrated load, then quiet reveals
+- **On load** the header mark assembles (`BrandMark animate`): the A's left stroke rises from its foot, the right falls from its apex, the skyline grows between them, and one band of light crosses the finished mark. Parts are revealed through clip paths, never redrawn, so at rest the mark is the approved artwork. Hovering the brand sends the light across again.
+- In step with it the homepage statement is **unveiled line by line** (`line-unveil`: each line rises out from behind its own baseline), followed by the lede and actions, while the skyline supergraphic climbs into the photograph.
+- **On scroll** (staged by `MotionManager`, only for content that starts below the fold): section titles and the footer signature unveil the same way; other content rises gently; photographs open behind a mask; the process scale rule draws itself across like a gauge sweeping to its reading.
+- With reduced motion nothing moves; everything renders at rest.
 
 ## Files (import order = cascade order)
+0. `fonts.css`: `@font-face` for the build-fetched Latin faces.
 1. `tokens.css`: colour, type, space, layout, motion and photo-grade tokens, with contrast notes.
 2. `base.css`: element defaults for both scripts, focus, layout utilities, reveal motion.
 3. `primitives.css`: label, section heading, scale rule, plate, buttons, chips, check list, register, form fields.

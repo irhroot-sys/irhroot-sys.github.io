@@ -1,0 +1,81 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Commercial pathways
+   Sell, buy, services: each route answers the same questions in the same
+   order — what AALKC handles, what to send, what happens next — so a
+   visitor who has read one knows how to read the others.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The three routes (homepage, and "other ways" on each route) ─────────── */
+.pathway-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 0; list-style: none; }
+.pathway-list.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Each route's title, two answers and link share rows with its neighbours,
+   so the answers line up across the three columns whatever their length. */
+.pathway {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: var(--s-5);
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--navy-800);
+}
+.pathway h3 { font-size: var(--fs-32); }
+.pathway dl { grid-row: span 2; display: grid; grid-template-rows: subgrid; margin: 0; }
+.pathway dt { color: var(--text-muted); font-size: var(--fs-13); font-weight: 600; }
+.pathway dd { margin: var(--s-1) 0 0; color: var(--text); font-size: var(--fs-16); line-height: 1.6; }
+.pathway .inline-action { align-self: end; justify-self: start; }
+
+/* ── A route's page: what we handle beside what to send ──────────────────── */
+.pathway-brief { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--s-8); align-items: start; }
+.pathway-handles { grid-column: 1 / span 5; }
+.pathway-send { grid-column: 7 / span 6; }
+.pathway-heading { font-size: var(--fs-32); }
+.pathway-lede { max-width: 46ch; margin-top: var(--s-3); color: var(--text-muted); font-size: var(--fs-16); }
+.pathway-subheading { margin-top: var(--s-7); color: var(--text-muted); font-family: var(--font-text); font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; }
+
+.material-index { margin-top: var(--s-5); list-style: none; border-top: 1px solid var(--rule-strong); }
+.material-index a {
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 5.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+  transition: background var(--t-fast) var(--ease-std);
+}
+.material-index a:hover, .material-index a:focus-visible { background: var(--state-hover); }
+.material-index-symbol { padding-inline-start: var(--s-2); color: var(--navy-800); font-family: var(--font-figures); font-size: var(--fs-24); font-weight: 400; line-height: 1; white-space: nowrap; }
+.material-index-symbol[data-alloy] { font-size: var(--fs-18); }
+html[dir="rtl"] .material-index-symbol { text-align: right; }
+.material-index-name { color: var(--text-strong); font-weight: 600; }
+.material-index-family { padding-inline-end: var(--s-2); color: var(--text-muted); font-size: var(--fs-13); }
+
+.pathway-checklist { display: grid; gap: var(--s-3); margin-top: var(--s-5); list-style: none; }
+.pathway-checklist li { display: flex; align-items: flex-start; gap: var(--s-3); color: var(--text); font-size: var(--fs-16); line-height: 1.55; }
+.pathway-checklist svg { flex: 0 0 auto; margin-top: 4px; color: var(--signal); font-size: 16px; }
+.pathway-checklist.is-excluded svg { color: var(--danger); }
+.pathway-assurance { margin-top: var(--s-4); }
+.pathway-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-7); }
+.pathway-actions svg { font-size: 18px; }
+.pathway-credentials { margin-top: var(--s-5); color: var(--text-muted); font-size: var(--fs-14); }
+.pathway-credentials a { color: var(--navy-800); font-weight: 600; text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+.pathway-credentials a:hover { text-decoration-color: var(--navy-800); }
+
+/* ── What happens next: a true sequence, so it is numbered ───────────────── */
+.pathway-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-7) var(--gutter); list-style: none; }
+.pathway-steps li { padding-top: var(--s-5); border-top: 1px solid var(--rule-strong); }
+.pathway-step-number { display: block; color: var(--metal); font-family: var(--font-figures); font-size: var(--fs-44); font-weight: 300; font-variant-numeric: lining-nums; line-height: 1; }
+.pathway-steps h3 { margin-top: var(--s-4); font-size: var(--fs-24); }
+.pathway-steps p { margin-top: var(--s-3); max-width: 42ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.65; }
+.pathway-more { margin-top: var(--s-7); }
+.pathway-faq > .longform-faq { max-width: 880px; margin-top: 0; }
+
+@media (max-width: 1100px) {
+  .pathway-handles, .pathway-send { grid-column: 1 / -1; }
+}
+@media (max-width: 900px) {
+  .pathway-list, .pathway-list.is-2, .pathway-steps { grid-template-columns: minmax(0, 1fr); }
+  .pathway h3 { font-size: var(--fs-24); }
+}
+@media (max-width: 620px) {
+  .pathway-actions > * { flex: 1 1 100%; justify-content: center; }
+}

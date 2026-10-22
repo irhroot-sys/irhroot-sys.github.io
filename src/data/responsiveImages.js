@@ -11,6 +11,32 @@ export const responsiveImages = {
   "/assets/service-metal-sorting.webp": { width: 1600, height: 900 },
   "/assets/service-global-trade.webp": { width: 1600, height: 900 },
   "/assets/service-construction-materials.webp": { width: 1690, height: 931 },
+  // AALKC's own photographs of its yard, fleet and material (see
+  // public/assets/PHOTO-CREDITS.md), plus one licensed foundry photograph.
+  "/assets/yard/aalkc-yard-entrance-night.webp": { width: 1448, height: 1086 },
+  "/assets/yard/cable-reel-loading.webp": { width: 1920, height: 1440 },
+  "/assets/yard/cast-metal-components.webp": { width: 1440, height: 1920 },
+  "/assets/yard/yard-weighbridge.webp": { width: 1920, height: 946 },
+  "/assets/yard/scrap-trailer.webp": { width: 1920, height: 1081 },
+  "/assets/yard/structural-scrap-yard.webp": { width: 1920, height: 1081 },
+  "/assets/yard/truck-grapple-loading.webp": { width: 1920, height: 1081 },
+  "/assets/yard/grapple-steel-piles.webp": { width: 1920, height: 1440 },
+  "/assets/yard/crane-cable-reels.webp": { width: 1920, height: 1440 },
+  "/assets/yard/steel-channels-pipes.webp": { width: 1920, height: 1920 },
+  "/assets/yard/used-transformers.webp": { width: 1920, height: 1440 },
+  "/assets/yard/generator-stator.webp": { width: 1440, height: 1920 },
+  "/assets/yard/galvanized-cable-trays.webp": { width: 1920, height: 1081 },
+  "/assets/yard/steel-plates.webp": { width: 1081, height: 1920 },
+  "/assets/yard/cable-reel-trucks.webp": { width: 1920, height: 1440 },
+  "/assets/yard/flatbed-cable-loops.webp": { width: 1920, height: 1440 },
+  "/assets/yard/stator-interior.webp": { width: 1440, height: 1920 },
+  "/assets/yard/ferrous-scrap-yard.webp": { width: 1920, height: 1440 },
+  "/assets/yard/steel-beams-containers.webp": { width: 1081, height: 1920 },
+  "/assets/yard/transformers-safety-gates.webp": { width: 1920, height: 1440 },
+  "/assets/yard/cable-drums-grapple.webp": { width: 1081, height: 1920 },
+  "/assets/yard/switchgear-dismantling.webp": { width: 1920, height: 1440 },
+  "/assets/yard/sorted-copper-container.webp": { width: 1440, height: 1920 },
+  "/assets/yard/foundry-pour.webp": { width: 1920, height: 1280 },
 };
 
 export const VARIANT_DIRECTORY = "/assets/img";

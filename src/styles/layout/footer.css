@@ -20,7 +20,7 @@
 .footer-brandmark > path { fill: var(--white); }
 .footer-brandmark > g path { fill: var(--steel-500); }
 .footer-wordmark { display: grid; gap: 3px; margin: 0; color: var(--white); line-height: 1.1; }
-.footer-wordmark strong { font-family: var(--font-text); font-size: 19px; font-weight: 600; letter-spacing: .2em; }
+.footer-wordmark strong { font-family: var(--font-brand); font-size: 20px; font-weight: 700; letter-spacing: .12em; }
 .footer-wordmark span { color: var(--on-ink-muted); font-size: var(--fs-12); }
 .footer-wordmark span[lang="ar"] { font-family: var(--font-arabic); font-size: var(--fs-13); }
 .footer-brand > p { max-width: 40ch; margin-top: var(--s-6); line-height: var(--lh-text); }
@@ -33,7 +33,6 @@
   font-weight: 600;
   letter-spacing: 0;
 }
-html[lang="ar"] .footer-main h2 { font-family: var(--font-arabic); }
 .footer-links, .footer-contact { display: flex; flex-direction: column; align-items: flex-start; }
 .footer-links a,
 .footer-contact a,
@@ -82,16 +81,16 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
   gap: var(--s-2);
   padding-block: var(--s-7);
   border-top: 1px solid var(--rule-ink);
-  color: #677C97; /* 3.5:1 on navy-900 — a steel engraving: display-size, decorative duplicate of the name */
+  color: var(--engraving-on-ink); /* a steel engraving: display-size, decorative duplicate of the name */
   line-height: 1;
   user-select: none;
 }
 .footer-signature span:first-child {
   justify-self: start;
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 1rem + 6vw, 6.75rem);
-  font-weight: 330;
-  letter-spacing: -.025em;
+  font-family: var(--font-brand);
+  font-size: clamp(2rem, .8rem + 4.8vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: 0;
 }
 .footer-signature span[lang="ar"] {
   justify-self: end;
@@ -120,7 +119,7 @@ html[dir="rtl"] :is(.footer-links, .footer-contact, .footer-legal) a::after { tr
 }
 .site-footer { isolation: isolate; overflow: clip; }
 .footer-legal { display: flex; align-items: center; gap: var(--s-5); }
-.footer-legal span { font-size: var(--fs-13); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.footer-legal span { font-size: var(--fs-13); font-variant-numeric: lining-nums; letter-spacing: .01em; }
 
 @media (max-width: 1020px) {
   .footer-main { grid-template-columns: repeat(3, minmax(0, 1fr)); }

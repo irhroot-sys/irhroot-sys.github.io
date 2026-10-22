@@ -6,10 +6,11 @@
    double as the graduations of a measuring scale — the instrument the
    business actually runs on (certified weighing, grading). The name, أمانة
    الكلمة, means "the trust of one's word". Precision is how that trust is
-   shown, so the system borrows the discipline of written agreements and
-   technical documents — a set serif for what is declared, a clear grotesk
-   for what is measured, registers, measured spacing, one scale rule where
-   something is weighed — with the restraint of an established house.
+   shown, so the system borrows the discipline of engineering documents and
+   equipment plates — a squared, engineered grotesk for what is declared, a
+   clear one for what is read, registers set on steel, measured spacing, one
+   scale rule where something is weighed — with the restraint of an
+   established house.
 
    Colour: Navy · Steel · Platinum
    The palette is the logo, extended — nothing is imported from outside it.
@@ -23,9 +24,16 @@
      · Signal — navy lifted in lightness and held at the logo's steel-blue
        saturation (not a web blue): the one signal on light surfaces.
      · Platinum / Ice — a cool metallic highlight, the signal on navy.
+   Three materials, each with one job:
+     · Paper (white, mist) — reading.
+     · Steel plate — records: the company register and quality facts, set
+       on a light steel ground taken from the skyline's hue, like the
+       data plate riveted to a machine.
+     · Navy — statements: hero, sectors, closing, footer.
    Proportion: white carries most of every page, navy is reserved for the
-   statements (hero, sectors, closing, footer), steel draws the lines, and
-   the signal colour is used in small doses only.
+   statements, steel draws the lines and holds the records, and the signal
+   colour is used in small doses only. No textures or brushed-metal
+   effects: the material is suggested by colour and edge alone.
    No gold, copper or orange: a metal recycler's photographs already carry
    those colours, so the interface stays in the logo's cool register and
    lets the material be the warmth.
@@ -63,11 +71,14 @@
   --mist: #F5F7FA;             /* alternate section ground: cool, not grey */
   --frost: #E8EDF2;            /* recessed ground */
   --platinum: #D3DCE6;         /* metallic highlight on navy — 9.2:1 */
+  --plate: #E6EAEF;            /* steel plate: the ground of records — body text 8.7:1, muted 5.1:1, navy 10.6:1 */
+  --plate-rule: #C3CAD2;       /* hairline engraved on the plate */
 
   /* ── Roles: surfaces ─────────────────────────────────────────────────── */
   --surface: var(--white);
   --surface-alt: var(--mist);
   --surface-sunk: var(--frost);
+  --surface-plate: var(--plate);
   --surface-ink: var(--navy-800);
   --surface-ink-raised: var(--navy-700);
   --surface-ink-deep: var(--navy-900);
@@ -107,29 +118,79 @@
   --focus-on-ink: var(--navy-300);
   --ring: 0 0 0 3px rgba(47, 95, 145, .2);
 
+  /* ── Roles: interactive states ──────────────────────────────────────────
+     Every control draws its states from these, so hover, selection and
+     disabled look the same everywhere. */
+  --state-hover: var(--navy-50);           /* tint behind a hovered row or chip */
+  --state-selected: var(--navy-800);       /* a chosen filter: white type, 12.8:1 */
+  --state-selected-text: var(--white);
+  --state-disabled: var(--steel-200);
+  --state-disabled-text: var(--steel-600); /* 5.3:1 on steel-200 */
+  --field-border: var(--rule-strong);
+  --field-border-hover: var(--steel-400);
+  --field-placeholder: #6A727C;            /* 4.9:1 on white */
+
+  /* Status. Functional only — never decoration — and always paired with an
+     icon or words, so colour is never the only signal. */
+  --danger: #A43A3A;                       /* rule and invalid border, 6.5:1 */
+  --danger-text: #7E2424;                  /* 8.6:1 on danger-surface */
+  --danger-surface: #FBEFEF;
+  --success: #0E7468;                      /* confirmation marks, 5.7:1 on white */
+  --engraving-on-ink: #677C97;             /* decorative display text on navy-900 only, 3.5:1 */
+
   /* ── Typography ──────────────────────────────────────────────────────────
-     The name means "the trust of one's word", so the voice is that of a
-     written undertaking. Two families, two jobs:
-       · Declared — Newsreader, a variable serif with optical sizes, so a
-         headline gets the fine, high-contrast display cut and a small title
-         the sturdier text cut, automatically. Its Arabic partner is Markazi
-         Text, a contemporary Naskh: Naskh is the hand of contracts and
-         official correspondence in the Kingdom.
-       · Measured — IBM Plex Sans (variable) and IBM Plex Sans Arabic, drawn
-         as one family: body copy, interface, labels, grades and numbers
-         (tabular figures, never a monospace).
-     Display weight falls as size rises, so every heading carries the same
-     colour on the page. Labels are sentence case — no tracked capitals. */
-  --font-display: "Newsreader Variable", "Newsreader", Georgia, "Times New Roman", serif;
-  --font-text: "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-arabic: "IBM Plex Sans Arabic", "IBM Plex Sans Variable", Tahoma, sans-serif;
-  --font-arabic-display: "Markazi Text Variable", "Newsreader Variable", "IBM Plex Sans Arabic", serif;
-  --display-stretch: 100%;     /* the serif has no width axis */
-  --w-display: 380;            /* hero statement, 60px and up */
-  --w-heading: 410;            /* section titles */
-  --w-title: 500;              /* card and row titles */
-  --w-arabic-display: 500;     /* Markazi Text */
-  --w-arabic-title: 600;
+     AALKC's own typefaces first, then its Adobe Fonts web project:
+       · Brand — AALKC (office typeface): wide, squared capitals drawn to the
+         company's lettering. The homepage statement, page titles and the
+         wordmark. Capitals only, so it is never used for chemical symbols
+         (Cu, Fe) or running text.
+       · Declared — Sweet Square Pro Medium (Adobe Fonts): the same squared
+         construction with a lowercase, for section and card titles.
+       · Figures — Sweet Square Pro Extra Light: hairline numerals and
+         symbols, the graduations of a scale.
+       · Measured — Futura PT Book / Medium / Demi (Adobe Fonts) for reading,
+         interface and labels.
+       · Arabic — Mawzoon (Adobe Fonts), a heavy square Kufic, for the
+         statement and titles; AALKC Kufi (office typeface, Noto Kufi Arabic)
+         for card titles and reading.
+     Weights are never synthesised (base.css): each face ships only the
+     weights in use. Figures are lining and proportional. Labels are
+     sentence case. */
+  /* Families. Components never name these directly: they use the roles
+     below, which switch script wherever lang="ar" is set. Later names in
+     each stack are fallbacks, used only if a face cannot load. */
+  --family-brand: "AALKC", "sweet-square-pro", "Cabinet Grotesk", system-ui, sans-serif;
+  --family-display: "sweet-square-pro", "Cabinet Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --family-text: "futura-pt", "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* The Arabic stacks lead with the Latin face, which has no Arabic glyphs:
+     Arabic letters fall through to the Arabic face, while digits, codes and
+     Latin names inside Arabic text stay in the Latin face. */
+  --family-arabic-display: "sweet-square-pro", "mawzoon", "AALKC Kufi", Tahoma, sans-serif;
+  --family-arabic: "futura-pt", "General Sans", "AALKC Kufi", Tahoma, sans-serif;
+
+  /* Roles. Statement = the homepage headline; brand = page titles and the
+     wordmark; display = section titles; title = card and row titles; text =
+     reading and interface; figures = symbols, codes and numerals. */
+  --font-statement: var(--family-brand);
+  --font-brand: var(--family-brand);
+  --font-display: var(--family-display);
+  --font-title: var(--family-display);
+  --font-text: var(--family-text);
+  --font-figures: var(--family-display);
+  /* The Arabic faces by name, for Arabic set inside the Latin interface
+     (the wordmark, the footer signature, the name on the About page). */
+  --font-arabic: var(--family-arabic);
+  --font-arabic-display: var(--family-arabic-display);
+
+  --w-statement: 700;          /* AALKC Bold */
+  --w-display: 700;            /* AALKC Bold / Sweet Square Pro Medium */
+  --w-heading: 700;
+  --w-title: 700;
+  --w-figures: 400;            /* Sweet Square Pro Extra Light */
+  --w-arabic-display: 700;     /* Mawzoon (single weight; never synthesised) */
+  --w-arabic-title: 700;       /* AALKC Kufi Bold */
+  --w-arabic-statement: 700;
+  --track-brand: .015em;       /* wide capitals want a little air */
 
   --fs-11: .6875rem;
   --fs-12: .75rem;
@@ -143,21 +204,24 @@
   --fs-32: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);
   --fs-44: clamp(2rem, 1.45rem + 2.4vw, 3.125rem);
   --fs-60: clamp(2.375rem, 1.5rem + 3.7vw, 4.375rem);
-  --fs-display: clamp(3rem, 1.6rem + 5.8vw, 6.75rem);
+  --fs-display: clamp(3rem, 1.5rem + 5vw, 6.25rem);
+  --fs-statement: clamp(2.5rem, 1.1rem + 4.2vw, 4.75rem);   /* AALKC capitals are wide */
+  --fs-page-title: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
 
-  /* A serif headline needs a touch more leading than a grotesk; Arabic
-     Naskh needs room for its ascenders and dots. */
-  --lh-display: 1.02;
-  --lh-heading: 1.08;
-  --lh-snug: 1.28;
+  /* Heavy grotesk display is set tight; Naskh needs room for its
+     ascenders, descenders and dots. */
+  --lh-display: .96;
+  --lh-heading: 1.04;
+  --lh-snug: 1.2;
   --lh-text: 1.65;
-  --lh-arabic-display: 1.42;
-  --lh-arabic-text: 1.85;
-  --track-display: -.024em;
-  --track-heading: -.016em;
+  --lh-arabic-display: 1.3;   /* Mawzoon is compact vertically */
+  --lh-arabic-text: 1.9;
+  --track-display: -.012em;    /* a squared face needs little tightening */
+  --track-heading: -.006em;
+  --track-title: 0;
   --track-label: .08em;
 
-  /* Long-form reading: 17–19px Plex at a 66-character measure. */
+  /* Long-form reading: 17–19px General Sans at a 66-character measure. */
   --fs-article: clamp(1.0625rem, 1rem + .28vw, 1.1875rem);
   --lh-article: 1.72;
   --measure-text: 66ch;
@@ -213,4 +277,53 @@
   --media-ratio: 4 / 3;
   --card-ratio: 4 / 3;
   --plate-ratio: 4 / 5;
+}
+
+/* ── Arabic ────────────────────────────────────────────────────────────────
+   The same roles, calibrated for Arabic rather than copied from the Latin:
+   Mawzoon for the statement and titles, AALKC Kufi for card titles and
+   reading, taller leading for ascenders and dots, and no tracking, because
+   Arabic letters join. Set on any element with lang="ar", so a whole Arabic
+   page and an Arabic phrase on an English page follow the same rules. */
+[lang="ar"] {
+  --font-statement: var(--family-arabic-display);
+  --font-brand: var(--family-arabic-display);
+  --track-brand: 0;
+  --font-display: var(--family-arabic-display);
+  --font-title: var(--family-arabic);
+  --font-text: var(--family-arabic);
+  --w-statement: var(--w-arabic-statement);
+  --w-display: var(--w-arabic-display);
+  --w-heading: var(--w-arabic-display);
+  --w-title: var(--w-arabic-title);
+  --lh-display: var(--lh-arabic-display);
+  --lh-heading: var(--lh-arabic-display);
+  --lh-snug: 1.55;
+  --lh-text: var(--lh-arabic-text);
+  --track-display: 0;
+  --track-heading: 0;
+  --track-title: 0;
+  --track-label: 0;
+}
+/* A Latin name set inside Arabic (the AALKC wordmark) is marked lang="en"
+   and takes the Latin roles back. */
+[lang="ar"] [lang="en"] {
+  --font-statement: var(--family-brand);
+  --font-brand: var(--family-brand);
+  --track-brand: .015em;
+  --font-display: var(--family-display);
+  --font-title: var(--family-display);
+  --font-text: var(--family-text);
+  --w-statement: 700;
+  --w-display: 700;
+  --w-heading: 700;
+  --w-title: 700;
+  --lh-display: .96;
+  --lh-heading: 1.04;
+  --lh-snug: 1.2;
+  --lh-text: 1.65;
+  --track-display: -.012em;
+  --track-heading: -.006em;
+  --track-title: 0;
+  --track-label: .08em;
 }

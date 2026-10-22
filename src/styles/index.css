@@ -1,5 +1,6 @@
 /* AALKC design system — import order is the cascade order:
    tokens → base elements → primitives → site chrome → components → pages. */
+@import "./fonts.css";
 @import "./tokens.css";
 @import "./base.css";
 @import "./primitives.css";
@@ -7,5 +8,7 @@
 @import "./layout/footer.css";
 @import "./components/overlays.css";
 @import "./components/home.css";
+@import "./components/gallery.css";
 @import "./pages/pages.css";
 @import "./pages/guides.css";
+@import "./pages/pathways.css";

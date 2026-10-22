@@ -8,6 +8,7 @@ import { industryMeta, insightMeta, materialMeta } from "../data/knowledge/index
 import { insightBodies } from "../data/knowledge/insights.js";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import { Link } from "../lib/router.jsx";
+import { photos } from "../data/photos.js";
 
 // The reading room: articles on the industry first, then the reference
 // guides — one per material, one per sector, and the process — so a reader
@@ -20,8 +21,9 @@ export function InsightsPage() {
         eyebrow="Insights"
         title="Notes on the scrap metal trade."
         copy="How scrap is graded, processed and recycled, the history and rules of the trade in Saudi Arabia, and practical guidance for suppliers. Every figure is cited."
-        image="/assets/service-metal-sorting.webp"
-        alt="Industrial metal stock prepared for sorting and grading"
+        image={photos.beamsContainers.src}
+        alt={photos.beamsContainers.alt}
+        focus={photos.beamsContainers.focus}
         trail="Insights"
       />
 

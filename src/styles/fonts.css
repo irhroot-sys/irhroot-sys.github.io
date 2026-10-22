@@ -1,0 +1,57 @@
+/* ── Self-hosted typefaces ─────────────────────────────────────────────────
+   The display faces (Sweet Square Pro, Mawzoon) and Futura PT come from
+   AALKC's Adobe Fonts web project (index.html). These two carry the text
+   until Futura PT is in that project, and stand in for the display face if
+   Adobe Fonts cannot be reached: General Sans and Cabinet Grotesk, by Indian
+   Type Foundry, under the ITF Free Font License. The files are fetched unaltered
+   at build time by scripts/fetch-fonts.mjs (the licence forbids committing
+   them to this public repository) and served from the site's own origin.
+   Arabic faces come from npm (@fontsource-variable, SIL OFL), imported in
+   main.jsx. Both Latin files are variable and cover Latin only, so Arabic
+   text falls through to the Arabic faces. */
+@font-face {
+  font-family: "Cabinet Grotesk";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/cabinet-grotesk-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "General Sans";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("../fonts/general-sans-variable.woff2") format("woff2");
+}
+
+/* AALKC's office typefaces (src/assets/fonts/aalkc/README.md): AALKC, the
+   capitals-only Latin of the company's own documents, and AALKC Kufi, its
+   Arabic companion (Noto Kufi Arabic, SIL OFL 1.1). */
+@font-face {
+  font-family: "AALKC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/aalkc/AALKC-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "AALKC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/aalkc/AALKC-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "AALKC Kufi";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/aalkc/AALKCKufi-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "AALKC Kufi";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/aalkc/AALKCKufi-Bold.woff2") format("woff2");
+}

@@ -5,11 +5,11 @@ import { SectionHeading } from "./SectionHeading.jsx";
 // The facts a procurement team checks first, set as a company register.
 // Every entry is taken from the company's own registration and contact
 // details already published on the site.
-export function CompanyRegister({ commitments }) {
+export function CompanyRegister({ commitments, id }) {
   const { t, isArabic } = useLanguage();
   const standards = certifications.filter(({ title }) => title.startsWith("ISO"));
   return (
-    <section className="company-register content-section surface-white" aria-label={t("Company register")}>
+    <section id={id} className="company-register content-section surface-white" aria-label={t("Company register")}>
       <div className="container register-layout">
         <div className="register-intro">
           <SectionHeading
@@ -29,8 +29,8 @@ export function CompanyRegister({ commitments }) {
             </ol>
           )}
         </div>
-        <dl className="register">
-          <div><dt>{t("Legal name")}</dt><dd><span dir="ltr">Amanat Al-Kalima Company</span><small lang="ar" dir="rtl">شركة أمانة الكلمة</small></dd></div>
+        <dl className="register is-plate">
+          <div><dt>{t("Legal name")}</dt><dd><span lang="en" dir="ltr">Amanat Al-Kalima Company</span><small lang="ar" dir="rtl">شركة أمانة الكلمة</small></dd></div>
           <div><dt>{t("Commercial registration")}</dt><dd dir="ltr" className="is-mono">{contactDetails.commercialRegistration}</dd></div>
           <div><dt>{t("Year established")}</dt><dd>2017</dd></div>
           <div><dt>{t("Operating status")}</dt><dd>{t("Licensed scrap metal dealer")}</dd></div>

@@ -13,10 +13,13 @@ import { SustainabilityPage } from "./pages/SustainabilityPage.jsx";
 import { industries, legalContent, materials, services } from "./data/siteContent.jsx";
 import { ARTICLE_IMAGE, industryImages, industryMeta, insightMeta, materialMeta, processMeta, resolveSources } from "./data/knowledge/index.js";
 import { KnowledgePage } from "./lib/knowledge.jsx";
+import { PathwayPage } from "./pages/PathwayPage.jsx";
+import { buyGuide, sellGuide } from "./data/pathways.js";
 import { splitLocalePath } from "./lib/i18n.js";
 import { HOME_HERO_SIZES, PAGE_HERO_SIZES } from "./data/imageSizes.js";
+import { photos } from "./data/photos.js";
 
-const DEFAULT_IMAGE = "/assets/service-industrial-dismantling.webp";
+const DEFAULT_IMAGE = photos.yardEntrance.src;
 
 // The single list of pages. The client router, the document head, the sitemap
 // and the build-time prerender all read from here, so a page added once is
@@ -37,18 +40,41 @@ export const routes = [
     element: () => <AboutPage />,
     title: "About Us",
     description: "Learn about Amanat Al-Kalima Company, a licensed scrap metal dealer established in 2017 in Dammam, Saudi Arabia.",
-    image: DEFAULT_IMAGE,
-    heroImage: DEFAULT_IMAGE,
+    image: photos.cableReelLoading.src,
+    heroImage: photos.cableReelLoading.src,
     changefreq: "yearly",
     priority: "0.8",
+  },
+  // The two commercial routes: selling scrap to AALKC and buying from it.
+  {
+    path: "/sell",
+    element: () => <PathwayPage id="sell" />,
+    title: sellGuide.title,
+    description: sellGuide.description,
+    image: photos.ferrousYard.src,
+    heroImage: photos.ferrousYard.src,
+    faq: sellGuide.faq,
+    changefreq: "monthly",
+    priority: "0.9",
+  },
+  {
+    path: "/buy",
+    element: () => <PathwayPage id="buy" />,
+    title: buyGuide.title,
+    description: buyGuide.description,
+    image: photos.foundry.src,
+    heroImage: photos.foundry.src,
+    faq: buyGuide.faq,
+    changefreq: "monthly",
+    priority: "0.9",
   },
   {
     path: "/services",
     element: () => <ServicesPage />,
     title: "Services",
     description: "Explore AALKC container service, industrial demolition, scrap purchasing, heavy logistics, metal sorting, and global export support.",
-    image: "/assets/service-scrap-metal.webp",
-    heroImage: "/assets/service-scrap-metal.webp",
+    image: photos.cableReelTrucks.src,
+    heroImage: photos.cableReelTrucks.src,
     changefreq: "monthly",
     priority: "0.9",
   },
@@ -70,8 +96,8 @@ export const routes = [
     element: () => <IndustriesPage />,
     title: "Industries",
     description: "AALKC scrap metal collection, grading and purchasing for construction, manufacturing, industrial plants, electrical and commercial operations in the Eastern Province.",
-    image: "/assets/service-construction-materials.webp",
-    heroImage: "/assets/service-construction-materials.webp",
+    image: photos.transformers.src,
+    heroImage: photos.transformers.src,
     changefreq: "monthly",
     priority: "0.8",
   },
@@ -94,8 +120,8 @@ export const routes = [
     knowledge: { kind: "process" },
     title: processMeta.title,
     description: processMeta.description,
-    image: "/assets/service-metal-sorting.webp",
-    heroImage: "/assets/service-metal-sorting.webp",
+    image: photos.weighbridge.src,
+    heroImage: photos.weighbridge.src,
     changefreq: "yearly",
     priority: "0.8",
   },
@@ -104,8 +130,8 @@ export const routes = [
     element: () => <SustainabilityPage />,
     title: "Sustainability",
     description: "How AALKC keeps industrial metal in productive use: circular materials, responsible handling, ISO 14001 environmental management and efficient logistics.",
-    image: "/assets/service-metal-sorting.webp",
-    heroImage: "/assets/service-metal-sorting.webp",
+    image: photos.sortedCopper.src,
+    heroImage: photos.sortedCopper.src,
     changefreq: "yearly",
     priority: "0.7",
   },
@@ -114,8 +140,8 @@ export const routes = [
     element: () => <MaterialsPage />,
     title: "Materials",
     description: "Review the ferrous and non-ferrous materials AALKC purchases, including copper, steel, aluminium, brass, cast iron, stainless steel, and structural plate.",
-    image: "/assets/service-construction-materials.webp",
-    heroImage: "/assets/service-construction-materials.webp",
+    image: photos.steelSections.src,
+    heroImage: photos.steelSections.src,
     changefreq: "monthly",
     priority: "0.9",
   },
@@ -138,8 +164,8 @@ export const routes = [
     knowledge: { kind: "hub" },
     title: "Insights",
     description: "Articles and guides on the scrap metal trade: grades and specifications, how metal is recycled, Saudi Arabia's scrap industry and circular economy, and practical advice for suppliers.",
-    image: ARTICLE_IMAGE,
-    heroImage: ARTICLE_IMAGE,
+    image: photos.beamsContainers.src,
+    heroImage: photos.beamsContainers.src,
     changefreq: "monthly",
     priority: "0.8",
   },
@@ -161,8 +187,8 @@ export const routes = [
     element: () => <FaqPage />,
     title: "Frequently Asked Questions",
     description: "Answers about AALKC accepted scrap materials, industrial collection, grading, pricing, environmental controls, and supplier payments.",
-    image: "/assets/service-scrap-metal.webp",
-    heroImage: "/assets/service-scrap-metal.webp",
+    image: photos.flatbedCable.src,
+    heroImage: photos.flatbedCable.src,
     changefreq: "yearly",
     priority: "0.7",
   },
@@ -171,8 +197,8 @@ export const routes = [
     element: () => <ContactPage />,
     title: "Contact",
     description: "Contact Amanat Al-Kalima Company at 3508 Al Qatif 1 in Dammam for scrap-metal purchasing, collection, sorting, and industrial recycling enquiries.",
-    image: "/assets/service-container-handling.webp",
-    heroImage: "/assets/service-container-handling.webp",
+    image: photos.yardEntrance.src,
+    heroImage: photos.yardEntrance.src,
     changefreq: "yearly",
     priority: "0.8",
   },

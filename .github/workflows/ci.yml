@@ -17,13 +17,14 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run typecheck
-      - name: Restore responsive image variants
+      - name: Restore responsive image variants and licensed fonts
         uses: actions/cache@v4
         with:
           path: |
             public/assets/img
             node_modules/.cache/aalkc-responsive-images.json
-          key: responsive-images-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js') }}
+            src/fonts
+          key: build-inputs-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js', 'scripts/fetch-fonts.mjs') }}
       - run: npm run build
 
   unit-tests:
@@ -45,13 +46,14 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install chromium
-      - name: Restore responsive image variants
+      - name: Restore responsive image variants and licensed fonts
         uses: actions/cache@v4
         with:
           path: |
             public/assets/img
             node_modules/.cache/aalkc-responsive-images.json
-          key: responsive-images-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js') }}
+            src/fonts
+          key: build-inputs-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js', 'scripts/fetch-fonts.mjs') }}
       - run: npm run build
         env:
           VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
@@ -66,13 +68,14 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install chromium
-      - name: Restore responsive image variants
+      - name: Restore responsive image variants and licensed fonts
         uses: actions/cache@v4
         with:
           path: |
             public/assets/img
             node_modules/.cache/aalkc-responsive-images.json
-          key: responsive-images-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js') }}
+            src/fonts
+          key: build-inputs-${{ hashFiles('public/assets/*.webp', 'scripts/build-images.mjs', 'src/data/responsiveImages.js', 'scripts/fetch-fonts.mjs') }}
       - run: npm run build
         env:
           VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
