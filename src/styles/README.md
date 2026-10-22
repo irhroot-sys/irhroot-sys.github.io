@@ -1,6 +1,6 @@
 # AALKC design system
 
-**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, a set serif for what is declared and a clear grotesk for what is measured, generous space, and the photography of the yard. One bold gesture — the homepage hero, where the skyline bars of the mark rise out of the credentials band into the photograph — and everything else stays quiet.
+**Idea: "the measure of our word."** أمانة الكلمة means *the trust of one's word*, and the business runs on weighing, grading and certifying metal. The identity is the logo, extended: navy and steel, one grotesk stamped wide for what is declared and set at normal width for what is read, records on steel plate, generous space, and the photography of the yard. One orchestrated moment — on load the mark assembles in the header while the homepage statement rises and the skyline bars climb out of the credentials band into the photograph — and everything else stays quiet.
 
 ## Colour: Navy · Steel · Platinum
 The palette is the official logo, extended. Both scales sit on the mark's own hue (≈211°), so the whole site reads as one material family.
@@ -24,19 +24,34 @@ The palette is the official logo, extended. Both scales sit on the mark's own hu
 - **The scale rule** (minor tick every 8px, major every 80px) appears only where something is weighed: the four-step process track, and the 404 page. It sits under heroes, the process track and the 404 page.
 - **Navy-to-steel** is the system's quiet motion: capability titles rest in steel and turn navy when chosen; navy panels carry a steel top rule.
 
-## Type: declared and measured
-The name means *the trust of one's word*, so the voice is that of a written undertaking.
+## Type: stamped and measured
+One Latin family, **Mona Sans** (variable: width 75–125, weight 200–900, one self-hosted file), used along its width axis the way a fabricator uses one alloy in several gauges.
 
-| Role | Latin | Arabic |
+| Voice | Latin | Arabic |
 | --- | --- | --- |
-| Declared — display and headings | Newsreader Variable (optical sizes on), 380 hero / 410 sections / 500 titles | Markazi Text Variable (a contemporary Naskh, the hand of contracts), 500 / 600 |
-| Measured — body, interface | IBM Plex Sans Variable | IBM Plex Sans Arabic 400 / 500 / 600 |
-| Labels, data, codes | IBM Plex Sans, lining tabular figures — never a monospace | IBM Plex Sans Arabic |
+| Statement — homepage headline | Mona Sans, width 125%, weight 760 | **Reem Kufi** 700 — Kufic, the angular hand of inscriptions cut in stone and metal |
+| Declared — page and section titles | Mona Sans, width 112.5%, 720 page titles / 620 sections | **Alexandria** 600 — geometric, upright, tall verticals answering the skyline bars |
+| Titles — cards and rows | Mona Sans, width 100%, 600 | Alexandria 560 |
+| Measured — body, interface, labels | Mona Sans, width 100%, 400–600 | IBM Plex Sans Arabic 400 / 500 / 600 |
+| Figures — symbols, codes, step numbers, large numerals | Mona Sans, width 125%, light (300) | — (Latin in both languages) |
 
-- Display weight falls as size rises (`--w-display` < `--w-heading` < `--w-title`), so every heading carries the same colour on the page.
-- Serif headings get a touch more leading than a grotesk (`--lh-display` 1.02, `--lh-heading` 1.08); Naskh needs room for its marks (`--lh-arabic-display` 1.42, body `--lh-arabic-text` 1.85).
+- Roles, not families: components use `--font-statement`, `--font-display`, `--font-text`, `--font-figures` with `--stretch-*` and `--w-*`; every one switches script under `[lang="ar"]`, and a Latin name inside Arabic (`lang="en"`) takes the Latin values back.
+- Figures are lining and proportional. Mona Sans draws its tabular figures as a monospace set, which reads as code, so `tabular-nums` is not used.
+- Expanded heavy type is set tight (`--lh-display` .98, `--lh-heading` 1.06); Arabic needs room for its marks (`--lh-arabic-display` 1.45, body `--lh-arabic-text` 1.85).
 - Long-form reading (`.longform`): `--fs-article` 17–19px at `--lh-article` 1.72 on a `--measure-text` of 66 characters.
 - Labels are sentence case. Arabic copy uses Western digits, as the rest of the site does.
+- Preloads: Mona Sans on English pages; Plex Sans Arabic 400 and Alexandria on Arabic pages, plus Reem Kufi on the Arabic homepage.
+
+## Materials: paper, steel plate, navy
+- **Paper** (`--surface`, `--surface-alt`) for reading.
+- **Steel plate** (`--surface-plate` `#E6EAEF`, rules `--plate-rule`) for records — `.register.is-plate`: the company register and the buyer quality facts, set like the data plate riveted to a machine, with a navy top edge. Body text 8.7:1, muted 5.1:1.
+- **Navy** for statements only: hero, sectors, closing, footer.
+- No textures, gradients-as-decoration or brushed-metal effects: the material is suggested by colour and edge alone.
+
+## Motion: one orchestrated moment
+- On load the header mark assembles (`BrandMark animate`): the A's left stroke rises from its foot, the right falls from its apex, the skyline grows between them, and one band of light crosses the finished mark. Parts are revealed through clip paths, never redrawn, so at rest the mark is the approved artwork. Hovering the brand sends the light across again.
+- In step with it, the homepage statement rises and the skyline supergraphic climbs into the photograph.
+- With reduced motion nothing moves; the mark and hero render at rest.
 
 ## Files (import order = cascade order)
 1. `tokens.css`: colour, type, space, layout, motion and photo-grade tokens, with contrast notes.

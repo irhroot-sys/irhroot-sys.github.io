@@ -16,6 +16,7 @@ export function QuoteModal() {
   const modalRef = useRef(null);
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
   const { t } = useLanguage();
+  const buying = quoteContext.kind === "buy";
 
   useEffect(() => {
     const modal = modalRef.current;
@@ -127,8 +128,8 @@ export function QuoteModal() {
                 </select>
               </label>
             )}
-            <QuoteDetailsFields defaultMaterial={quoteContext.kind === "material" ? quoteContext.service : undefined} />
-            <label>{t("Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" maxLength="1800" required placeholder={t("Material type, estimated quantity, condition, and site location")} /></label>
+            <QuoteDetailsFields defaultMaterial={quoteContext.kind === "material" ? quoteContext.service : undefined} variant={buying ? "buy" : "supply"} />
+            <label>{t(buying ? "Requirement details" : "Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" maxLength="1800" required placeholder={t(buying ? "Grade or specification, quantity, destination, timing and inspection requirements" : "Material type, estimated quantity, condition, and site location")} /></label>
             <label className="consent-field">
               <input type="checkbox" name="consent" value="yes" required />
               <span>{t("I consent to AALKC storing and using these details to respond to my request, as described in the")} <Link to="/privacy" onClick={closeQuote}>{t("Privacy Policy")}</Link>.</span>

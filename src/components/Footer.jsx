@@ -17,8 +17,8 @@ export function Footer() {
           <div className="footer-lockup">
             <BrandMark className="footer-brandmark" />
             <p className="footer-wordmark">
-              <strong dir="ltr">AALKC</strong>
-              <span dir="ltr">Amanat Al-Kalima Company</span>
+              <strong lang="en" dir="ltr">AALKC</strong>
+              <span lang="en" dir="ltr">Amanat Al-Kalima Company</span>
               <span lang="ar" dir="rtl">شركة أمانة الكلمة</span>
             </p>
           </div>
@@ -42,7 +42,7 @@ export function Footer() {
         </div>
       </div>
       <p className="footer-signature content-width" aria-hidden="true">
-        <span dir="ltr">Amanat Al-Kalima</span>
+        <span lang="en" dir="ltr">Amanat Al-Kalima</span>
         <span lang="ar" dir="rtl">أمانة الكلمة</span>
       </p>
       <div className="footer-bottom content-width">

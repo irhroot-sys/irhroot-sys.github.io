@@ -1,14 +1,13 @@
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
-// Display: Newsreader (variable, with optical sizes, so headlines get the
-// fine display cut) and, for Arabic, Markazi Text — a contemporary Naskh,
-// the hand of written agreements, which carries the company's name, "the
-// trust of one's word". Text and data: IBM Plex Sans (variable) with its
-// Arabic partner. Every face is subset by unicode-range, so a page only
-// downloads the scripts it renders.
-import "@fontsource-variable/newsreader/opsz.css";
-import "@fontsource-variable/markazi-text/wght.css";
-import "@fontsource-variable/ibm-plex-sans/wght.css";
+// One Latin family, used along its width axis: Mona Sans (variable, width
+// 75–125, weight 200–900) — expanded for what is declared and for figures,
+// normal width for reading. Arabic: Alexandria for headings, Reem Kufi for
+// the few signature lines, IBM Plex Sans Arabic for reading. Every face is
+// subset by unicode-range, so a page only downloads the scripts it renders.
+import "@fontsource-variable/mona-sans/standard.css";
+import "@fontsource-variable/alexandria/wght.css";
+import "@fontsource-variable/reem-kufi/wght.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-400.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-500.css";
 import "@fontsource/ibm-plex-sans-arabic/arabic-600.css";

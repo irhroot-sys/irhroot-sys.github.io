@@ -62,10 +62,10 @@ export function Header() {
 
       <div className="primary-header">
         <Link className="brand" to="/" aria-label={t("AALKC home")}>
-          <BrandMark className="brand-mark" />
+          <BrandMark className="brand-mark" animate />
           <span className="brand-wordmark" aria-hidden="true">
-            <strong dir="ltr">AALKC</strong>
-            <span>Amanat Al-Kalima Company</span>
+            <strong lang="en" dir="ltr">AALKC</strong>
+            <span lang="en">Amanat Al-Kalima Company</span>
             <span lang="ar" dir="rtl">شركة أمانة الكلمة</span>
           </span>
         </Link>

@@ -13,6 +13,8 @@ import { SustainabilityPage } from "./pages/SustainabilityPage.jsx";
 import { industries, legalContent, materials, services } from "./data/siteContent.jsx";
 import { ARTICLE_IMAGE, industryImages, industryMeta, insightMeta, materialMeta, processMeta, resolveSources } from "./data/knowledge/index.js";
 import { KnowledgePage } from "./lib/knowledge.jsx";
+import { PathwayPage } from "./pages/PathwayPage.jsx";
+import { buyGuide, sellGuide } from "./data/pathways.js";
 import { splitLocalePath } from "./lib/i18n.js";
 import { HOME_HERO_SIZES, PAGE_HERO_SIZES } from "./data/imageSizes.js";
 
@@ -41,6 +43,29 @@ export const routes = [
     heroImage: DEFAULT_IMAGE,
     changefreq: "yearly",
     priority: "0.8",
+  },
+  // The two commercial routes: selling scrap to AALKC and buying from it.
+  {
+    path: "/sell",
+    element: () => <PathwayPage id="sell" />,
+    title: sellGuide.title,
+    description: sellGuide.description,
+    image: "/assets/service-scrap-metal.webp",
+    heroImage: "/assets/service-scrap-metal.webp",
+    faq: sellGuide.faq,
+    changefreq: "monthly",
+    priority: "0.9",
+  },
+  {
+    path: "/buy",
+    element: () => <PathwayPage id="buy" />,
+    title: buyGuide.title,
+    description: buyGuide.description,
+    image: "/assets/service-global-trade.webp",
+    heroImage: "/assets/service-global-trade.webp",
+    faq: buyGuide.faq,
+    changefreq: "monthly",
+    priority: "0.9",
   },
   {
     path: "/services",

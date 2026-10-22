@@ -6,8 +6,9 @@ import { industryGuides } from '../../src/data/knowledge/industries.js';
 import { insightBodies } from '../../src/data/knowledge/insights.js';
 import { processGuide } from '../../src/data/knowledge/process.js';
 import { sources } from '../../src/data/knowledge/sources.js';
+import { buyGuide, intents, sellGuide } from '../../src/data/pathways.js';
 
-const STATIC_PAGES = ['/', '/about', '/services', '/industries', '/sustainability', '/materials', '/process', '/insights', '/faq', '/contact', '/privacy', '/terms'];
+const STATIC_PAGES = ['/', '/about', '/sell', '/buy', '/services', '/industries', '/sustainability', '/materials', '/process', '/insights', '/faq', '/contact', '/privacy', '/terms'];
 const pages = new Set([
   ...STATIC_PAGES,
   ...services.map(({ slug }) => `/services/${slug}`),
@@ -16,7 +17,7 @@ const pages = new Set([
   ...insightMeta.map(({ slug }) => `/insights/${slug}`),
 ]);
 
-const bodies = { materialGuides, industryGuides, insightBodies, processGuide };
+const bodies = { materialGuides, industryGuides, insightBodies, processGuide, sellGuide, buyGuide, intents };
 
 // Every localized pair in a value, wherever it sits.
 function pairs(value: unknown, found: { en: string; ar: string }[] = []) {
@@ -75,6 +76,7 @@ describe('knowledge base', () => {
       ...processGuide.stages.flatMap((stage: { links?: [string, unknown][] }) => (stage.links ?? []).map(([to]) => to)),
     ];
     for (const link of listed) expect(pages.has(link), link).toBe(true);
+    for (const { to } of intents) expect(pages.has(to), to).toBe(true);
   });
 
   it('cites only sources that are defined, over https', () => {

@@ -27,8 +27,9 @@ for (const marker of ["<!--app-head-->", '<div id="root"><!--app-html--></div>',
   if (!template.includes(marker)) throw new Error(`index.html is missing the prerender marker ${marker}`);
 }
 
-// The fonts that paint the first screen: body copy and the display headline,
-// per script. Preloading them lets the browser fetch them alongside the
+// The fonts that paint the first screen: body copy and headings, per script
+// (Mona Sans is one variable file for every width and weight; the Arabic
+// homepage statement adds the Kufic signature face). Preloading them lets the browser fetch them alongside the
 // stylesheet instead of after it has been parsed.
 const assetFiles = await readdir(path.join(distDir, "assets"));
 function fontAsset(prefix) {
@@ -37,16 +38,18 @@ function fontAsset(prefix) {
   return `/assets/${file}`;
 }
 const criticalFonts = {
-  en: [fontAsset("ibm-plex-sans-latin-wght-normal-"), fontAsset("newsreader-latin-opsz-normal-")],
-  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("markazi-text-arabic-wght-normal-")],
+  en: [fontAsset("mona-sans-latin-standard-normal-")],
+  ar: [fontAsset("ibm-plex-sans-arabic-arabic-400-normal-"), fontAsset("alexandria-arabic-wght-normal-")],
 };
+const signatureFont = fontAsset("reem-kufi-arabic-wght-normal-");
 
 // The guide pages hydrate from their own chunk; fetch it with the entry.
 const knowledgeChunk = assetFiles.find((name) => /^knowledge-[\w-]+\.js$/.test(name));
 if (!knowledgeChunk) throw new Error("Expected a built knowledge-*.js chunk");
 
 function preloadTags(route, language) {
-  const tags = criticalFonts[language].map((href) => `<link rel="preload" as="font" type="font/woff2" href="${href}" crossorigin />`);
+  const fonts = language === "ar" && route.path === "/" ? [...criticalFonts.ar, signatureFont] : criticalFonts[language];
+  const tags = fonts.map((href) => `<link rel="preload" as="font" type="font/woff2" href="${href}" crossorigin />`);
   if (route.knowledge) tags.push(`<link rel="modulepreload" href="/assets/${knowledgeChunk}" />`);
   // The hero photograph is the largest element on every page that has one.
   // Preload exactly the AVIF candidates the <picture> will choose from, so the
@@ -121,6 +124,7 @@ ${sitemapEntries.join("\n")}
 // sitemap, so it can never point at a page that does not exist.
 const llmsGroups = [
   ["Company", (p) => ["/", "/about", "/process", "/sustainability", "/faq", "/contact"].includes(p)],
+  ["Working with AALKC", (p) => ["/sell", "/buy"].includes(p)],
   ["Services", (p) => p === "/services" || p.startsWith("/services/")],
   ["Materials", (p) => p === "/materials" || p.startsWith("/materials/")],
   ["Industries", (p) => p === "/industries" || p.startsWith("/industries/")],

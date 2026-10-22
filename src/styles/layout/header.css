@@ -37,14 +37,14 @@
   color: var(--on-ink-muted);
   background: var(--surface-ink);
   font-size: var(--fs-13);
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums;
 }
 .utility-bar a, .utility-bar span { display: inline-flex; align-items: center; gap: var(--s-2); }
 .utility-bar a { transition: color var(--t-fast) var(--ease-std); }
 .utility-bar a:hover, .utility-bar a:focus-visible { color: var(--white); }
 .utility-bar svg { color: var(--signal-on-ink); font-size: 13px; }
 .utility-bar :focus-visible { outline-color: var(--focus-on-ink); }
-html[lang="ar"] .utility-bar { font-family: var(--font-arabic); letter-spacing: 0; }
+html[lang="ar"] .utility-bar { letter-spacing: 0; }
 
 .primary-header {
   height: var(--header-h);
@@ -60,6 +60,33 @@ html[lang="ar"] .utility-bar { font-family: var(--font-arabic); letter-spacing: 
 .brand { flex: 0 0 auto; display: flex; align-items: center; gap: var(--s-3); min-height: 56px; }
 .brand-mark { width: 52px; height: 52px; flex: 0 0 auto; }
 .brand-wordmark { display: grid; gap: 2px; line-height: 1; }
+
+/* The mark assembles once, when the page first loads, in step with the hero:
+   the A's left stroke rises from its foot, the right falls from its apex,
+   the skyline grows between them like a gauge filling, and one band of light
+   crosses the finished mark. Hovering the brand sends the light across
+   again. Each part is revealed through a clip, never redrawn, so the mark at
+   rest is the approved artwork; with reduced motion nothing moves at all. */
+.brand-mark .mark-reveal { transform-box: fill-box; }
+.brand-mark .mark-light { transform-box: view-box; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .brand-mark .mark-reveal-rise { animation: mark-rise 760ms var(--ease-out) 60ms both; }
+  .brand-mark .mark-reveal-fall { animation: mark-fall 760ms var(--ease-out) 200ms both; }
+  .brand-mark .mark-reveal-city { animation: mark-rise 900ms var(--ease-out) 420ms both; }
+  .brand-mark .mark-light { animation: mark-light 1000ms var(--ease-std) 1150ms both; }
+  .brand:is(:hover, :focus-visible) .brand-mark .mark-light { animation: mark-light-again 800ms var(--ease-std) both; }
+}
+@keyframes mark-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes mark-fall { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes mark-light {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 1; transform: translateX(240px); }
+}
+/* A separate name, so hovering restarts the sweep after the intro. */
+@keyframes mark-light-again {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 1; transform: translateX(240px); }
+}
 /* The official mark has no wordmark; the name is set in the measured face,
    spaced like an engraved plate, so it never competes with the mark. */
 .brand-wordmark strong {
@@ -99,6 +126,12 @@ html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
 .primary-nav a:hover, .primary-nav a:focus-visible, .primary-nav a.active { color: var(--navy-800); }
 .primary-nav a:hover::after, .primary-nav a.active::after { transform: scaleX(1); }
 .mobile-nav-quote, .nav-scrim { display: none; }
+/* Eight destinations in Mona Sans need about 1370px at full spacing; on
+   narrower desktops the menu tightens instead of collapsing early. */
+@media (max-width: 1365px) {
+  .primary-nav { gap: 16px; padding-inline-start: 16px; }
+  .primary-nav a { font-size: var(--fs-14); }
+}
 
 .language-toggle { display: flex; align-items: center; gap: var(--s-1); font-size: var(--fs-13); font-weight: 500; letter-spacing: .04em; }
 .language-option { display: inline-flex; align-items: center; gap: var(--s-1); }
@@ -116,12 +149,12 @@ html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
 
 .header-quote { min-height: 44px; padding-inline: var(--s-4); color: var(--action-text); background: var(--action); }
 .header-quote:hover, .header-quote:focus-visible { background: var(--action-hover); }
-html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var(--fs-16); }
+html[lang="ar"] .primary-nav a { font-size: var(--fs-16); }
 
 .menu-button { display: none; }
 
 /* ── Compact header and menu ──────────────────────────────────────────────
-   Seven destinations need about 1240px beside the brand and actions. Below
+   Eight destinations need about 1240px beside the brand and actions. Below
    that the menu becomes a full-height sheet: numbered, large, unhurried. */
 @media (max-width: 1240px) {
   :root { --header-h: 72px; }
@@ -152,6 +185,7 @@ html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var
     color: var(--on-ink-body);
     font-family: var(--font-display);
     font-size: var(--fs-24);
+    font-stretch: var(--stretch-heading);
     font-weight: var(--w-heading);
     letter-spacing: -.015em;
   }
@@ -169,7 +203,7 @@ html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var
   .primary-nav a.active::after { opacity: 1; transform: none; }
   .primary-nav a:hover, .primary-nav a:focus-visible { color: var(--white); }
   .primary-nav a.active { color: var(--white); }
-  html[lang="ar"] .primary-nav a { font-family: var(--font-arabic-display); font-size: var(--fs-32); font-weight: var(--w-arabic-display); }
+  html[lang="ar"] .primary-nav a { font-size: var(--fs-24); letter-spacing: 0; }
   .mobile-nav-quote {
     display: inline-flex;
     min-height: 56px;
@@ -194,7 +228,7 @@ html[lang="ar"] .primary-nav a { font-family: var(--font-arabic); font-size: var
     font-size: 20px;
     transition: border-color var(--t-fast) var(--ease-std), background var(--t-fast) var(--ease-std);
   }
-  .menu-button:hover, .menu-button:focus-visible { border-color: var(--navy-800); background: var(--navy-50); }
+  .menu-button:hover, .menu-button:focus-visible { border-color: var(--navy-800); background: var(--state-hover); }
 }
 @media (max-width: 620px) {
   .brand-wordmark { display: none; }

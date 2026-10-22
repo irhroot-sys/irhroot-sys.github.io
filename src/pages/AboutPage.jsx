@@ -60,7 +60,7 @@ export function AboutPage() {
         </ol>
       </section>
 
-      <CompanyRegister />
+      <CompanyRegister id="credentials" />
 
       <section className="content-section container certification-section">
         <SectionHeading eyebrow="Official certification" title="Institutional integrity and trust" copy="AALKC maintains quality, environmental, and safety certifications alongside verified Ministry of Commerce registration." />

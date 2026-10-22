@@ -72,7 +72,7 @@ export function MaterialsPage() {
         <div className="catalog-tools" aria-label={t("Material filters")}>
           <div className="filter-chips" role="group" aria-label={t("Filter materials by category")}>
             {categories.map((item) => (
-              <button type="button" className={category === item ? "active" : ""} onClick={() => setCategory(item)} key={item}>{t(item)}</button>
+              <button type="button" aria-pressed={category === item} onClick={() => setCategory(item)} key={item}>{t(item)}</button>
             ))}
           </div>
           <label className="search-control"><LuSearch /><span className="sr-only">{t("Search materials")}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search materials")} /></label>

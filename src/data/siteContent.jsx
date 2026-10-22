@@ -2,15 +2,18 @@ import { LuAward, LuContainer, LuLayers, LuBadgeCheck, LuBox, LuBuilding2, LuCir
 
 export const navigation = [
   { label: "Home", to: "/" },
-  { label: "About Us", to: "/about" },
+  { label: "Sell scrap", to: "/sell" },
+  { label: "Buy materials", to: "/buy" },
   { label: "Services", to: "/services" },
-  { label: "Industries", to: "/industries" },
   { label: "Materials", to: "/materials" },
   { label: "Insights", to: "/insights" },
+  { label: "About Us", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];
 
 export const footerCompanyLinks = [
+  { label: "Sell your scrap", to: "/sell" },
+  { label: "Buy from AALKC", to: "/buy" },
   { label: "About Us", to: "/about" },
   { label: "How we work", to: "/process" },
   { label: "Industries", to: "/industries" },

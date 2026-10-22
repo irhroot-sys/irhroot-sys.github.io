@@ -38,11 +38,7 @@
   --kicker-tall: var(--platinum);
   color: var(--on-ink-muted);
 }
-html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker, .modal-kicker) {
-  font-family: var(--font-arabic);
-  font-size: var(--fs-14);
-  letter-spacing: 0;
-}
+html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker, .modal-kicker) { letter-spacing: 0; }
 
 /* ── Section heading ──────────────────────────────────────────────────────
    Editorial, not centred: label and title hold the left of the measure and
@@ -153,7 +149,7 @@ html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: var(--lh-a
 .primary-button { color: var(--action-text); background: var(--action); }
 .primary-button:hover,
 .primary-button:focus-visible { background: var(--action-hover); }
-.primary-button:disabled { color: var(--steel-600); background: var(--steel-200); }
+.primary-button:disabled { color: var(--state-disabled-text); background: var(--state-disabled); }
 .on-ink .primary-button { color: var(--action-ink-text); background: var(--action-ink); }
 .on-ink .primary-button:hover,
 .on-ink .primary-button:focus-visible { background: var(--action-ink-hover); }
@@ -162,7 +158,7 @@ html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: var(--lh-a
 .secondary-button:hover,
 .secondary-button:focus-visible,
 .explore-button:hover,
-.explore-button:focus-visible { border-color: var(--navy-800); background: var(--navy-50); }
+.explore-button:focus-visible { border-color: var(--navy-800); background: var(--state-hover); }
 .on-ink .secondary-button,
 .on-ink .explore-button { color: var(--white); border-color: var(--rule-ink-strong); }
 .on-ink .secondary-button:hover,
@@ -172,7 +168,7 @@ html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: var(--lh-a
 :is(.primary-button, .secondary-button, .explore-button, .quote-button, .inline-action):hover .directional-icon { translate: 4px 0; }
 html[dir="rtl"] :is(.primary-button, .secondary-button, .explore-button, .quote-button, .inline-action):hover .directional-icon { translate: -4px 0; }
 .primary-button svg, .secondary-button svg, .explore-button svg, .quote-button svg { font-size: 18px; }
-html[lang="ar"] :is(.primary-button, .secondary-button, .explore-button, .quote-button) { font-family: var(--font-arabic); font-size: var(--fs-16); }
+html[lang="ar"] :is(.primary-button, .secondary-button, .explore-button, .quote-button) { font-size: var(--fs-16); }
 
 /* Text action: an underlined link with an arrow, for secondary routes. */
 .inline-action {
@@ -197,7 +193,6 @@ html[lang="ar"] :is(.primary-button, .secondary-button, .explore-button, .quote-
 .inline-action:focus-visible { color: var(--navy-600); text-decoration-color: var(--signal); }
 .on-ink .inline-action { color: var(--white); text-decoration-color: var(--rule-ink-strong); }
 .on-ink .inline-action:hover { text-decoration-color: var(--signal-on-ink); }
-html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
 
 /* ── Chips ──────────────────────────────────────────────────────────────── */
 .chip-list { display: flex; flex-wrap: wrap; gap: var(--s-2); list-style: none; }
@@ -212,7 +207,7 @@ html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
   line-height: 1.3;
   transition: border-color var(--t-fast) var(--ease-std), color var(--t-fast) var(--ease-std);
 }
-.chip-list a:hover, .chip-list a:focus-visible { color: var(--heading); border-color: var(--navy-800); background: var(--navy-50); }
+.chip-list a:hover, .chip-list a:focus-visible { color: var(--heading); border-color: var(--navy-800); background: var(--state-hover); }
 .on-ink .chip-list li > *, .surface-ink .chip-list li > * { color: var(--on-ink); border-color: var(--rule-ink-strong); }
 
 /* ── Check list ─────────────────────────────────────────────────────────── */
@@ -242,7 +237,7 @@ html[lang="ar"] .inline-action { font-family: var(--font-arabic); }
   letter-spacing: .005em;
   line-height: 1.45;
 }
-html[lang="ar"] .caption { font-family: var(--font-arabic); letter-spacing: 0; }
+html[lang="ar"] .caption { letter-spacing: 0; }
 
 /* ── Register (definition table) ──────────────────────────────────────────
    Key facts as a register: a quiet key, a set value, a hairline between. */
@@ -263,7 +258,15 @@ html[lang="ar"] .caption { font-family: var(--font-arabic); letter-spacing: 0; }
 .register dd { margin: 0; color: var(--text-strong); font-size: var(--fs-16); font-weight: 500; line-height: 1.55; }
 .register dd small { display: block; color: var(--text-muted); font-size: var(--fs-14); font-weight: 400; }
 html[dir="ltr"] .register dd small[dir="rtl"] { text-align: left; }
-html[lang="ar"] .register dt { font-family: var(--font-arabic); }
+/* A register that is a record of the company is set on a steel plate: a
+   light steel ground with a navy edge, like the data plate on a machine. */
+.register.is-plate {
+  padding: var(--s-2) clamp(var(--s-5), 3vw, var(--s-7)) var(--s-4);
+  border-top: 3px solid var(--navy-800);
+  background: var(--surface-plate);
+}
+.register.is-plate > div { border-bottom-color: var(--plate-rule); }
+.register.is-plate > div:last-child { border-bottom: 0; }
 @media (max-width: 620px) { .register > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); } }
 
 /* ── Form fields (quote dialog and contact form) ─────────────────────────── */
@@ -282,7 +285,7 @@ html[lang="ar"] .register dt { font-family: var(--font-arabic); }
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--field-border);
   border-radius: var(--radius);
   color: var(--text-strong);
   background: var(--white);
@@ -293,13 +296,16 @@ html[lang="ar"] .register dt { font-family: var(--font-arabic); }
 }
 :is(.quote-modal, .contact-form) label > :is(input, select, textarea) { flex: 1 0 100%; }
 :is(.quote-modal, .contact-form) textarea { resize: vertical; min-height: 120px; }
-:is(.quote-modal, .contact-form) :is(input, select, textarea):hover { border-color: var(--steel-400); }
+:is(.quote-modal, .contact-form) :is(input, select, textarea):hover { border-color: var(--field-border-hover); }
+/* A field the visitor has left invalid (not one they have not reached yet). */
+:is(.quote-modal, .contact-form) :is(input, select, textarea):user-invalid { border-color: var(--danger); }
+:is(.quote-modal, .contact-form) :is(input, select, textarea):disabled { color: var(--state-disabled-text); background: var(--state-disabled); cursor: not-allowed; }
 :is(.quote-modal, .contact-form) :is(input, select, textarea):focus {
   outline: none;
   border-color: var(--navy-500);
   box-shadow: var(--ring);
 }
-:is(.quote-modal, .contact-form) ::placeholder { color: #6A727C; /* 4.8:1 */ }
+:is(.quote-modal, .contact-form) ::placeholder { color: var(--field-placeholder); }
 .field-status {
   margin-inline-start: var(--s-2);
   color: var(--text-muted);
@@ -343,7 +349,7 @@ html[lang="ar"] .register dt { font-family: var(--font-arabic); }
   line-height: 1.6;
 }
 .selected-context strong { color: var(--text-strong); }
-.form-alert { margin: 0 0 var(--s-4); padding: var(--s-3) var(--s-4); border-inline-start: 2px solid #A43A3A; color: #7E2424; background: #FBEFEF; font-size: var(--fs-14); line-height: 1.5; }
+.form-alert { margin: 0 0 var(--s-4); padding: var(--s-3) var(--s-4); border-inline-start: 2px solid var(--danger); color: var(--danger-text); background: var(--danger-surface); font-size: var(--fs-14); line-height: 1.5; }
 .submit-button { width: 100%; }
 @media (max-width: 620px) { .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; } }
 

@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 // Inline reproduction of AALKC's official brand mark. The path data is
 // copied verbatim from /public/assets/aalkc-logo-official-9233f531.svg
 // (the same file used for the header logo, the favicon, and the
@@ -15,21 +17,58 @@ export const SKYLINE_PATHS = [
   "M64.1274,110.1067l-7.5755-.0178c2.3653-2.3894,4.7338-4.2923,7.5392-6.1628l.0363,6.1805Z",
 ];
 
-export function BrandMark({ className = "", title }) {
+// The two navy strokes of the A, exactly as drawn in the official file.
+const STROKE_LEFT = "M40.6097,109.6633l-.2689.4369-26.9875-.0155c2.3892-1.16,4.6273-2.2115,6.5648-4.0248,1.9144-1.6539,3.3848-3.6204,4.6217-5.9149l9.9303-21.0167.9007-1.8843,3.2142-6.7224,4.1347-8.6643.768-1.6079,3.2151-6.7188,3.8128-7.9508,3.3912-7.0713,3.0176-6.2684,2.6889-5.607,20.2558.0011-1.9293,4.0544-2.641,5.4686-3.6494,7.6057-7.1456,14.8039-5.1876,10.7553-2.7643,5.7504-.5575,1.288,18.2575.0076-1.8829,3.8939-1.2544,2.5469-.5772,1.1623-17.9689.0015-1.7553,3.8278-5.0307,10.783-5.1729,11.0798Z";
+const STROKE_RIGHT = "M142.8912,107.7974c.7852.8507,1.7717,1.3494,2.7529,1.8046l1.0026.4651-19.3773.0079-2.7007-5.8472-3.9694-8.5782-3.8937-8.4056-4.2211-9.1075-2.8123-6.0995-2.9674-6.4438-3.1455-6.8028-2.8907-6.2462,10.8727-10.1026,2.0743,4.4832,4.8898,10.5299,4.0132,8.6738,2.9769,6.4425,3.0171,6.5378,3.2628,7.0701,2.8937,6.2704,3.2644,7.0646,1.8644,4.0336c.4309.9322.8856,1.8583,1.5673,2.5968l1.5259,1.6533Z";
+
+// `animate` stages the mark into view once, on page load (the header uses
+// it): the left stroke of the A rises from its foot, the right stroke falls
+// from its apex, the skyline grows between them, and a single band of light
+// crosses the finished mark. Nothing about the mark changes — the paths are
+// revealed through clip paths, so at rest, with reduced motion, or before the
+// animation runs, it is the approved logo, pixel for pixel. Every other use
+// renders the plain mark.
+export function BrandMark({ className = "", title, animate = false }) {
+  const uid = useId().replace(/[^a-zA-Z0-9-]/g, "");
+  const a11y = title ? { role: "img" } : { "aria-hidden": "true" };
+  const strokes = [STROKE_LEFT, STROKE_RIGHT];
+  if (!animate) {
+    return (
+      <svg className={className} viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" focusable="false" {...a11y}>
+        {title ? <title>{title}</title> : null}
+        {strokes.map((d) => <path key={d} d={d} fill="#0e335c" />)}
+        <g>
+          {SKYLINE_PATHS.map((d) => <path key={d} d={d} fill="#7d8389" />)}
+        </g>
+      </svg>
+    );
+  }
+  const id = (name) => `mark-${name}-${uid}`;
+  const url = (name) => `url(#${id(name)})`;
   return (
-    <svg
-      className={className}
-      viewBox="0 0 160 160"
-      xmlns="http://www.w3.org/2000/svg"
-      focusable="false"
-      {...(title ? { role: "img" } : { "aria-hidden": "true" })}
-    >
+    <svg className={`${className} is-animated`} viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" focusable="false" {...a11y}>
       {title ? <title>{title}</title> : null}
-      <path d="M40.6097,109.6633l-.2689.4369-26.9875-.0155c2.3892-1.16,4.6273-2.2115,6.5648-4.0248,1.9144-1.6539,3.3848-3.6204,4.6217-5.9149l9.9303-21.0167.9007-1.8843,3.2142-6.7224,4.1347-8.6643.768-1.6079,3.2151-6.7188,3.8128-7.9508,3.3912-7.0713,3.0176-6.2684,2.6889-5.607,20.2558.0011-1.9293,4.0544-2.641,5.4686-3.6494,7.6057-7.1456,14.8039-5.1876,10.7553-2.7643,5.7504-.5575,1.288,18.2575.0076-1.8829,3.8939-1.2544,2.5469-.5772,1.1623-17.9689.0015-1.7553,3.8278-5.0307,10.783-5.1729,11.0798Z" fill="#0e335c" />
-      <path d="M142.8912,107.7974c.7852.8507,1.7717,1.3494,2.7529,1.8046l1.0026.4651-19.3773.0079-2.7007-5.8472-3.9694-8.5782-3.8937-8.4056-4.2211-9.1075-2.8123-6.0995-2.9674-6.4438-3.1455-6.8028-2.8907-6.2462,10.8727-10.1026,2.0743,4.4832,4.8898,10.5299,4.0132,8.6738,2.9769,6.4425,3.0171,6.5378,3.2628,7.0701,2.8937,6.2704,3.2644,7.0646,1.8644,4.0336c.4309.9322.8856,1.8583,1.5673,2.5968l1.5259,1.6533Z" fill="#0e335c" />
-      <g>
-        <path d={SKYLINE_PATHS[0]} fill="#7d8389" />
-        <path d={SKYLINE_PATHS[1]} fill="#7d8389" />
+      <defs>
+        <clipPath id={id("rise")}><rect className="mark-reveal mark-reveal-rise" width="160" height="160" /></clipPath>
+        <clipPath id={id("fall")}><rect className="mark-reveal mark-reveal-fall" width="160" height="160" /></clipPath>
+        <clipPath id={id("city")}><rect className="mark-reveal mark-reveal-city" width="160" height="160" /></clipPath>
+        <clipPath id={id("shape")}>
+          {strokes.map((d) => <path key={d} d={d} />)}
+          {SKYLINE_PATHS.map((d) => <path key={d} d={d} />)}
+        </clipPath>
+        <linearGradient id={id("light")} x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#fff" stopOpacity="0" />
+          <stop offset=".5" stopColor="#fff" stopOpacity=".7" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={STROKE_LEFT} fill="#0e335c" clipPath={url("rise")} />
+      <path d={STROKE_RIGHT} fill="#0e335c" clipPath={url("fall")} />
+      <g clipPath={url("city")}>
+        {SKYLINE_PATHS.map((d) => <path key={d} d={d} fill="#7d8389" />)}
+      </g>
+      <g clipPath={url("shape")}>
+        <rect className="mark-light" x="-40" y="0" width="40" height="160" fill={url("light")} />
       </g>
     </svg>
   );
