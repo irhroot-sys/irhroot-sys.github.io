@@ -5,7 +5,7 @@ type system v0.3), using that package's own `builder.js` and `fontmerge.js`.
 
 | File | Family | What it is |
 | --- | --- | --- |
-| `AALKC-Regular.woff2`, `AALKC-Bold.woff2` | AALKC | AALKC's Latin face: capitals only (lowercase maps to capitals), digits, punctuation and the Saudi Riyal sign (U+20C1). Built offline from `glyphs.json`; converted from TTF to WOFF2 without other changes. |
+| `AALKC-Regular.woff2`, `AALKC-Bold.woff2` | AALKC | AALKC's Latin face: capitals only (lowercase maps to capitals), digits, punctuation and the Saudi Riyal sign (U+20C1). Built offline from `glyphs.json`; every table decompiled and recompiled by fontTools when converting to WOFF2 (passing the builder's raw `glyf` straight through produced WOFF2 files FreeType rejects). Outlines, advances, cmap and kerning are unchanged. |
 | `AALKCKufi-Regular.woff2`, `AALKCKufi-Bold.woff2` | AALKC Kufi | Noto Kufi Arabic 2.110 (static, hinted) merged with the AALKC Latin and Riyal sign. Subset for the web to Basic Latin, the Arabic block used on the site, common punctuation and U+20C1. |
 
 Licence: AALKC Kufi is a derivative of Noto Kufi Arabic under the SIL Open
