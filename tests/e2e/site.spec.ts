@@ -367,6 +367,48 @@ test('asks buyers for their requirement, not a collection site', async ({ page }
   for (const name of ['location', 'timing', 'weightTons']) await expect(page.getByRole('dialog').locator(`[name="${name}"]`), name).toHaveCount(1);
 });
 
+test('keeps the auctions record to what its documents prove', async ({ page, request }) => {
+  await page.goto('/sell');
+  await page.locator('.pathway-send').getByRole('link', { name: 'the sales we take part in' }).click();
+  await expect(page).toHaveURL(/\/auctions-and-tenders$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Industrial auctions and tenders, on the record.' })).toBeVisible();
+
+  // Four stages, defined once; every sale carries the same four-notch gauge,
+  // the furthest stage first, and no image — so no third-party logo.
+  await expect(page.locator('.stage-scale > li')).toHaveCount(4);
+  const rows = page.locator('.auction-record > li');
+  expect(await rows.count()).toBeGreaterThan(3);
+  await expect(rows.first()).toHaveAttribute('data-stage', 'offered');
+  for (const gauge of await rows.locator('.stage-gauge').all()) {
+    await expect(gauge.locator('i')).toHaveCount(4);
+    await expect(gauge).toHaveAttribute('aria-label', /^Stages reached: /);
+  }
+  await expect(page.locator('.auction-record img, .auction-record svg')).toHaveCount(0);
+
+  // No figures, deposits or outcomes, and the disclaimer stands.
+  expect(await page.locator('main').innerText()).not.toMatch(/\bSAR\b|﷼/);
+  expect(await page.locator('.auction-record').innerText()).not.toMatch(/\d{5,}|award|\bwon\b|\blost\b|partner|contract/i);
+  await expect(page.locator('.auction-disclosure-list')).toContainText('No contract award, partnership or endorsement is implied');
+
+  // A seller can invite AALKC to bid.
+  await page.locator('.auction-invite').getByRole('button', { name: 'Invite AALKC to bid' }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'Invite AALKC to bid' })).toBeVisible();
+  await page.getByRole('dialog').getByRole('button', { name: 'Close enquiry form' }).click();
+
+  await page.goto('/ar/auctions-and-tenders');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.getByRole('heading', { level: 1, name: 'المزادات والمناقصات الصناعية، موثّقة.' })).toBeVisible();
+  await expect(page.locator('.auction-record .stage-gauge').first()).toHaveAttribute('aria-label', /^المراحل المنجزة: /);
+
+  // Indexed in both languages, with its questions as FAQPage data.
+  const html = await (await request.get('/auctions-and-tenders')).text();
+  expect(html).toContain('<title>Industrial Scrap Auctions &amp; Tenders | AALKC</title>');
+  expect(html).toContain('"@type":"FAQPage"');
+  expect(html).toContain('href="/auctions-and-tenders"');
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  for (const loc of ['/auctions-and-tenders', '/ar/auctions-and-tenders']) expect(sitemap, loc).toContain(`<loc>https://aalkc.com${loc}</loc>`);
+});
+
 test('serves a useful 404 fallback', async ({ page }) => {
   const response = await page.goto('/missing-page');
   expect(response?.status()).toBeLessThan(500);
@@ -806,7 +848,7 @@ test('prerenders the service, industries and sustainability pages in both langua
 
 test('has no serious or critical axe findings on the new company pages', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/sell', '/ar/buy', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
+  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/sell', '/ar/buy', '/auctions-and-tenders', '/ar/auctions-and-tenders', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
     await page.goto(path);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();

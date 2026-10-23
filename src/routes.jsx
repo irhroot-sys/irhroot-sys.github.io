@@ -15,6 +15,8 @@ import { ARTICLE_IMAGE, industryImages, industryMeta, insightMeta, materialMeta,
 import { KnowledgePage } from "./lib/knowledge.jsx";
 import { PathwayPage } from "./pages/PathwayPage.jsx";
 import { buyGuide, sellGuide } from "./data/pathways.js";
+import { AuctionsPage } from "./pages/AuctionsPage.jsx";
+import { auctionsGuide } from "./data/auctions.js";
 import { splitLocalePath } from "./lib/i18n.js";
 import { HOME_HERO_SIZES, PAGE_HERO_SIZES } from "./data/imageSizes.js";
 import { photos } from "./data/photos.js";
@@ -67,6 +69,18 @@ export const routes = [
     faq: buyGuide.faq,
     changefreq: "monthly",
     priority: "0.9",
+  },
+  // AALKC's record of industrial auctions and tenders (src/data/auctions.js).
+  {
+    path: "/auctions-and-tenders",
+    element: () => <AuctionsPage />,
+    title: auctionsGuide.seoTitle,
+    description: auctionsGuide.description,
+    image: photos.generatorStator.src,
+    heroImage: photos.generatorStator.src,
+    faq: auctionsGuide.faq,
+    changefreq: "monthly",
+    priority: "0.8",
   },
   {
     path: "/services",

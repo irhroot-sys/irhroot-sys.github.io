@@ -89,6 +89,11 @@ export function PathwayPage({ id }) {
           <p className="pathway-credentials">
             <RichText text={{ en: "Registered and certified: see the [company register and certifications](/about#credentials).", ar: "شركة مسجّلة ومعتمدة: اطّلع على [سجل الشركة وشهاداتها](/about#credentials)." }} />
           </p>
+          {id === "sell" && (
+            <p className="pathway-credentials">
+              <RichText text={{ en: "Selling surplus by auction or tender? See [the sales we take part in](/auctions-and-tenders).", ar: "تبيع فوائضك بالمزاد أو المناقصة؟ اطّلع على [المزادات التي نشارك فيها](/auctions-and-tenders)." }} />
+            </p>
+          )}
         </div>
       </section>
 
