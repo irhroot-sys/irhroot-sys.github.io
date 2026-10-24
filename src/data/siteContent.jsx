@@ -15,6 +15,7 @@ export const navigation = [
 export const footerCompanyLinks = [
   { label: "Sell your scrap", to: "/sell" },
   { label: "Buy from AALKC", to: "/buy" },
+  { label: "Auctions & tenders", to: "/auctions-and-tenders" },
   { label: "About Us", to: "/about" },
   { label: "How we work", to: "/process" },
   { label: "Industries", to: "/industries" },

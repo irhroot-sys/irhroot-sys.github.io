@@ -1,0 +1,105 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Auctions & tenders
+   A record, not a showcase: each sale is a row in a ledger, keyed by a
+   four-notch gauge that shows which stages of the sale AALKC's documents
+   prove — read the catalogue, invited, inspected, offered. Navy where a
+   stage was reached, a steel hairline where it was not. No logos, no
+   figures: the gauge is the only device on the page.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The gauge ─────────────────────────────────────────────────────────── */
+.stage-gauge {
+  display: inline-grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  width: 112px;
+  flex: 0 0 auto;
+}
+.stage-gauge i { display: block; height: 6px; background: var(--rule-strong); }
+.stage-gauge i.is-reached { background: var(--navy-800); }
+.stage-gauge i:nth-child(2) { --notch: 1; }
+.stage-gauge i:nth-child(3) { --notch: 2; }
+.stage-gauge i:nth-child(4) { --notch: 3; }
+/* The notches a record reached draw in one after another as its row arrives. */
+[data-motion="reveal"].is-revealed .stage-gauge i.is-reached {
+  animation: rule-draw 600ms var(--ease-soft) both;
+  animation-delay: calc(240ms + var(--notch, 0) * 110ms);
+}
+html[dir="rtl"] [data-motion="reveal"].is-revealed .stage-gauge i.is-reached { animation-name: rule-draw-rtl; }
+[data-motion="reveal"].is-revealed.is-immediate .stage-gauge i.is-reached { animation: none; }
+
+/* ── The scale: the four stages, defined once ──────────────────────────── */
+.stage-scale { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-7) var(--gutter); list-style: none; }
+.stage-scale li { padding-top: var(--s-5); border-top: 1px solid var(--rule-strong); }
+.stage-scale h3 { display: flex; align-items: baseline; gap: var(--s-3); margin-top: var(--s-5); font-size: var(--fs-20); }
+.stage-number { color: var(--text-muted); font-family: var(--font-figures); font-size: var(--fs-24); font-weight: var(--w-figures); font-variant-numeric: lining-nums; line-height: 1; }
+.stage-scale p { margin-top: var(--s-3); max-width: 34ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.65; }
+
+/* ── The record ────────────────────────────────────────────────────────── */
+.auction-record { list-style: none; border-bottom: 1px solid var(--rule-strong); }
+.auction-record > li { border-top: 1px solid var(--rule-strong); }
+/* A sale AALKC bid in carries the heavier navy edge of a record of fact. */
+.auction-record > li[data-stage="offered"] { border-top: 2px solid var(--navy-800); }
+.auction-entry {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--s-4);
+  align-items: start;
+  padding: var(--s-6) 0;
+}
+.auction-entry-stage { grid-column: 1 / span 3; display: grid; gap: var(--s-3); justify-items: start; padding-top: var(--s-2); }
+.auction-entry-stage p { color: var(--navy-800); font-size: var(--fs-14); font-weight: 600; }
+.auction-entry-head { grid-column: 4 / span 4; }
+.auction-entry-head h3 { font-size: var(--fs-24); line-height: var(--lh-snug); }
+.auction-entry-sector { margin-top: var(--s-2); color: var(--text-muted); font-size: var(--fs-14); }
+.auction-entry-note { margin-top: var(--s-3); max-width: 40ch; color: var(--text); font-size: var(--fs-15); line-height: 1.6; }
+.auction-entry-facts { grid-column: 8 / span 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4) var(--gutter); margin: 0; }
+.auction-entry-facts dt { color: var(--text-muted); font-size: var(--fs-13); font-weight: 600; }
+.auction-entry-facts dd { margin: var(--s-1) 0 0; color: var(--text-strong); font-size: var(--fs-15); line-height: 1.5; }
+
+/* ── Channels beside capabilities ──────────────────────────────────────── */
+.auction-brief { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--s-8); align-items: start; }
+.auction-channels { grid-column: 1 / span 5; }
+.auction-capabilities { grid-column: 7 / span 6; }
+.auction-capabilities .register { margin-top: var(--s-5); }
+.auction-capabilities .register a { color: var(--navy-800); font-weight: 600; text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+.auction-capabilities .register a:hover { text-decoration-color: var(--navy-800); }
+.auction-channels ul { margin-top: var(--s-5); list-style: none; border-top: 1px solid var(--rule-strong); }
+.auction-channels li { padding: var(--s-5) 0; border-bottom: 1px solid var(--rule); }
+/* A channel with its own platform or organiser mark: the logo on a small white
+   plate at the start of the row, sized by area like the track record. */
+.auction-channels li.has-mark { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+.auction-channel-mark { display: grid; place-items: center; aspect-ratio: 3 / 2; padding: var(--s-2); border: 1px solid var(--rule); background: var(--white); }
+.auction-channel-mark img { display: block; width: auto; height: var(--logo-h, 2rem); max-width: 88%; object-fit: contain; }
+.auction-channels h3 { font-size: var(--fs-20); }
+.auction-channels p { margin-top: var(--s-2); max-width: 46ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.6; }
+
+/* ── What is published, beside the invitation to bid ───────────────────── */
+.auction-disclosure { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--s-8); align-items: start; }
+.auction-disclosure > div { grid-column: 1 / span 7; }
+.auction-disclosure .section-heading { grid-template-columns: minmax(0, 1fr); margin-bottom: var(--s-6); }
+.auction-disclosure-list { grid-template-columns: minmax(0, 1fr); }
+.auction-invite {
+  grid-column: 9 / span 4;
+  padding: var(--s-6) clamp(var(--s-5), 2.5vw, var(--s-7)) var(--s-7);
+  border-top: 3px solid var(--navy-800);
+  background: var(--surface);
+}
+.auction-invite > p { margin-top: var(--s-3); color: var(--text-muted); font-size: var(--fs-15); line-height: 1.65; }
+.auction-invite .pathway-actions { margin-top: var(--s-6); }
+
+@media (max-width: 1100px) {
+  .stage-scale { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .auction-entry-stage { grid-column: 1 / -1; grid-template-columns: auto 1fr; align-items: center; padding-top: 0; }
+  .auction-entry-head { grid-column: 1 / span 5; }
+  .auction-entry-facts { grid-column: 6 / span 7; }
+  .auction-channels, .auction-capabilities, .auction-disclosure > div, .auction-invite { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .auction-entry-head, .auction-entry-facts { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .stage-scale, .auction-entry-facts { grid-template-columns: minmax(0, 1fr); }
+  .stage-scale { gap: var(--s-5); }
+}

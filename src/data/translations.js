@@ -526,6 +526,7 @@ export const arabicTranslations = {
   "Sell scrap": "بيع الخردة",
   "Buy materials": "شراء المواد",
   "Sell your scrap": "بِع خردتك",
+  "Auctions & tenders": "المزادات والمناقصات",
   "Buy from AALKC": "اشترِ من أمانة الكلمة",
   "For suppliers": "للمورّدين",
   "For mills, foundries and traders": "لمصانع الصلب والمسابك والتجار",

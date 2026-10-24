@@ -1,0 +1,123 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Our experience & track record
+   Each organisation's own logo on a plate of the same size, captioned with
+   its name and sector, the way a data plate carries a maker's mark. Marks are
+   sized by area, not by width, so a square emblem and a long wordmark read
+   with the same weight. The brand's steel is the only accent; the logos keep
+   their own colours.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.engagements-head {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: var(--gutter);
+  align-items: end;
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--navy-800);
+}
+.engagements-head h3 { font-size: var(--fs-24); }
+.engagements-head p { max-width: 62ch; color: var(--text-muted); font-size: var(--fs-14); line-height: 1.6; }
+
+/* ── The plate grid ─────────────────────────────────────────────────────── */
+.engagement-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-6) var(--gutter);
+  margin-top: var(--s-7);
+  list-style: none;
+}
+.engagement { display: grid; grid-template-rows: auto 1fr; height: 100%; margin: 0; }
+.engagement-plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  padding: var(--s-5);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--white);
+  transition: border-color var(--t-mid) var(--ease-std), box-shadow var(--t-mid) var(--ease-std);
+}
+/* A steel rule draws across the top edge of the plate under the pointer. */
+.engagement-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--metal);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-slow) var(--ease-out);
+}
+html[dir="rtl"] .engagement-plate::before { transform-origin: right center; }
+.engagement-plate img,
+.platform-plate img {
+  display: block;
+  width: auto;
+  height: var(--logo-h, 3.7rem);
+  max-width: 82%;
+  object-fit: contain;
+  transition: scale var(--t-slow) var(--ease-out);
+}
+.engagement-plate img { max-height: calc(100% - var(--s-2)); }
+@media (hover: hover) {
+  .engagement:hover .engagement-plate { border-color: var(--rule-strong); box-shadow: 0 18px 36px -28px rgba(14, 51, 92, .45); }
+  .engagement:hover .engagement-plate::before { transform: scaleX(1); }
+  .engagement:hover .engagement-plate img { scale: 1.04; }
+}
+.engagement figcaption {
+  display: grid;
+  align-content: start;
+  gap: var(--s-1);
+  padding-top: var(--s-3);
+}
+.engagement-name { color: var(--text-strong); font-size: var(--fs-15); font-weight: 600; line-height: 1.4; }
+.engagement-sector { color: var(--text-muted); font-size: var(--fs-13); line-height: 1.45; }
+
+/* ── Digital procurement platforms ──────────────────────────────────────── */
+.platforms {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  column-gap: var(--gutter);
+  row-gap: var(--s-6);
+  align-items: start;
+  margin-top: var(--s-9);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule-strong);
+}
+.platforms-intro h3 { font-size: var(--fs-24); }
+.platforms-intro p { margin-top: var(--s-3); max-width: 42ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.65; }
+.platforms-intro .inline-action { margin-top: var(--s-5); }
+.platform-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); list-style: none; }
+.platform {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--navy-800);
+  background: var(--surface-plate);
+}
+.platform-plate { display: grid; place-items: center; min-height: 9rem; padding: var(--s-5); background: var(--white); border-bottom: 1px solid var(--plate-rule); }
+.platform-plate img { height: calc(var(--logo-h, 3.7rem) * 1.2); max-width: 72%; }
+.platform-copy { padding: var(--s-5) clamp(var(--s-5), 2vw, var(--s-6)) var(--s-6); }
+.platform-copy h4 { font-size: var(--fs-20); }
+.platform-kind { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-1) var(--s-3); margin-top: var(--s-2); color: var(--navy-800); font-size: var(--fs-13); font-weight: 600; }
+.platform-domain { color: var(--text-muted); font-weight: 500; }
+.platform-copy > p:last-child { margin-top: var(--s-3); color: var(--text); font-size: var(--fs-15); line-height: 1.65; }
+
+@media (max-width: 1100px) {
+  .platforms { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .engagements-head { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-3); }
+  .engagement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .engagement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-4); }
+  .engagement-plate { padding: var(--s-4); }
+  .engagement-plate img { height: calc(var(--logo-h, 3.7rem) * .62); }
+  .platform-list { grid-template-columns: minmax(0, 1fr); }
+  .platform-plate { min-height: 7.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .engagement-plate::before, .engagement-plate img { transition: none; }
+}

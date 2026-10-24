@@ -121,7 +121,7 @@ ${sitemapEntries.join("\n")}
 // sitemap, so it can never point at a page that does not exist.
 const llmsGroups = [
   ["Company", (p) => ["/", "/about", "/process", "/sustainability", "/faq", "/contact"].includes(p)],
-  ["Working with AALKC", (p) => ["/sell", "/buy"].includes(p)],
+  ["Working with AALKC", (p) => ["/sell", "/buy", "/auctions-and-tenders"].includes(p)],
   ["Services", (p) => p === "/services" || p.startsWith("/services/")],
   ["Materials", (p) => p === "/materials" || p.startsWith("/materials/")],
   ["Industries", (p) => p === "/industries" || p.startsWith("/industries/")],
