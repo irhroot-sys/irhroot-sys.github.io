@@ -62,6 +62,6 @@ describe('auctions record', () => {
   it('keeps the disclaimer that names imply no award, partnership or endorsement', () => {
     const disclosures = text(auctionDisclosures);
     expect(disclosures).toMatch(/No contract award, partnership or endorsement is implied/);
-    expect(disclosures).toMatch(/no third-party logo/);
+    expect(disclosures).toMatch(/Logos are the trademarks of their owners/);
   });
 });

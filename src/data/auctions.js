@@ -1,4 +1,5 @@
 import { L } from "../lib/i18n.js";
+import { markFor } from "./engagements.js";
 
 // AALKC's record of industrial scrap auctions and tenders.
 //
@@ -11,7 +12,8 @@ import { L } from "../lib/i18n.js";
 // - A seller is named only where its own sale documents name it. A sale whose
 //   seller is not yet confirmed is described by its sector and region instead.
 // - Names identify who ran each sale; they never imply an award, a contract,
-//   a partnership or an endorsement, and no third-party logo is shown.
+//   a partnership or an endorsement. The only logos are those of the sale
+//   channels, shown to identify them (src/data/engagements.js).
 // - One entry per seller: repeat sales by the same seller are one record.
 // Sales still awaiting confirmation are kept out of this file entirely until
 // they are confirmed (tests/lib/auctions.test.ts enforces the rules above).
@@ -150,6 +152,7 @@ export function furthestStage(record) {
 export const auctionChannels = [
   {
     name: L("Al-Qahtani Auctions", "شركة القحطاني للمزادات"),
+    mark: markFor("al-qahtani-auctions"),
     text: L(
       "Sealed-envelope sales of surplus and scrap for utilities, energy, drilling and telecom companies across the Kingdom.",
       "مزادات بالظرف المختوم للفوائض والخردة لشركات المرافق والطاقة والحفر والاتصالات في أنحاء المملكة.",
@@ -157,9 +160,18 @@ export const auctionChannels = [
   },
   {
     name: L("Etimad", "منصة اعتماد"),
+    mark: markFor("etimad"),
     text: L(
       "The government platform through which public entities sell surplus assets by auction.",
       "المنصة الحكومية التي تبيع عبرها الجهات العامة أصولها الفائضة بالمزاد.",
+    ),
+  },
+  {
+    name: L("Saudi eMazad", "المزاد الإلكتروني"),
+    mark: markFor("emazad"),
+    text: L(
+      "The Kingdom's electronic auction platform for public sales.",
+      "منصة المزادات الإلكترونية للبيوع العامة في المملكة.",
     ),
   },
   {
@@ -215,7 +227,8 @@ export const auctionCapabilities = [
 export const auctionDisclosures = [
   L("Every entry is supported by sale documents or platform notices held by AALKC.", "كل إدخال مدعوم بوثائق بيع أو إشعارات منصات محفوظة لدى أمانة الكلمة."),
   L("Bid amounts, deposits, guarantees and outcomes are confidential and are never published.", "قيم العطاءات والعرابين والضمانات والنتائج سرّية ولا تُنشر أبدًا."),
-  L("Organisations are named only to identify the sale. No contract award, partnership or endorsement is implied, and no third-party logo is used.", "تُذكر الجهات للتعريف بالبيع فقط، ولا يعني ذلك ترسية عقد أو شراكة أو تزكية، ولا يُستخدم شعار أي جهة أخرى."),
+  L("Organisations are named only to identify the sale. No contract award, partnership or endorsement is implied.", "تُذكر الجهات للتعريف بالبيع فقط، ولا يعني ذلك ترسية عقد أو شراكة أو تزكية."),
+  L("Logos are the trademarks of their owners and appear only to identify them.", "الشعارات علامات تجارية مملوكة لأصحابها، وتظهر للتعريف بهم فقط."),
   L("Sales still awaiting confirmation are not listed.", "لا تُدرج المزادات التي لا تزال بانتظار التأكيد."),
 ];
 

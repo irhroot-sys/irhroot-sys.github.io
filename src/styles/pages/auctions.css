@@ -67,6 +67,11 @@ html[dir="rtl"] [data-motion="reveal"].is-revealed .stage-gauge i.is-reached { a
 .auction-capabilities .register a:hover { text-decoration-color: var(--navy-800); }
 .auction-channels ul { margin-top: var(--s-5); list-style: none; border-top: 1px solid var(--rule-strong); }
 .auction-channels li { padding: var(--s-5) 0; border-bottom: 1px solid var(--rule); }
+/* A channel with its own platform or organiser mark: the logo on a small white
+   plate at the start of the row, sized by area like the track record. */
+.auction-channels li.has-mark { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--s-5); align-items: start; }
+.auction-channel-mark { display: grid; place-items: center; aspect-ratio: 3 / 2; padding: var(--s-2); border: 1px solid var(--rule); background: var(--white); }
+.auction-channel-mark img { display: block; width: auto; height: var(--logo-h, 2rem); max-width: 88%; object-fit: contain; }
 .auction-channels h3 { font-size: var(--fs-20); }
 .auction-channels p { margin-top: var(--s-2); max-width: 46ch; color: var(--text-muted); font-size: var(--fs-15); line-height: 1.6; }
 

@@ -367,6 +367,44 @@ test('asks buyers for their requirement, not a collection site', async ({ page }
   for (const name of ['location', 'timing', 'weightTons']) await expect(page.getByRole('dialog').locator(`[name="${name}"]`), name).toHaveCount(1);
 });
 
+test('shows the track record with each organisation\'s own logo, in both languages', async ({ page }) => {
+  await page.goto('/');
+  const section = page.locator('#track-record');
+  await expect(section.getByRole('heading', { level: 2, name: 'Our Experience & Track Record' })).toBeVisible();
+  await expect(section.getByRole('heading', { name: 'Selected Industry Engagements' })).toBeVisible();
+
+  // Twelve organisations, each captioned, each logo loaded at its own
+  // proportions; two platforms shown apart from them.
+  const cards = section.locator('.engagement-grid > li');
+  await expect(cards).toHaveCount(12);
+  await section.scrollIntoViewIfNeeded();
+  for (const card of await cards.all()) {
+    await card.scrollIntoViewIfNeeded();
+    const img = card.locator('img');
+    await expect(img).toHaveAttribute('alt', '');
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+    await expect(card.locator('.engagement-name')).not.toBeEmpty();
+  }
+  await expect(section.locator('.platform-list > li')).toHaveCount(2);
+  await expect(section.locator('.platform-list')).toContainText('Etimad');
+  await expect(section.locator('.platform-list')).toContainText('Saudi eMazad');
+  await expect(section).toContainText('implies no partnership, endorsement or contract award');
+
+  // No card is wider than its column, at any width.
+  const overflow = await section.evaluate((el) => [...el.querySelectorAll('.engagement-plate img')].filter((img) => img.getBoundingClientRect().width > (img.parentElement as HTMLElement).clientWidth).length);
+  expect(overflow).toBe(0);
+
+  await section.getByRole('link', { name: 'See our auctions and tenders record' }).click();
+  await expect(page).toHaveURL(/\/auctions-and-tenders$/);
+  await expect(page.locator('.auction-channels .auction-channel-mark img')).toHaveCount(3);
+
+  await page.goto('/ar');
+  const arabic = page.locator('#track-record');
+  await expect(arabic.getByRole('heading', { level: 2, name: 'خبرتنا وسجل أعمالنا' })).toBeVisible();
+  await expect(arabic.locator('.engagement-name').first()).toHaveText('أرامكو السعودية');
+  await expect(arabic.locator('.platform-list')).toContainText('المزاد الإلكتروني');
+});
+
 test('keeps the auctions record to what its documents prove', async ({ page, request }) => {
   await page.goto('/sell');
   await page.locator('.pathway-send').getByRole('link', { name: 'the sales we take part in' }).click();
@@ -848,7 +886,7 @@ test('prerenders the service, industries and sustainability pages in both langua
 
 test('has no serious or critical axe findings on the new company pages', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const path of ['/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/sell', '/ar/buy', '/auctions-and-tenders', '/ar/auctions-and-tenders', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
+  for (const path of ['/', '/ar', '/services/scrap-purchasing', '/industries', '/sustainability', '/ar/services/scrap-purchasing', '/sell', '/ar/buy', '/auctions-and-tenders', '/ar/auctions-and-tenders', '/materials/copper', '/ar/industries/electrical', '/process', '/insights', '/insights/scrap-metal-grades-explained', '/ar/insights/scrap-metal-in-saudi-circular-economy']) {
     await page.goto(path);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const results = await new AxeBuilder({ page }).analyze();

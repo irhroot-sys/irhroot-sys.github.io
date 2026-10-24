@@ -6,6 +6,7 @@ import { CtaBand } from "../components/CtaBand.jsx";
 import { FaqBlock, RichText } from "../components/LongForm.jsx";
 import { auctionCapabilities, auctionChannels, auctionDisclosures, auctionRecord, auctionStages, auctionsGuide, furthestStage } from "../data/auctions.js";
 import { contactDetails } from "../data/siteContent.jsx";
+import { logoHeight } from "../data/engagements.js";
 import { photos } from "../data/photos.js";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { useLanguage } from "../context/LanguageContext.jsx";
@@ -97,8 +98,15 @@ export function AuctionsPage() {
         <div className="auction-channels">
           <h2 className="pathway-heading">{t({ en: "Where sales reach us", ar: "كيف تصلنا المزادات" })}</h2>
           <ul>
-            {auctionChannels.map(({ name, text }, index) => (
-              <li key={index}><h3>{t(name)}</h3><p>{t(text)}</p></li>
+            {auctionChannels.map(({ name, text, mark }, index) => (
+              <li key={index} className={mark ? "has-mark" : undefined}>
+                {mark && (
+                  <span className="auction-channel-mark">
+                    <img src={mark.logo} alt="" width={mark.width ?? Math.round(mark.ratio * 100)} height={mark.height ?? 100} loading="lazy" decoding="async" style={{ "--logo-h": `${Math.min(logoHeight(mark), 2.4).toFixed(2)}rem` }} />
+                  </span>
+                )}
+                <div><h3>{t(name)}</h3><p>{t(text)}</p></div>
+              </li>
             ))}
           </ul>
         </div>
