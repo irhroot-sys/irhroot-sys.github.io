@@ -3,13 +3,9 @@ import saudiAramco from "../assets/engagements/saudi-aramco.svg";
 import saudiEnergy from "../assets/engagements/saudi-energy.svg";
 import yasref from "../assets/engagements/yasref.webp";
 import sadara from "../assets/engagements/sadara.svg";
-import tasnee from "../assets/engagements/tasnee.svg";
 import saudiWaterAuthority from "../assets/engagements/saudi-water-authority.svg";
 import militaryIndustries from "../assets/engagements/military-industries-corporation.svg";
-import mobily from "../assets/engagements/mobily.svg";
 import abdullaFouad from "../assets/engagements/abdulla-fouad-group.svg";
-import olayan from "../assets/engagements/olayan.webp";
-import nabors from "../assets/engagements/nabors.svg";
 import alQahtani from "../assets/engagements/al-qahtani-auctions.webp";
 import etimad from "../assets/engagements/etimad.svg";
 import emazad from "../assets/engagements/emazad.svg";
@@ -20,21 +16,15 @@ import emazad from "../assets/engagements/emazad.svg";
 // none, from its Wikipedia infobox), optimised but never redrawn or
 // recoloured; see src/assets/engagements/README.md. `ratio` is the logo's
 // width over its height, used to size every mark to the same optical weight.
-// `ground: "ink"` marks a logo whose owner publishes it only reversed, so its
-// plate is set in brand navy instead of white.
 
 export const engagements = [
   { id: "saudi-aramco", name: L("Saudi Aramco", "أرامكو السعودية"), sector: L("Energy", "الطاقة"), logo: saudiAramco, ratio: 3.57 },
   { id: "saudi-energy", name: L("Saudi Energy", "السعودية للطاقة"), sector: L("Power utility, formerly Saudi Electricity Company", "مرافق الكهرباء، الشركة السعودية للكهرباء سابقًا"), logo: saudiEnergy, ratio: 1.21, optical: 1.05 },
   { id: "yasref", name: L("Yanbu Aramco Sinopec Refining Company (YASREF)", "شركة ينبع أرامكو سينوبك للتكرير (ياسرف)"), sector: L("Refining", "التكرير"), logo: yasref, ratio: 2.43, width: 560, height: 230 },
   { id: "sadara", name: L("Sadara Chemical Company", "شركة صدارة للكيميائيات"), sector: L("Petrochemicals", "البتروكيماويات"), logo: sadara, ratio: 2.85 },
-  { id: "tasnee", name: L("Tasnee", "التصنيع"), sector: L("Petrochemicals and manufacturing", "البتروكيماويات والتصنيع"), logo: tasnee, ratio: 7.48, optical: 1.1 },
   { id: "saudi-water-authority", name: L("Saudi Water Authority", "الهيئة السعودية للمياه"), sector: L("Water utility", "مرافق المياه"), logo: saudiWaterAuthority, ratio: 1.26, optical: 1.1 },
   { id: "military-industries-corporation", name: L("Military Industries Corporation", "المؤسسة العامة للصناعات العسكرية"), sector: L("Defence manufacturing", "الصناعات العسكرية"), logo: militaryIndustries, ratio: 1.69, optical: 1.05 },
-  { id: "mobily", name: L("Mobily", "موبايلي"), sector: L("Telecommunications", "الاتصالات"), logo: mobily, ratio: 0.63, optical: 0.95 },
   { id: "abdulla-fouad-group", name: L("Abdulla Fouad Group", "مجموعة عبدالله فؤاد"), sector: L("Diversified industrial group", "مجموعة صناعية متنوعة"), logo: abdullaFouad, ratio: 9.42, optical: 1.1 },
-  { id: "olayan", name: L("Olayan", "العليان"), sector: L("Diversified group", "مجموعة متنوعة الأنشطة"), logo: olayan, ratio: 5.38, width: 560, height: 104, ground: "ink", optical: 0.9 },
-  { id: "nabors", name: L("Nabors", "نابورز"), sector: L("Drilling", "الحفر"), logo: nabors, ratio: 4.83 },
   { id: "al-qahtani-auctions", name: L("Al-Qahtani Auctions Company", "شركة القحطاني للمزادات"), sector: L("Industrial auctions", "المزادات الصناعية"), logo: alQahtani, ratio: 1, width: 214, height: 214, optical: 0.85 },
 ];
 

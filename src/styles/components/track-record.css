@@ -38,8 +38,6 @@
   background: var(--white);
   transition: border-color var(--t-mid) var(--ease-std), box-shadow var(--t-mid) var(--ease-std);
 }
-/* A logo published only reversed sits on the brand's own navy. */
-.engagement-plate.is-ink { border-color: var(--navy-800); background: var(--navy-800); }
 /* A steel rule draws across the top edge of the plate under the pointer. */
 .engagement-plate::before {
   content: "";
@@ -64,7 +62,6 @@ html[dir="rtl"] .engagement-plate::before { transform-origin: right center; }
 .engagement-plate img { max-height: calc(100% - var(--s-2)); }
 @media (hover: hover) {
   .engagement:hover .engagement-plate { border-color: var(--rule-strong); box-shadow: 0 18px 36px -28px rgba(14, 51, 92, .45); }
-  .engagement:hover .engagement-plate.is-ink { border-color: var(--navy-700); }
   .engagement:hover .engagement-plate::before { transform: scaleX(1); }
   .engagement:hover .engagement-plate img { scale: 1.04; }
 }
@@ -108,11 +105,11 @@ html[dir="rtl"] .engagement-plate::before { transform-origin: right center; }
 .platform-copy > p:last-child { margin-top: var(--s-3); color: var(--text); font-size: var(--fs-15); line-height: 1.65; }
 
 @media (max-width: 1100px) {
-  .engagement-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .platforms { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 900px) {
   .engagements-head { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-3); }
+  .engagement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 620px) {
   .engagement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-4); }

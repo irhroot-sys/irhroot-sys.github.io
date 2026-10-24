@@ -373,10 +373,10 @@ test('shows the track record with each organisation\'s own logo, in both languag
   await expect(section.getByRole('heading', { level: 2, name: 'Our Experience & Track Record' })).toBeVisible();
   await expect(section.getByRole('heading', { name: 'Selected Industry Engagements' })).toBeVisible();
 
-  // Twelve organisations, each captioned, each logo loaded at its own
+  // Eight organisations, each captioned, each logo loaded at its own
   // proportions; two platforms shown apart from them.
   const cards = section.locator('.engagement-grid > li');
-  await expect(cards).toHaveCount(12);
+  await expect(cards).toHaveCount(8);
   await section.scrollIntoViewIfNeeded();
   for (const card of await cards.all()) {
     await card.scrollIntoViewIfNeeded();

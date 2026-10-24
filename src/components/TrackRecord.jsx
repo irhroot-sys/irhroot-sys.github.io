@@ -38,8 +38,8 @@ export function TrackRecord({ id = "track-record", surface = "surface-white", sh
           eyebrow={{ en: "Track record", ar: "سجل الخبرة" }}
           title={{ en: "Our Experience & Track Record", ar: "خبرتنا وسجل أعمالنا" }}
           copy={{
-            en: "Since 2017, AALKC has bought, inspected and cleared scrap and surplus assets for Saudi industry. Our work runs across energy, petrochemicals, utilities, manufacturing and telecoms, and through the sealed-bid auctions and government tenders by which these organisations sell.",
-            ar: "منذ عام 2017 تشتري أمانة الكلمة الخردة والأصول الفائضة للقطاع الصناعي السعودي وتعاينها وتُخليها. ويمتد عملنا عبر قطاعات الطاقة والبتروكيماويات والمرافق والتصنيع والاتصالات، ومن خلال المزادات بالظرف المختوم والمنافسات الحكومية التي تبيع بها هذه الجهات.",
+            en: "Since 2017, AALKC has bought, inspected and cleared scrap and surplus assets for Saudi industry. Our work runs across energy, petrochemicals, utilities and manufacturing, and through the sealed-bid auctions and government tenders by which these organisations sell.",
+            ar: "منذ عام 2017 تشتري أمانة الكلمة الخردة والأصول الفائضة للقطاع الصناعي السعودي وتعاينها وتُخليها. ويمتد عملنا عبر قطاعات الطاقة والبتروكيماويات والمرافق والتصنيع، ومن خلال المزادات بالظرف المختوم والمنافسات الحكومية التي تبيع بها هذه الجهات.",
           }}
         />
 
@@ -57,7 +57,7 @@ export function TrackRecord({ id = "track-record", surface = "surface-white", sh
           {engagements.map((item) => (
             <li key={item.id}>
               <figure className="engagement">
-                <div className={`engagement-plate${item.ground === "ink" ? " is-ink" : ""}`}>
+                <div className="engagement-plate">
                   <LogoMark item={item} />
                 </div>
                 <figcaption>
