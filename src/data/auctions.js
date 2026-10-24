@@ -58,7 +58,6 @@ export const auctionStages = [
 ];
 
 const ORGANISER_QAHTANI = L("Al-Qahtani Auctions, sealed envelope", "شركة القحطاني للمزادات، بالظرف المختوم");
-const SURPLUS = L("Surplus materials and scrap", "مواد فائضة وخردة");
 
 // Furthest stage first; within a stage, the most recent sale first.
 export const auctionRecord = [
@@ -104,38 +103,12 @@ export const auctionRecord = [
     stages: ["reviewed"],
   },
   {
-    id: "olayan",
-    seller: L("Arabian Olayan Company", "الشركة العربية العليان"),
-    channel: ORGANISER_QAHTANI,
-    scope: SURPLUS,
-    period: L("September 2026", "سبتمبر 2026"),
-    stages: ["reviewed"],
-  },
-  {
-    id: "mobily",
-    seller: L("Mobily", "موبايلي"),
-    sector: L("Telecommunications", "الاتصالات"),
-    channel: ORGANISER_QAHTANI,
-    scope: SURPLUS,
-    period: L("Several sales, 2026", "عدة مزادات، 2026"),
-    stages: ["reviewed"],
-  },
-  {
     id: "saudi-aramco",
     seller: L("Saudi Aramco", "أرامكو السعودية"),
     sector: L("Oil and gas", "النفط والغاز"),
     channel: L("Sealed bid sale by the company", "بيع بالظرف المختوم من الشركة"),
     scope: L("Ten lots at four company sites", "عشر مجموعات في أربعة مواقع للشركة"),
     period: L("2026", "2026"),
-    stages: ["reviewed"],
-  },
-  {
-    id: "sanad",
-    seller: L("Saudi Aramco Nabors Drilling (SANAD)", "أرامكو السعودية نابورز للحفر (سند)"),
-    sector: L("Drilling", "الحفر"),
-    channel: ORGANISER_QAHTANI,
-    scope: SURPLUS,
-    period: L("April 2026", "أبريل 2026"),
     stages: ["reviewed"],
   },
 ];
@@ -154,8 +127,8 @@ export const auctionChannels = [
     name: L("Al-Qahtani Auctions", "شركة القحطاني للمزادات"),
     mark: markFor("al-qahtani-auctions"),
     text: L(
-      "Sealed-envelope sales of surplus and scrap for utilities, energy, drilling and telecom companies across the Kingdom.",
-      "مزادات بالظرف المختوم للفوائض والخردة لشركات المرافق والطاقة والحفر والاتصالات في أنحاء المملكة.",
+      "Sealed-envelope sales of surplus and scrap for utility and energy companies across the Kingdom.",
+      "مزادات بالظرف المختوم للفوائض والخردة لشركات المرافق والطاقة في أنحاء المملكة.",
     ),
   },
   {
@@ -238,8 +211,8 @@ export const auctionsGuide = {
   // use the short name.
   seoTitle: L("Industrial Scrap Auctions & Tenders", "مزادات ومناقصات الخردة الصناعية"),
   description: L(
-    "AALKC's record of industrial scrap auctions and tenders in Saudi Arabia: the government, utility, energy and telecom sales we have bid in, inspected or reviewed, and what we bring to a sale.",
-    "سجل أمانة الكلمة في مزادات ومناقصات الخردة الصناعية في المملكة: المزادات الحكومية ومزادات شركات المرافق والطاقة والاتصالات التي قدّمنا فيها عروضًا أو عايناها أو راجعناها، وما نقدّمه في كل بيع.",
+    "AALKC's record of industrial scrap auctions and tenders in Saudi Arabia: the government, utility, energy and refining sales we have bid in, inspected or reviewed, and what we bring to a sale.",
+    "سجل أمانة الكلمة في مزادات ومناقصات الخردة الصناعية في المملكة: المزادات الحكومية ومزادات شركات المرافق والطاقة والتكرير التي قدّمنا فيها عروضًا أو عايناها أو راجعناها، وما نقدّمه في كل بيع.",
   ),
   heading: L("Industrial auctions and tenders, on the record.", "المزادات والمناقصات الصناعية، موثّقة."),
   standfirst: L(
@@ -250,8 +223,8 @@ export const auctionsGuide = {
     {
       question: L("Does AALKC take part in industrial scrap auctions?", "هل تشارك أمانة الكلمة في مزادات الخردة الصناعية؟"),
       answer: L(
-        "Yes. AALKC has submitted offers in government and direct sales, and follows the sealed-envelope sales held for Saudi utility, energy, drilling and telecom companies. Each entry on this page shows the stage we reached in that sale.",
-        "نعم. قدّمت أمانة الكلمة عروضًا في مزادات حكومية وبيوع مباشرة، وتتابع المزادات بالظرف المختوم التي تُطرح لشركات المرافق والطاقة والحفر والاتصالات السعودية. ويبيّن كل إدخال في هذه الصفحة المرحلة التي بلغناها في ذلك البيع.",
+        "Yes. AALKC has submitted offers in government and direct sales, and follows the sealed-envelope sales held for Saudi utility, energy and refining companies. Each entry on this page shows the stage we reached in that sale.",
+        "نعم. قدّمت أمانة الكلمة عروضًا في مزادات حكومية وبيوع مباشرة، وتتابع المزادات بالظرف المختوم التي تُطرح لشركات المرافق والطاقة والتكرير السعودية. ويبيّن كل إدخال في هذه الصفحة المرحلة التي بلغناها في ذلك البيع.",
       ),
     },
     {
