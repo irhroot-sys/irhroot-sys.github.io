@@ -180,11 +180,18 @@ export async function requeueFailedNotifications(env: Env) {
   const { results } = await env.DB.prepare(`SELECT id, name, company, email, phone, message, material, weight_tons, currency,
       market_snapshot_id, created_at FROM quote_requests WHERE notification_status = 'failed' AND expires_at >= ? LIMIT 50`)
     .bind(new Date().toISOString()).all<StoredQuoteRow>();
+  let queued = 0;
   for (const row of results) {
     await env.DB.prepare("UPDATE quote_requests SET notification_status = 'queued' WHERE id = ?").bind(row.id).run();
-    await env.QUOTE_QUEUE.send(notificationFromRow(row));
+    try {
+      await env.QUOTE_QUEUE.send(notificationFromRow(row));
+      queued += 1;
+    } catch {
+      // Leave it failed, so the next run picks it up again.
+      await env.DB.prepare("UPDATE quote_requests SET notification_status = 'failed' WHERE id = ?").bind(row.id).run();
+    }
   }
-  return results.length;
+  return queued;
 }
 
 export default {

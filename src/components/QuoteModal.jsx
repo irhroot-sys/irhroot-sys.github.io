@@ -21,9 +21,15 @@ export function QuoteModal() {
   useEffect(() => {
     const modal = modalRef.current;
     if (!modal) return undefined;
-    const focusable = modal.querySelectorAll('input, select, textarea, button, [href], [tabindex]:not([tabindex="-1"])');
-    const first = modal.querySelector('input[name="name"]') || focusable[0];
-    const last = focusable[focusable.length - 1];
+    // Recomputed on every Tab: opening or closing "Add details" changes which
+    // controls can take focus. A control inside a closed <details> (other than
+    // its summary) cannot, even where the browser still gives it a box.
+    const focusable = () => [...modal.querySelectorAll('input, select, textarea, button, summary, [href], [tabindex]')]
+      .filter((element) => element.tabIndex >= 0 && !element.disabled && element.type !== "hidden"
+        && element.getClientRects().length > 0
+        && !element.parentElement?.closest("details:not([open])")
+        || (element.tagName === "SUMMARY" && element.getClientRects().length > 0));
+    const first = modal.querySelector('input[name="name"]') || focusable()[0];
     first?.focus();
 
     const trapFocus = (event) => {
@@ -33,7 +39,7 @@ export function QuoteModal() {
       }
       if (event.key !== "Tab") return;
       event.preventDefault();
-      const items = Array.from(focusable);
+      const items = focusable();
       const activeIndex = items.indexOf(document.activeElement);
       const nextIndex = event.shiftKey
         ? (activeIndex <= 0 ? items.length - 1 : activeIndex - 1)

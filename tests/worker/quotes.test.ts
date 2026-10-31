@@ -101,6 +101,14 @@ describe('quote notification delivery', () => {
     expect(sent).toHaveLength(1);
   });
 
+  it('keeps a notification failed when it cannot be queued again', async () => {
+    const row = { id: 'q2', name: 'A', company: null, email: 'a@example.com', phone: '1', message: 'm', material: null, weight_tons: null, currency: null, market_snapshot_id: null, created_at: '2026-01-01T00:00:00.000Z' };
+    const { env, updates } = fakeEnv([row], 're_test');
+    (env.QUOTE_QUEUE as unknown as { send: () => Promise<void> }).send = async () => { throw new Error('queue unavailable'); };
+    await expect(requeueFailedNotifications(env)).resolves.toBe(0);
+    expect(updates).toEqual(['UPDATE q2', 'UPDATE q2']);
+  });
+
   it('leaves failed notifications alone while no sender is configured', async () => {
     const { env, sent } = fakeEnv([{ id: 'q1' }]);
     await expect(requeueFailedNotifications(env)).resolves.toBe(0);

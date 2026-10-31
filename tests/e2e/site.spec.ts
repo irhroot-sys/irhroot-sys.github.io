@@ -988,6 +988,12 @@ test('folds optional enquiry details so the quote dialog fits one screen', async
   await expect(details).not.toHaveAttribute('open', /.*/);
   await expect(dialog.locator('input[name="company"]')).toBeHidden();
   for (const name of ['name', 'phone', 'email', 'message']) await expect(dialog.locator(`[name="${name}"]`), name).toBeVisible();
+  // Keyboard users move from the message to the summary, never to hidden fields.
+  await dialog.locator('textarea[name="message"]').focus();
+  await page.keyboard.press('Tab');
+  await expect(details.locator('summary')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(dialog.locator('input[name="consent"]')).toBeFocused();
   await details.locator('summary').click();
   await expect(dialog.locator('input[name="company"]')).toBeVisible();
 });
