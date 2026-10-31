@@ -86,7 +86,7 @@ export function EnquiryForm() {
       )}
       {error && <div className="form-alert" role="alert">{error}</div>}
       <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-        {status === "loading" ? t("Sending…") : t("Send message")} <LuArrowRight className="directional-icon" />
+        {status === "loading" ? t("Sending…") : t("Send request")} <LuArrowRight className="directional-icon" />
       </button>
     </form>
   );

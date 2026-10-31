@@ -14,7 +14,7 @@ export function CompanyRegister({ commitments, id }) {
         <div className="register-intro">
           <SectionHeading
             eyebrow="Company register"
-            title="A registered, certified counterpart."
+            title="A registered, certified counterpart"
             copy="The details a procurement team checks first, in one place."
             compact
           />

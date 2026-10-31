@@ -125,3 +125,44 @@ html[dir="rtl"] .concierge-option:hover .concierge-option-arrow { translate: -2p
 .success-state > svg { margin: 0 auto var(--s-4); color: var(--success); font-size: 44px; }
 .success-state .primary-button { margin-inline: auto; }
 @media (max-width: 620px) { .quote-modal { padding: var(--s-6) var(--s-5) var(--s-5); } }
+
+/* ── Mobile action bar ────────────────────────────────────────────────────
+   Phones only, where the header drops its quote button: call, WhatsApp and
+   the quote form stay within thumb reach. It replaces the contact launcher
+   at this width, sits on the same layer (under the menu sheet and dialog)
+   and reserves its own height at the foot of the page. */
+.mobile-action-bar { display: none; }
+@media (max-width: 620px) {
+  .contact-concierge { display: none; }
+  .mobile-action-bar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 1px;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid var(--rule-ink-strong);
+    background: var(--rule-ink);
+    box-shadow: var(--shadow-float);
+  }
+  body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  .mobile-action {
+    min-height: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    padding: 0 var(--s-4);
+    border: 0;
+    color: var(--on-ink);
+    background: var(--surface-ink);
+    font-size: var(--fs-14);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .mobile-action svg { font-size: 18px; }
+  .mobile-action.is-primary { color: var(--action-ink-text); background: var(--action-ink); font-size: var(--fs-15); }
+  .mobile-action:focus-visible { outline: 2px solid var(--signal-on-ink); outline-offset: -4px; }
+  html[lang="ar"] .mobile-action { font-size: var(--fs-15); }
+}

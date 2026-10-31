@@ -33,7 +33,7 @@ export function ProcessPage() {
 
       <section className="content-section surface-mist process-stages-section" aria-labelledby="stages-title">
         <div className="container">
-          <SectionHeading id="stages-title" eyebrow="The sequence" title="Seven stages, one documented record." copy="Every load follows the same order, so the value is set on what was actually delivered." />
+          <SectionHeading id="stages-title" eyebrow="The sequence" title="Seven stages, one documented record" copy="Every load follows the same order, so the value is set on what was actually delivered." />
           <ol className="process-stages">
             {stages.map(({ id, title: stageTitle, copy, points, links }, index) => (
               <li className="process-stage" id={id} key={id}>

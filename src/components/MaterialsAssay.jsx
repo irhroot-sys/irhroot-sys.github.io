@@ -15,7 +15,7 @@ export function MaterialsAssay() {
         <SectionHeading
           id="assay-title"
           eyebrow="What we buy"
-          title="Ferrous and non-ferrous, graded at source."
+          title="Ferrous and non-ferrous, graded at source"
           copy="Eight material families form the core of what AALKC purchases. Every load is inspected and weighed before its grade and value are confirmed."
         />
         <ul className="assay-grid">

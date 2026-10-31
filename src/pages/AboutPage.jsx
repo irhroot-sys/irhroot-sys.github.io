@@ -21,7 +21,7 @@ export function AboutPage() {
         image={photos.cableReelLoading.src}
         alt={photos.cableReelLoading.alt}
         focus={photos.cableReelLoading.focus}
-        trail="About Us"
+        trail="About us"
       />
 
       <section className="content-section container about-intro">

@@ -101,7 +101,7 @@ export function ContactDock() {
         <span className="concierge-toggle-icon" aria-hidden="true">
           {open ? <LuX /> : <LuMessageSquareText />}
         </span>
-        <span className="concierge-toggle-label" aria-hidden="true">{t("Talk to us")}</span>
+        <span className="concierge-toggle-label" aria-hidden="true">{t("Contact us")}</span>
       </button>
     </div>
   );

@@ -73,7 +73,7 @@ html[lang="ar"] :is(.label, .section-heading > span, .page-kicker, .panel-kicker
 .section-heading.is-compact h2 { font-size: var(--fs-44); }
 .surface-ink .section-heading h2 { color: var(--white); }
 .surface-ink .section-heading p { color: var(--on-ink-muted); }
-html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: var(--lh-arabic-display); }
+html[lang="ar"] .section-heading h2 { letter-spacing: 0; line-height: var(--lh-arabic-heading); }
 @media (max-width: 900px) {
   .section-heading { grid-template-columns: minmax(0, 1fr); margin-bottom: var(--s-7); }
   .section-heading p { grid-column: 1; margin-top: var(--s-5); }
@@ -365,3 +365,23 @@ html[dir="ltr"] .register dd small[dir="rtl"] { text-align: left; }
   .utility-bar a { min-height: 44px; display: inline-flex; align-items: center; }
   .chip-list li > * { min-height: 44px; }
 }
+
+/* Optional enquiry details fold behind one disclosure, so the required
+   fields and the send button fit a single screen. */
+.optional-details { margin-bottom: var(--s-4); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.optional-details > summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--navy-800);
+  font-size: var(--fs-15);
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+.optional-details > summary::-webkit-details-marker { display: none; }
+.optional-details > summary::before { content: "+"; width: 1em; font-size: var(--fs-18); line-height: 1; }
+.optional-details[open] > summary::before { content: "\2212"; }
+.optional-details > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.optional-details[open] { padding-bottom: var(--s-2); }

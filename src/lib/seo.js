@@ -123,6 +123,21 @@ function pageSpecificNodes(route, language, canonical) {
   return [];
 }
 
+export const MAX_DESCRIPTION = 160;
+
+// Search engines cut meta descriptions at about 160 characters. Page copy
+// written for the page itself can run longer, so the head uses its complete
+// sentences up to that length, or failing that whole words and an ellipsis.
+export function searchSnippet(text, max = MAX_DESCRIPTION) {
+  if (!text || text.length <= max) return text;
+  const head = text.slice(0, max);
+  const sentenceEnd = Math.max(...[". ", "؟ ", "! "].map((mark) => head.lastIndexOf(mark)));
+  if (sentenceEnd >= max * 0.55) return head.slice(0, sentenceEnd + 1);
+  const cut = head.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,،;:—–-]+$/u, "")}…`;
+}
+
 // Everything the document head needs for one page in one language. Used by
 // the build-time prerender (serialised into each HTML file) and by the client
 // (applied on in-app navigation), so the two can never disagree.
@@ -130,8 +145,10 @@ export function buildPageHead({ route, language = DEFAULT_LANGUAGE }) {
   const t = (value) => translate(value, language);
   const isNotFound = Boolean(route.noindex);
   const siteName = SITE_NAMES[language];
-  const title = `${t(route.title)} | ${siteName}`;
-  const description = t(route.description);
+  // A shorter search title, where the page's own headline is too long for a
+  // result listing; the headline itself stays on the page and in breadcrumbs.
+  const title = `${t(route.seoTitle || route.title)} | ${siteName}`;
+  const description = searchSnippet(t(route.description));
   // A not-found document is served for many URLs and must not be indexed, so
   // it names no canonical address.
   const canonical = isNotFound ? null : absoluteUrl(localizePath(route.path, language));

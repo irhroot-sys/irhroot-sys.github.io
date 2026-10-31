@@ -46,7 +46,7 @@ export function ServicesPage() {
                     {t("View service details")} <LuArrowRight className="directional-icon" />
                   </Link>
                   <button type="button" className="inline-action" onClick={() => openQuote({ service: title })}>
-                    {t("Discuss this service")} <LuArrowRight className="directional-icon" />
+                    {t("Request a quote")} <LuArrowRight className="directional-icon" />
                   </button>
                 </div>
               </div>

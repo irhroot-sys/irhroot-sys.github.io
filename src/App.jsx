@@ -4,6 +4,7 @@ import { Footer } from "./components/Footer.jsx";
 import { MotionManager } from "./components/MotionManager.jsx";
 import { QuoteModal } from "./components/QuoteModal.jsx";
 import { ContactDock } from "./components/ContactDock.jsx";
+import { MobileActionBar } from "./components/MobileActionBar.jsx";
 import { DocumentHead } from "./components/DocumentHead.jsx";
 import { QuoteContext } from "./context/QuoteContext.jsx";
 import { LanguageProvider, readLanguagePreference, useLanguage } from "./context/LanguageContext.jsx";
@@ -87,6 +88,7 @@ function SiteApp() {
         <main id="main-content"><PageRoutes /></main>
         <Footer />
         <ContactDock />
+        <MobileActionBar />
         {quoteOpen && <QuoteModal />}
       </div>
     </QuoteContext.Provider>

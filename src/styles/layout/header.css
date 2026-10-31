@@ -125,12 +125,65 @@ html[lang="ar"] .utility-bar { letter-spacing: 0; }
 html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
 .primary-nav a:hover, .primary-nav a:focus-visible, .primary-nav a.active { color: var(--navy-800); }
 .primary-nav a:hover::after, .primary-nav a.active::after { transform: scaleX(1); }
-.mobile-nav-quote, .nav-scrim { display: none; }
-/* Eight destinations need about 1480px at full spacing; on narrower
-   desktops the menu tightens instead of collapsing early. */
+.mobile-nav-quote, .nav-scrim, .nav-group-label, .mobile-nav-direct { display: none; }
+
+/* Company: a disclosure button set like the links beside it, opening a
+   plain panel of the pages a procurement team checks. */
+.nav-group { position: relative; display: flex; align-items: stretch; }
+.nav-group-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  color: var(--steel-700);
+  background: none;
+  font: inherit;
+  font-size: var(--fs-15);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease-std);
+}
+.nav-group-toggle svg { font-size: 14px; transition: transform var(--t-fast) var(--ease-std); }
+.nav-group.is-open .nav-group-toggle svg { transform: rotate(180deg); }
+.nav-group-toggle::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--navy-800);
+  transform: scaleX(0);
+  transition: transform var(--t-mid) var(--ease-out);
+}
+.nav-group-toggle:hover, .nav-group-toggle:focus-visible, .nav-group-toggle.active, .nav-group.is-open .nav-group-toggle { color: var(--navy-800); }
+.nav-group-toggle.active::after, .nav-group.is-open .nav-group-toggle::after { transform: scaleX(1); }
+.nav-group-panel {
+  position: absolute;
+  top: 100%;
+  inset-inline-start: -16px;
+  z-index: 5;
+  min-width: 240px;
+  display: none;
+  flex-direction: column;
+  padding: var(--s-2) 0;
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--navy-800);
+  background: var(--white);
+  box-shadow: var(--shadow-panel);
+}
+.nav-group.is-open .nav-group-panel { display: flex; }
+.primary-nav .nav-group-panel a { min-height: 44px; padding: 0 var(--s-4); border-inline-start: 2px solid transparent; }
+.primary-nav .nav-group-panel a::after { display: none; }
+.primary-nav .nav-group-panel a:hover, .primary-nav .nav-group-panel a:focus-visible { background: var(--surface-alt); }
+.primary-nav .nav-group-panel a.active { border-inline-start-color: var(--navy-800); font-weight: 600; }
+/* Six destinations fit comfortably; on narrower desktops the menu still
+   tightens a little instead of collapsing early. */
 @media (max-width: 1480px) {
-  .primary-nav { gap: 16px; padding-inline-start: 16px; }
-  .primary-nav a { font-size: var(--fs-14); }
+  .primary-nav { gap: 20px; padding-inline-start: 16px; }
+  .primary-nav a, .nav-group-toggle { font-size: var(--fs-14); }
 }
 
 .language-toggle { display: flex; align-items: center; gap: var(--s-1); font-size: var(--fs-13); font-weight: 500; letter-spacing: .04em; }
@@ -149,7 +202,7 @@ html[dir="rtl"] .primary-nav a::after { transform-origin: right center; }
 
 .header-quote { min-height: 44px; padding-inline: var(--s-4); color: var(--action-text); background: var(--action); }
 .header-quote:hover, .header-quote:focus-visible { background: var(--action-hover); }
-html[lang="ar"] .primary-nav a { font-size: var(--fs-16); }
+html[lang="ar"] .primary-nav a, html[lang="ar"] .nav-group-toggle { font-size: var(--fs-16); }
 
 .menu-button { display: none; }
 
@@ -216,6 +269,37 @@ html[lang="ar"] .primary-nav a { font-size: var(--fs-16); }
     font-weight: 600;
   }
   .mobile-nav-quote:hover, .mobile-nav-quote:focus-visible { background: var(--action-ink-hover); }
+  /* In the sheet the Company group is a labelled, always-open list. */
+  .nav-group { flex-direction: column; }
+  .nav-group-toggle { display: none; }
+  .nav-group-label {
+    display: block;
+    margin-top: var(--s-6);
+    padding-bottom: var(--s-2);
+    color: var(--on-ink-muted);
+    font-size: var(--fs-13);
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+  .nav-group-panel { position: static; min-width: 0; display: flex; padding: 0; border: 0; background: none; box-shadow: none; }
+  .primary-nav .nav-group-panel a { min-height: 52px; padding: 0; border-inline-start: 0; font-size: var(--fs-20); }
+  .primary-nav .nav-group-panel a::after { display: block; }
+  .primary-nav .nav-group-panel a:hover, .primary-nav .nav-group-panel a:focus-visible { background: none; }
+  html[lang="ar"] .primary-nav .nav-group-panel a { font-size: var(--fs-20); }
+  .mobile-nav-direct { display: flex; gap: var(--s-3); margin-top: var(--s-3); }
+  .primary-nav .mobile-nav-direct a {
+    flex: 1;
+    min-height: 48px;
+    justify-content: center;
+    gap: var(--s-2);
+    border: 1px solid var(--rule-ink-strong);
+    color: var(--on-ink);
+    font-family: var(--font-text);
+    font-size: var(--fs-16);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .primary-nav .mobile-nav-direct a::after { display: none; }
   .menu-button {
     width: 44px;
     height: 44px;

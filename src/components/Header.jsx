@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { LuArrowRight, LuMail, LuMapPin, LuMenu, LuPhone, LuX } from "react-icons/lu";
+import { useEffect, useId, useRef, useState } from "react";
+import { FaWhatsapp } from "react-icons/fa";
+import { LuArrowRight, LuChevronDown, LuMail, LuMapPin, LuMenu, LuPhone, LuX } from "react-icons/lu";
 import { navigation, contactDetails } from "../data/siteContent.jsx";
 import { useQuote } from "../context/QuoteContext.jsx";
 import { Link, NavLink, useLocation } from "../lib/router.jsx";
@@ -10,13 +11,34 @@ import { BrandMark } from "./BrandMark.jsx";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
   const navRef = useRef(null);
   const menuButtonRef = useRef(null);
+  const groupRef = useRef(null);
+  const groupPanelId = useId();
   const { pathname, route } = useLocation();
   const { openQuote } = useQuote();
   const { language, setLanguage, t } = useLanguage();
 
-  useEffect(() => setMenuOpen(false), [pathname]);
+  useEffect(() => { setMenuOpen(false); setGroupOpen(false); }, [pathname]);
+
+  // The desktop Company menu is a disclosure: Escape or a click elsewhere
+  // closes it, and Escape returns focus to its button.
+  useEffect(() => {
+    if (!groupOpen) return undefined;
+    const handleKey = (event) => {
+      if (event.key !== "Escape") return;
+      setGroupOpen(false);
+      groupRef.current?.querySelector(".nav-group-toggle")?.focus();
+    };
+    const handlePointer = (event) => { if (!groupRef.current?.contains(event.target)) setGroupOpen(false); };
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("pointerdown", handlePointer);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("pointerdown", handlePointer);
+    };
+  }, [groupOpen]);
   useEffect(() => {
     if (!menuOpen) return undefined;
     const nav = navRef.current;
@@ -24,7 +46,8 @@ export function Header() {
     const footer = document.querySelector("footer");
     main?.setAttribute("inert", "");
     footer?.setAttribute("inert", "");
-    const focusable = nav?.querySelectorAll("a, button");
+    // Only what the sheet actually shows: the desktop Company button is hidden there.
+    const focusable = [...(nav?.querySelectorAll("a, button") ?? [])].filter((element) => element.offsetParent !== null);
     const first = focusable?.[0];
     const last = focusable?.[focusable.length - 1];
     first?.focus();
@@ -72,14 +95,35 @@ export function Header() {
 
         <div className="primary-nav-wrap">
           <nav className={`primary-nav ${menuOpen ? "is-open" : ""}`} aria-label={t("Primary navigation")} ref={navRef}>
-            {navigation.map(({ label, to }) => (
+            {navigation.map(({ label, to, children }) => children ? (
+              <div className={`nav-group${groupOpen ? " is-open" : ""}`} key={label} ref={groupRef}>
+                <button
+                  type="button"
+                  className={`nav-group-toggle${children.some((child) => child.to === route) ? " active" : ""}`}
+                  aria-expanded={groupOpen}
+                  aria-controls={groupPanelId}
+                  onClick={() => setGroupOpen((open) => !open)}
+                >
+                  {t(label)} <LuChevronDown aria-hidden="true" />
+                </button>
+                {/* In the compact sheet the group is a labelled list, always open. */}
+                <span className="nav-group-label" aria-hidden="true">{t(label)}</span>
+                <div className="nav-group-panel" id={groupPanelId}>
+                  {children.map((child) => <NavLink key={child.to} to={child.to}>{t(child.label)}</NavLink>)}
+                </div>
+              </div>
+            ) : (
               <NavLink key={to} to={to}>
                 {t(label)}
               </NavLink>
             ))}
             <button type="button" className="mobile-nav-quote" onClick={() => openQuote()}>
-              {t("Get a Quote")} <LuArrowRight className="directional-icon" />
+              {t("Request a quote")} <LuArrowRight className="directional-icon" />
             </button>
+            <div className="mobile-nav-direct">
+              <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer"><FaWhatsapp aria-hidden="true" /> {t("WhatsApp")}</a>
+              <a href={contactDetails.phoneHref}><LuPhone aria-hidden="true" /> {t("Call")}</a>
+            </div>
           </nav>
           {/* Real links, so the other language's URL is discoverable without
               JavaScript. The href is the bare page URL (identical in the
@@ -105,7 +149,7 @@ export function Header() {
             ))}
           </div>
           <button type="button" className="quote-button header-quote" onClick={() => openQuote()}>
-            {t("Get a Quote")} <LuArrowRight className="directional-icon" />
+            {t("Request a quote")} <LuArrowRight className="directional-icon" />
           </button>
           <button
             type="button"
