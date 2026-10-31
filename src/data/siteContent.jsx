@@ -1,22 +1,33 @@
 import { LuAward, LuContainer, LuLayers, LuBadgeCheck, LuBox, LuBuilding2, LuCircleCheck, LuCog, LuFactory, LuGlobe, LuHardHat, LuLeaf, LuMapPin, LuRecycle, LuScale, LuShieldCheck, LuTruck, LuZap } from "react-icons/lu";
 import { photos } from "./photos.js";
 
+// Five destinations a visitor arrives for, then one Company group for the
+// pages a procurement team checks. The logo links home.
 export const navigation = [
-  { label: "Home", to: "/" },
   { label: "Sell scrap", to: "/sell" },
   { label: "Buy materials", to: "/buy" },
   { label: "Services", to: "/services" },
   { label: "Materials", to: "/materials" },
   { label: "Insights", to: "/insights" },
-  { label: "About Us", to: "/about" },
-  { label: "Contact", to: "/contact" },
+  {
+    label: "Company",
+    children: [
+      { label: "About us", to: "/about" },
+      { label: "Industries", to: "/industries" },
+      { label: "Auctions & tenders", to: "/auctions-and-tenders" },
+      { label: "How we work", to: "/process" },
+      { label: "Sustainability", to: "/sustainability" },
+      { label: "FAQ", to: "/faq" },
+      { label: "Contact", to: "/contact" },
+    ],
+  },
 ];
 
 export const footerCompanyLinks = [
   { label: "Sell your scrap", to: "/sell" },
   { label: "Buy from AALKC", to: "/buy" },
   { label: "Auctions & tenders", to: "/auctions-and-tenders" },
-  { label: "About Us", to: "/about" },
+  { label: "About us", to: "/about" },
   { label: "How we work", to: "/process" },
   { label: "Industries", to: "/industries" },
   { label: "Materials", to: "/materials" },

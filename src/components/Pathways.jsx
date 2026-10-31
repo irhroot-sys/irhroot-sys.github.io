@@ -17,7 +17,7 @@ export function IntentPaths({ current }) {
         <SectionHeading
           id="pathways-title"
           eyebrow={current ? "Other ways to work with us" : "Working with AALKC"}
-          title={current ? "Something else in mind?" : "Three ways to work with us."}
+          title={current ? "Something else in mind?" : "Three ways to work with us"}
           copy={current ? undefined : "Whether you have scrap to sell, need material, or have a site to clear, each route says what we handle and what to send."}
         />
         <ul className={`pathway-list is-${shown.length}`}>

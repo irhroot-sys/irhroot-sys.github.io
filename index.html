@@ -9,10 +9,14 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- AALKC's Adobe Fonts web project: Sweet Square Pro and Mawzoon
-         (served by Adobe under AALKC's Creative Cloud licence). -->
+         (served by Adobe under AALKC's Creative Cloud licence). The kit is
+         preloaded and applied once it arrives, so it never blocks the first
+         paint; the self-hosted fallbacks in fonts.css carry the text until
+         then. The noscript copy keeps the faces without JavaScript. -->
     <link rel="preconnect" href="https://use.typekit.net" crossorigin />
     <link rel="preconnect" href="https://p.typekit.net" crossorigin />
-    <link rel="stylesheet" href="https://use.typekit.net/jrz4pqn.css" />
+    <link rel="preload" href="https://use.typekit.net/jrz4pqn.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://use.typekit.net/jrz4pqn.css" /></noscript>
     <!--app-head-->
   </head>
   <body>

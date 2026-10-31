@@ -65,4 +65,8 @@ export interface Env {
   TURNSTILE_SECRET?: string;
   QUOTE_FROM_EMAIL?: string;
   QUOTE_TO_EMAIL?: string;
+  /** Resend API key. When set, quote notifications are sent through Resend
+   *  instead of the send_email binding, which can only reach verified
+   *  Email Routing destinations. */
+  RESEND_API_KEY?: string;
 }

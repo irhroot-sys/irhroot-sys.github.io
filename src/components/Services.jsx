@@ -39,7 +39,7 @@ export function Capabilities({ services }) {
         <SectionHeading
           id="capabilities-title"
           eyebrow="What we do"
-          title="Six capabilities, one accountable counterpart."
+          title="Six capabilities, one accountable counterpart"
           copy="Comprehensive scrap management tailored to industrial-scale operations, from collection and sorting to purchasing and global trade."
         />
         <div className="capability-layout">
@@ -73,7 +73,7 @@ export function Capabilities({ services }) {
           </div>
         </div>
         <Link className="secondary-button capability-all" to="/services">
-          {t("Explore All Services")} <LuArrowRight className="directional-icon" />
+          {t("Explore all services")} <LuArrowRight className="directional-icon" />
         </Link>
       </div>
     </section>

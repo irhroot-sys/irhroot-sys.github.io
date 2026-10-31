@@ -21,9 +21,15 @@ export function QuoteModal() {
   useEffect(() => {
     const modal = modalRef.current;
     if (!modal) return undefined;
-    const focusable = modal.querySelectorAll('input, select, textarea, button, [href], [tabindex]:not([tabindex="-1"])');
-    const first = modal.querySelector('input[name="name"]') || focusable[0];
-    const last = focusable[focusable.length - 1];
+    // Recomputed on every Tab: opening or closing "Add details" changes which
+    // controls can take focus. A control inside a closed <details> (other than
+    // its summary) cannot, even where the browser still gives it a box.
+    const focusable = () => [...modal.querySelectorAll('input, select, textarea, button, summary, [href], [tabindex]')]
+      .filter((element) => element.tabIndex >= 0 && !element.disabled && element.type !== "hidden"
+        && element.getClientRects().length > 0
+        && !element.parentElement?.closest("details:not([open])")
+        || (element.tagName === "SUMMARY" && element.getClientRects().length > 0));
+    const first = modal.querySelector('input[name="name"]') || focusable()[0];
     first?.focus();
 
     const trapFocus = (event) => {
@@ -33,7 +39,7 @@ export function QuoteModal() {
       }
       if (event.key !== "Tab") return;
       event.preventDefault();
-      const items = Array.from(focusable);
+      const items = focusable();
       const activeIndex = items.indexOf(document.activeElement);
       const nextIndex = event.shiftKey
         ? (activeIndex <= 0 ? items.length - 1 : activeIndex - 1)
@@ -89,7 +95,7 @@ export function QuoteModal() {
     ? t(quoteContext.title)
     : quoteContext.service
       ? `${t("Enquire about")} ${t(quoteContext.service)}`
-      : t("Get a Quote");
+      : t("Request a quote");
   const prompt = t(quoteContext.prompt || "Tell us what you need and our Dammam team will respond with the next steps.");
 
   return (
@@ -113,23 +119,29 @@ export function QuoteModal() {
             <h2 id="quote-title">{title}</h2>
             <p>{prompt}</p>
             {quoteContext.service && <div className="selected-context">{t("Regarding")} <strong>{t(quoteContext.service)}</strong></div>}
+            {/* What the team needs to reply comes first; everything optional
+                folds away, so the dialog fits one screen. A material chosen
+                on the page that opened the dialog keeps the details open. */}
             <div className="form-row">
               <label>{t("Full name")} <span className="field-status">{t("Required")}</span><input name="name" autoComplete="name" minLength="2" required autoFocus /></label>
-              <label>{t("Company")} <span className="field-status">{t("Optional")}</span><input name="company" autoComplete="organization" /></label>
+              <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" inputMode="tel" dir="ltr" autoComplete="tel" required /></label>
             </div>
             <div className="form-row">
               <label>{t("Email")} <span className="field-status">{t("Required")}</span><input name="email" type="email" autoComplete="email" required /></label>
-              <label>{t("Phone")} <span className="field-status">{t("Required")}</span><input name="phone" type="tel" inputMode="tel" dir="ltr" autoComplete="tel" required /></label>
+              {!quoteContext.service && (
+                <label>{t("Service")}
+                  <select name="service" defaultValue="Scrap Metal Trading">
+                    {services.map((service) => <option key={service.slug} value={service.title}>{t(service.title)}</option>)}
+                  </select>
+                </label>
+              )}
             </div>
-            {!quoteContext.service && (
-              <label>{t("Service")}
-                <select name="service" defaultValue="Scrap Metal Trading">
-                  {services.map((service) => <option key={service.slug} value={service.title}>{t(service.title)}</option>)}
-                </select>
-              </label>
-            )}
-            <QuoteDetailsFields defaultMaterial={quoteContext.kind === "material" ? quoteContext.service : undefined} variant={buying ? "buy" : "supply"} />
-            <label>{t(buying ? "Requirement details" : "Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="4" minLength="10" maxLength="1800" required placeholder={t(buying ? "Grade or specification, quantity, destination, timing and inspection requirements" : "Material type, estimated quantity, condition, and site location")} /></label>
+            <label>{t(buying ? "Requirement details" : "Material details")} <span className="field-status">{t("Required")}</span><textarea name="message" rows="3" minLength="10" maxLength="1800" required placeholder={t(buying ? "Grade or specification, quantity, destination, timing and inspection requirements" : "Material type, estimated quantity, condition, and site location")} /></label>
+            <details className="optional-details" open={quoteContext.kind === "material"}>
+              <summary>{t("Add details (optional)")}</summary>
+              <label>{t("Company")} <span className="field-status">{t("Optional")}</span><input name="company" autoComplete="organization" /></label>
+              <QuoteDetailsFields defaultMaterial={quoteContext.kind === "material" ? quoteContext.service : undefined} variant={buying ? "buy" : "supply"} />
+            </details>
             <label className="consent-field">
               <input type="checkbox" name="consent" value="yes" required />
               <span>{t("I consent to AALKC storing and using these details to respond to my request, as described in the")} <Link to="/privacy" onClick={closeQuote}>{t("Privacy Policy")}</Link>.</span>
@@ -144,7 +156,7 @@ export function QuoteModal() {
             )}
             {error && <div className="form-alert" role="alert">{error}</div>}
             <button type="submit" className="primary-button submit-button" disabled={status === "loading" || !turnstileToken}>
-              {status === "loading" ? t("Sending…") : t("Send Request")} <LuArrowRight className="directional-icon" />
+              {status === "loading" ? t("Sending…") : t("Send request")} <LuArrowRight className="directional-icon" />
             </button>
           </form>
         )}

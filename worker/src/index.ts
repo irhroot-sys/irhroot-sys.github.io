@@ -90,13 +90,40 @@ export function buildQuoteEmail(message: QuoteNotification, to = 'contact@aalkc.
     `Weight: ${quote.weightTons ? `${quote.weightTons} tons` : '-'}`, `Currency: ${quote.currency || '-'}`,
     '', quote.message,
   ].join('\n');
-  return { to, from, subject: `AALKC quote request ${message.id}`, text, html: `<h1>New AALKC quote request</h1><pre>${escapeHtml(text)}</pre>` };
+  return {
+    to, from, replyTo: quote.email,
+    subject: `AALKC quote request ${message.id}`, text,
+    html: `<h1>New AALKC quote request</h1><pre>${escapeHtml(text)}</pre>`,
+  };
+}
+
+class EmailSendError extends Error {
+  constructor(readonly code: string) { super(code); }
+}
+
+// Resend's error body names the failure (e.g. validation_error); keep only
+// that bounded name, never the provider's free-text message.
+export async function sendViaResend(email: ReturnType<typeof buildQuoteEmail>, apiKey: string) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: `AALKC Website <${email.from}>`, to: [email.to], reply_to: email.replyTo,
+      subject: email.subject, text: email.text, html: email.html,
+    }),
+  });
+  if (response.ok) return;
+  let name = '';
+  try { name = String(((await response.json()) as { name?: unknown }).name ?? ''); } catch { /* non-JSON error body */ }
+  throw new EmailSendError(`RESEND_${response.status}${name ? `_${name}` : ''}`);
 }
 
 async function sendQuoteNotification(message: QuoteNotification, env: Env) {
   const to = env.QUOTE_TO_EMAIL || 'contact@aalkc.com';
   const from = env.QUOTE_FROM_EMAIL || 'quotes@aalkc.com';
-  await env.EMAIL.send(buildQuoteEmail(message, to, from));
+  const email = buildQuoteEmail(message, to, from);
+  if (env.RESEND_API_KEY) await sendViaResend(email, env.RESEND_API_KEY);
+  else await env.EMAIL.send({ to: email.to, from: email.from, subject: email.subject, text: email.text, html: email.html });
   await env.DB.batch([
     env.DB.prepare("UPDATE quote_requests SET notification_status = 'sent' WHERE id = ?").bind(message.id),
     env.DB.prepare('DELETE FROM quote_notification_failures WHERE quote_id = ?').bind(message.id),
@@ -123,6 +150,48 @@ async function recordFinalNotificationFailure(message: QuoteNotification, attemp
       ON CONFLICT(quote_id) DO UPDATE SET error_code = excluded.error_code, attempts = excluded.attempts, failed_at = excluded.failed_at`)
       .bind(message.id, errorCode, attempts, failedAt),
   ]);
+}
+
+interface StoredQuoteRow {
+  id: string; name: string; company: string | null; email: string; phone: string; message: string;
+  material: string | null; weight_tons: number | null; currency: 'SAR' | 'USD' | null;
+  market_snapshot_id: string | null; created_at: string;
+}
+
+export function notificationFromRow(row: StoredQuoteRow): QuoteNotification {
+  return {
+    id: row.id, createdAt: row.created_at,
+    quote: {
+      name: row.name, email: row.email, phone: row.phone, message: row.message, consent: true,
+      ...(row.company ? { company: row.company } : {}),
+      ...(row.material ? { material: row.material } : {}),
+      ...(row.weight_tons != null ? { weightTons: row.weight_tons } : {}),
+      ...(row.currency ? { currency: row.currency } : {}),
+      ...(row.market_snapshot_id ? { marketSnapshotId: row.market_snapshot_id } : {}),
+    },
+  };
+}
+
+// A notification that exhausted its queue retries is otherwise never sent.
+// Once a working sender is configured, the daily job queues every unexpired
+// failed request again, so a mail outage delays leads instead of losing them.
+export async function requeueFailedNotifications(env: Env) {
+  if (!env.RESEND_API_KEY) return 0;
+  const { results } = await env.DB.prepare(`SELECT id, name, company, email, phone, message, material, weight_tons, currency,
+      market_snapshot_id, created_at FROM quote_requests WHERE notification_status = 'failed' AND expires_at >= ? LIMIT 50`)
+    .bind(new Date().toISOString()).all<StoredQuoteRow>();
+  let queued = 0;
+  for (const row of results) {
+    await env.DB.prepare("UPDATE quote_requests SET notification_status = 'queued' WHERE id = ?").bind(row.id).run();
+    try {
+      await env.QUOTE_QUEUE.send(notificationFromRow(row));
+      queued += 1;
+    } catch {
+      // Leave it failed, so the next run picks it up again.
+      await env.DB.prepare("UPDATE quote_requests SET notification_status = 'failed' WHERE id = ?").bind(row.id).run();
+    }
+  }
+  return queued;
 }
 
 export default {
@@ -163,6 +232,7 @@ export default {
   },
   async scheduled(_controller: ScheduledController, env: Env) {
     await env.DB.prepare('DELETE FROM quote_requests WHERE expires_at < ?').bind(new Date().toISOString()).run();
+    await requeueFailedNotifications(env);
     await clearStaleMarketCache(env);
   },
 } satisfies ExportedHandler<Env, QuoteNotification>;

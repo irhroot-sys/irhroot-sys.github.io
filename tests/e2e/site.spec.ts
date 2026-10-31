@@ -192,9 +192,13 @@ test('uses the premium bilingual body fonts and interactive link states', async 
 
   // The bar is white, so the active page is set in brand navy (#0E335C); in
   // the compact menu the links sit on a navy sheet and the active one is white.
+  await page.goto('/services');
   const activeNav = page.locator('.primary-nav a.active');
   const compactMenu = await page.evaluate(() => matchMedia('(max-width: 1279px)').matches);
   await expect(activeNav).toHaveCSS('color', compactMenu ? 'rgb(255, 255, 255)' : 'rgb(14, 51, 92)');
+  // Page titles use Sweet Square Pro; the AALKC capitals stay with the statement and wordmark.
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.page-hero h1')!).fontFamily)).toMatch(/^"?sweet-square-pro/);
+  await page.goto('/');
 
   const footerLink = page.locator('.footer-links a').first();
   await footerLink.hover();
@@ -213,9 +217,9 @@ test('uses the premium bilingual body fonts and interactive link states', async 
   }));
   // Arabic stacks lead with the Latin face (no Arabic glyphs), so Arabic
   // letters fall through to the Arabic face and digits stay Latin. Mawzoon
-  // sets the statement and titles; AALKC Kufi the card titles and reading.
+  // sets only the statement; AALKC Kufi every other title and the reading.
   expect(arabicFonts.statement).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
-  expect(arabicFonts.heading).toMatch(/^"?sweet-square-pro"?, "?mawzoon/);
+  expect(arabicFonts.heading).toMatch(/^"?sweet-square-pro"?, "?AALKC Kufi/);
   expect(arabicFonts.title).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
   expect(arabicFonts.body).toMatch(/^"?futura-pt"?, "?General Sans"?, "?AALKC Kufi/);
   await page.evaluate(() => document.fonts.ready);
@@ -370,8 +374,8 @@ test('asks buyers for their requirement, not a collection site', async ({ page }
 test('shows the track record with each organisation\'s own logo, in both languages', async ({ page }) => {
   await page.goto('/');
   const section = page.locator('#track-record');
-  await expect(section.getByRole('heading', { level: 2, name: 'Our Experience & Track Record' })).toBeVisible();
-  await expect(section.getByRole('heading', { name: 'Selected Industry Engagements' })).toBeVisible();
+  await expect(section.getByRole('heading', { level: 2, name: 'Our experience and track record' })).toBeVisible();
+  await expect(section.getByRole('heading', { name: 'Selected industry engagements' })).toBeVisible();
 
   // Eight organisations, each captioned, each logo loaded at its own
   // proportions; two platforms shown apart from them.
@@ -698,7 +702,8 @@ test('keeps the language in the URL and hydrates prerendered pages cleanly', asy
   expect(problems).toEqual([]);
 });
 
-test('opens the contact concierge with WhatsApp, call and email on every page', async ({ page }) => {
+test('opens the contact concierge with WhatsApp, call and email on every page', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Phones use the action bar instead');
   await page.goto('/ar');
   const toggle = page.getByRole('button', { name: 'تواصل مع أمانة الكلمة' });
   await expect(toggle).toBeVisible();
@@ -777,8 +782,8 @@ test('prerenders every guide and article with its structured data', async ({ req
     ['/ar/buy', 'ar', 'اشترِ من أمانة الكلمة | أمانة الكلمة'],
     ['/ar/process', 'ar', 'كيف نعمل | أمانة الكلمة'],
     ['/insights', 'en', 'Insights | AALKC'],
-    ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: how ferrous and non-ferrous scrap is classified | AALKC'],
-    ['/ar/insights/saudi-arabia-scrap-metal-industry', 'ar', 'صناعة الخردة المعدنية في المملكة العربية السعودية: التاريخ والجغرافيا والسوق اليوم | أمانة الكلمة'],
+    ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: ferrous vs non-ferrous | AALKC'],
+    ['/ar/insights/saudi-arabia-scrap-metal-industry', 'ar', 'صناعة الخردة المعدنية في السعودية وسوقها | أمانة الكلمة'],
   ]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
@@ -930,4 +935,65 @@ test('keeps the full menu on one line wherever it is shown', async ({ page }, te
       expect(Math.max(...ordered.map((b) => b.right)), label).toBeLessThanOrEqual(width);
     }
   }
+});
+
+test('keeps call, WhatsApp and the quote form within reach on phones', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Phone layout only');
+  for (const [path, quote] of [['/', 'Request a quote'], ['/ar', 'اطلب عرض سعر']] as const) {
+    await page.goto(path);
+    const bar = page.locator('.mobile-action-bar');
+    await expect(bar).toBeVisible();
+    await expect(page.locator('.concierge-toggle')).toBeHidden();
+    const box = (await bar.boundingBox())!;
+    expect(Math.round(box.y + box.height)).toBe(page.viewportSize()!.height);
+    await expect(bar.locator('a[href="tel:+966551811700"]')).toBeVisible();
+    expect(await bar.locator('a[href^="https://wa.me/966551811700"]').getAttribute('target')).toBe('_blank');
+    await bar.getByRole('button', { name: quote }).click();
+    await expect(page.locator('.quote-modal')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.quote-modal')).toHaveCount(0);
+  }
+  // The page reserves room, so the footer's last line is not hidden behind the bar.
+  const reserved = await page.evaluate(() => parseFloat(getComputedStyle(document.body).paddingBottom));
+  expect(reserved).toBeGreaterThanOrEqual(60);
+});
+
+test('groups company pages under one accessible menu', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop disclosure only');
+  await page.goto('/');
+  const toggle = page.getByRole('button', { name: 'Company' });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('.nav-group-panel')).toBeHidden();
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  const panel = page.locator('.nav-group-panel');
+  for (const name of ['About us', 'Industries', 'Auctions & tenders', 'How we work', 'Sustainability', 'FAQ', 'Contact']) {
+    await expect(panel.getByRole('link', { name, exact: true })).toBeVisible();
+  }
+  await page.keyboard.press('Escape');
+  await expect(panel).toBeHidden();
+  await expect(toggle).toBeFocused();
+  await toggle.click();
+  await panel.getByRole('link', { name: 'Industries', exact: true }).click();
+  await expect(page).toHaveURL(/\/industries$/);
+  await expect(panel).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Company' })).toHaveClass(/active/);
+});
+
+test('folds optional enquiry details so the quote dialog fits one screen', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Request a quote/i }).first().click();
+  const dialog = page.getByRole('dialog');
+  const details = dialog.locator('details.optional-details');
+  await expect(details).not.toHaveAttribute('open', /.*/);
+  await expect(dialog.locator('input[name="company"]')).toBeHidden();
+  for (const name of ['name', 'phone', 'email', 'message']) await expect(dialog.locator(`[name="${name}"]`), name).toBeVisible();
+  // Keyboard users move from the message to the summary, never to hidden fields.
+  await dialog.locator('textarea[name="message"]').focus();
+  await page.keyboard.press('Tab');
+  await expect(details.locator('summary')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(dialog.locator('input[name="consent"]')).toBeFocused();
+  await details.locator('summary').click();
+  await expect(dialog.locator('input[name="company"]')).toBeVisible();
 });

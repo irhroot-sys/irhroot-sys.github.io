@@ -151,8 +151,12 @@
        · Measured — Futura PT Book / Medium / Demi (Adobe Fonts) for reading,
          interface and labels.
        · Arabic — Mawzoon (Adobe Fonts), a heavy square Kufic, for the
-         statement and titles; AALKC Kufi (office typeface, Noto Kufi Arabic)
-         for card titles and reading.
+         homepage statement and the footer signature only; AALKC Kufi
+         (office typeface, Noto Kufi Arabic) for every other title and for
+         reading, where legibility matters more than display character.
+     The AALKC capitals are reserved for brand moments (the homepage
+     statement, the wordmark and the footer signature); page titles use
+     Sweet Square Pro like every other heading.
      Weights are never synthesised (base.css): each face ships only the
      weights in use. Figures are lining and proportional. Labels are
      sentence case. */
@@ -166,10 +170,11 @@
      Arabic letters fall through to the Arabic face, while digits, codes and
      Latin names inside Arabic text stay in the Latin face. */
   --family-arabic-display: "sweet-square-pro", "mawzoon", "AALKC Kufi", Tahoma, sans-serif;
+  --family-arabic-heading: "sweet-square-pro", "AALKC Kufi", Tahoma, sans-serif;
   --family-arabic: "futura-pt", "General Sans", "AALKC Kufi", Tahoma, sans-serif;
 
-  /* Roles. Statement = the homepage headline; brand = page titles and the
-     wordmark; display = section titles; title = card and row titles; text =
+  /* Roles. Statement = the homepage headline; brand = the wordmark and the
+     footer signature; display = page and section titles; title = card and row titles; text =
      reading and interface; figures = symbols, codes and numerals. */
   --font-statement: var(--family-brand);
   --font-brand: var(--family-brand);
@@ -187,7 +192,7 @@
   --w-heading: 700;
   --w-title: 700;
   --w-figures: 400;            /* Sweet Square Pro Extra Light */
-  --w-arabic-display: 700;     /* Mawzoon (single weight; never synthesised) */
+  --w-arabic-display: 700;     /* Mawzoon, AALKC Kufi Bold (never synthesised) */
   --w-arabic-title: 700;       /* AALKC Kufi Bold */
   --w-arabic-statement: 700;
   --track-brand: .015em;       /* wide capitals want a little air */
@@ -215,6 +220,7 @@
   --lh-snug: 1.2;
   --lh-text: 1.65;
   --lh-arabic-display: 1.3;   /* Mawzoon is compact vertically */
+  --lh-arabic-heading: 1.5;   /* AALKC Kufi needs room for ascenders and dots */
   --lh-arabic-text: 1.9;
   --track-display: -.012em;    /* a squared face needs little tightening */
   --track-heading: -.006em;
@@ -289,15 +295,15 @@
   --font-statement: var(--family-arabic-display);
   --font-brand: var(--family-arabic-display);
   --track-brand: 0;
-  --font-display: var(--family-arabic-display);
+  --font-display: var(--family-arabic-heading);
   --font-title: var(--family-arabic);
   --font-text: var(--family-arabic);
   --w-statement: var(--w-arabic-statement);
   --w-display: var(--w-arabic-display);
   --w-heading: var(--w-arabic-display);
   --w-title: var(--w-arabic-title);
-  --lh-display: var(--lh-arabic-display);
-  --lh-heading: var(--lh-arabic-display);
+  --lh-display: var(--lh-arabic-heading);
+  --lh-heading: var(--lh-arabic-heading);
   --lh-snug: 1.55;
   --lh-text: var(--lh-arabic-text);
   --track-display: 0;

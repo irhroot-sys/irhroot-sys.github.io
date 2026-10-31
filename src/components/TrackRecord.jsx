@@ -36,7 +36,7 @@ export function TrackRecord({ id = "track-record", surface = "surface-white", sh
         <SectionHeading
           id={`${id}-title`}
           eyebrow={{ en: "Track record", ar: "سجل الخبرة" }}
-          title={{ en: "Our Experience & Track Record", ar: "خبرتنا وسجل أعمالنا" }}
+          title={{ en: "Our experience and track record", ar: "خبرتنا وسجل أعمالنا" }}
           copy={{
             en: "Since 2017, AALKC has bought, inspected and cleared scrap and surplus assets for Saudi industry. Our work runs across energy, petrochemicals, utilities and manufacturing, and through the sealed-bid auctions and government tenders by which these organisations sell.",
             ar: "منذ عام 2017 تشتري أمانة الكلمة الخردة والأصول الفائضة للقطاع الصناعي السعودي وتعاينها وتُخليها. ويمتد عملنا عبر قطاعات الطاقة والبتروكيماويات والمرافق والتصنيع، ومن خلال المزادات بالظرف المختوم والمنافسات الحكومية التي تبيع بها هذه الجهات.",
@@ -44,7 +44,7 @@ export function TrackRecord({ id = "track-record", surface = "surface-white", sh
         />
 
         <div className="engagements-head">
-          <h3>{t({ en: "Selected Industry Engagements", ar: "مختارات من تعاملاتنا مع القطاع الصناعي" })}</h3>
+          <h3>{t({ en: "Selected industry engagements", ar: "مختارات من تعاملاتنا مع القطاع الصناعي" })}</h3>
           <p>
             {t({
               en: "Organisations whose sales, tenders and procurement AALKC has taken part in. Logos are the trademarks of their owners; showing them implies no partnership, endorsement or contract award.",

@@ -42,7 +42,7 @@ export function AuctionsPage() {
         <SectionHeading
           id="scale-title"
           eyebrow={{ en: "How to read the record", ar: "كيف تقرأ السجل" }}
-          title={{ en: "Four stages, from the catalogue to the offer.", ar: "أربع مراحل، من الكتالوج إلى العرض." }}
+          title={{ en: "Four stages, from the catalogue to the offer", ar: "أربع مراحل، من الكتالوج إلى العرض" }}
           copy={{ en: "Every sale below is marked only with the stages its documents prove, and labelled by the furthest one.", ar: "لا يُعلَّم كل بيع أدناه إلا بالمراحل التي تثبتها وثائقه، ويُوسَم بأبعدها." }}
         />
         <ol className="stage-scale">
@@ -61,7 +61,7 @@ export function AuctionsPage() {
           <SectionHeading
             id="record-title"
             eyebrow={{ en: "The record", ar: "السجل" }}
-            title={{ en: "Sales we have bid in, inspected and studied.", ar: "مزادات قدّمنا فيها عروضًا أو عايناها أو درسناها." }}
+            title={{ en: "Sales we have bid in, inspected and studied", ar: "مزادات قدّمنا فيها عروضًا أو عايناها أو درسناها" }}
             copy={{ en: "Government, utility, energy and refining sales, from 2025 to today.", ar: "مزادات حكومية ومزادات لشركات المرافق والطاقة والتكرير، من 2025 حتى اليوم." }}
           />
           <ul className="auction-record">
@@ -124,7 +124,7 @@ export function AuctionsPage() {
             <SectionHeading
               id="disclosure-title"
               eyebrow={{ en: "How this record is kept", ar: "كيف يُحفظ هذا السجل" }}
-              title={{ en: "What we publish, and what we never will.", ar: "ما ننشره، وما لن ننشره أبدًا." }}
+              title={{ en: "What we publish, and what we never will", ar: "ما ننشره، وما لن ننشره أبدًا" }}
             />
             <ul className="check-list auction-disclosure-list">
               {auctionDisclosures.map((item, index) => <li key={index}><LuCheck aria-hidden="true" />{t(item)}</li>)}

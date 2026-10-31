@@ -95,6 +95,7 @@ export const industryMeta = {
   },
   commercial: {
     title: L("Scrap metal from commercial buildings and facilities management", "خردة المعادن من المباني التجارية وإدارة المرافق"),
+    seoTitle: L("Scrap from commercial buildings and facilities", "خردة المباني التجارية والمرافق"),
     description: L(
       "Fit-out strip-outs, building-services metals and end-of-life equipment from offices, retail and warehousing: what is recoverable and how to clear it with minimal disruption.",
       "إزالة التشطيبات ومعادن أنظمة المباني والمعدات المنتهية من المكاتب والمحلات والمستودعات: ما القابل للاستعادة وكيف يُخلى بأقل إزعاج.",
@@ -119,6 +120,7 @@ export const insightMeta = [
     slug: "scrap-metal-grades-explained",
     category: L("Grades and specifications", "الدرجات والمواصفات"),
     title: L("Scrap metal grades explained: how ferrous and non-ferrous scrap is classified", "شرح درجات الخردة المعدنية: كيف تُصنَّف الخردة الحديدية وغير الحديدية"),
+    seoTitle: L("Scrap metal grades explained: ferrous vs non-ferrous", "شرح درجات الخردة الحديدية وغير الحديدية"),
     description: L(
       "A plain guide to scrap metal grades: ferrous versus non-ferrous, the Scrap Specifications Circular and its code names, what decides a grade, and how grades are confirmed.",
       "دليل واضح لدرجات الخردة المعدنية: الحديدية مقابل غير الحديدية، ونشرة مواصفات الخردة وأسماؤها الرمزية، وما الذي يحدد الدرجة، وكيف تُؤكَّد الدرجات.",
@@ -131,6 +133,7 @@ export const insightMeta = [
     slug: "how-scrap-metal-is-recycled",
     category: L("Recycling and processing", "التدوير والمعالجة"),
     title: L("How scrap metal is recycled: from collection to new metal", "كيف يُعاد تدوير الخردة المعدنية: من الجمع إلى معدن جديد"),
+    seoTitle: L("How scrap metal is recycled: collection to new metal", "كيف يُعاد تدوير الخردة المعدنية"),
     description: L(
       "The metal recycling chain step by step — sources of scrap, collection, sorting, shearing, baling and shredding, separation, melting — and the energy and material it saves.",
       "سلسلة تدوير المعادن خطوة بخطوة — مصادر الخردة، والجمع، والفرز، والقص والكبس والفرم، والفصل، والصهر — وما توفّره من طاقة ومواد.",
@@ -143,6 +146,7 @@ export const insightMeta = [
     slug: "saudi-arabia-scrap-metal-industry",
     category: L("Saudi Arabia", "المملكة العربية السعودية"),
     title: L("Saudi Arabia's scrap metal industry: history, geography and the market today", "صناعة الخردة المعدنية في المملكة العربية السعودية: التاريخ والجغرافيا والسوق اليوم"),
+    seoTitle: L("Saudi Arabia's scrap metal industry and market", "صناعة الخردة المعدنية في السعودية وسوقها"),
     description: L(
       "How Saudi Arabia's scrap metal trade grew out of the oil economy and its industrial cities, why the Eastern Province is at its centre, and how export rules and domestic steelmaking shape the market.",
       "كيف نشأت تجارة الخردة المعدنية في المملكة من اقتصاد النفط ومدنه الصناعية، ولماذا تقع المنطقة الشرقية في قلبها، وكيف تشكّل قواعد التصدير وصناعة الصلب المحلية السوق.",
@@ -155,6 +159,7 @@ export const insightMeta = [
     slug: "scrap-metal-in-saudi-circular-economy",
     category: L("Saudi Arabia", "المملكة العربية السعودية"),
     title: L("Scrap metal and Saudi Arabia's circular economy", "الخردة المعدنية والاقتصاد الدائري في المملكة العربية السعودية"),
+    seoTitle: L("Scrap metal and Saudi Arabia's circular economy", "الخردة المعدنية والاقتصاد الدائري في السعودية"),
     description: L(
       "How Vision 2030, the circular carbon economy, the National Center for Waste Management, the 2021 Waste Management Law and the 2026 recycling licences shape the role of scrap metal in Saudi Arabia.",
       "كيف تشكّل رؤية 2030 والاقتصاد الدائري للكربون والمركز الوطني لإدارة النفايات ونظام إدارة النفايات لعام 2021 وتراخيص التدوير لعام 2026 دور الخردة المعدنية في المملكة.",
@@ -167,6 +172,7 @@ export const insightMeta = [
     slug: "preparing-scrap-for-grading",
     category: L("Supplier guide", "دليل المورّدين"),
     title: L("How to prepare industrial scrap for accurate grading and fair value", "كيف تجهّز الخردة الصناعية لتصنيف دقيق وقيمة عادلة"),
+    seoTitle: L("Preparing industrial scrap for accurate grading", "تجهيز الخردة الصناعية لتصنيف دقيق"),
     description: L(
       "Practical steps for suppliers: separating metals at source, removing attachments and contamination, sizing, safety checks and the paperwork that makes grading quick and fair.",
       "خطوات عملية للمورّدين: فصل المعادن من المصدر، وإزالة الملحقات والتلوث، والتقطيع، وفحوص السلامة، والوثائق التي تجعل التصنيف سريعًا وعادلًا.",

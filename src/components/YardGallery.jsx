@@ -20,7 +20,7 @@ export function YardGallery({ surface = "surface-white" }) {
         <SectionHeading
           id="yard-title"
           eyebrow="The yard"
-          title="Our operation, in pictures."
+          title="Our operation, in pictures"
           copy="AALKC's own photographs of its yard, its equipment and the material it handles."
         />
         <ul className="yard-gallery">
