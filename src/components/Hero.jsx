@@ -97,7 +97,7 @@ export function Hero() {
             <span className="hero-line hero-line-2">{t("weighed in every tonne.")}</span>
           </h1>
           <p className="hero-lede">
-            {t("Premium, transparent, and efficient metal recycling services for industrial, commercial, and construction businesses across Saudi Arabia.")}
+            {t("A licensed scrap metal buyer in Dammam since 2017. We collect, weigh and grade ferrous and non-ferrous scrap at source, with every load documented from enquiry to payment.")}
           </p>
           <div className="hero-actions">
             <button type="button" className="primary-button" onClick={() => openQuote()}>

@@ -214,7 +214,7 @@ export const routes = [
     title: "Contact",
     description: "Contact Amanat Al-Kalima Company at 3508 Al Qatif 1 in Dammam for scrap-metal purchasing, collection, sorting, and industrial recycling enquiries.",
     image: photos.yardEntrance.src,
-    heroImage: photos.yardEntrance.src,
+    heroImage: photos.truckGrapple.src,
     changefreq: "yearly",
     priority: "0.8",
   },

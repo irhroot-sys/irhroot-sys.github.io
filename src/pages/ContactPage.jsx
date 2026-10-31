@@ -17,9 +17,9 @@ export function ContactPage() {
         eyebrow="Start a conversation"
         title="Maximize the value of your scrap."
         copy="Share the material, estimated quantity, site location, and collection needs. Our Dammam team will review the requirement and respond with the next step."
-        image={photos.yardEntrance.src}
-        alt={photos.yardEntrance.alt}
-        focus={photos.yardEntrance.focus}
+        image={photos.truckGrapple.src}
+        alt={photos.truckGrapple.alt}
+        focus={photos.truckGrapple.focus}
         trail="Contact"
       />
       <section className="content-section container contact-layout">
