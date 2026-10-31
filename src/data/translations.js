@@ -16,7 +16,7 @@ export const arabicTranslations = {
   "Amanat Al-Kalima Company": "شركة أمانة الكلمة",
   "Building Value,": "نبني القيمة،",
   "Recycling the Future.": "ونعيد تدوير المستقبل.",
-  "A licensed scrap metal buyer in Dammam since 2017. We collect, weigh and grade ferrous and non-ferrous scrap at source, with every load documented from enquiry to payment.": "تاجر خردة معادن مرخّص في الدمام منذ 2017. نجمع الخردة الحديدية وغير الحديدية ونزنها ونصنّفها من المصدر، مع توثيق كل حمولة من الاستفسار حتى الدفع.",
+  "A licensed scrap metal buyer in Dammam since 2017. We collect ferrous and non-ferrous scrap, grade it at source, and weigh and document every load from enquiry to payment.": "تاجر خردة معادن مرخّص في الدمام منذ 2017. نجمع الخردة الحديدية وغير الحديدية، ونصنّفها من المصدر، ونزن كل حمولة ونوثّقها من الاستفسار حتى الدفع.",
   "Our Services": "خدماتنا",
   "Contact Us": "تواصل معنا",
   "Certifications and registrations": "الشهادات والتسجيلات",
