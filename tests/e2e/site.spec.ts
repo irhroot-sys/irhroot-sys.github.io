@@ -782,8 +782,8 @@ test('prerenders every guide and article with its structured data', async ({ req
     ['/ar/buy', 'ar', 'اشترِ من أمانة الكلمة | أمانة الكلمة'],
     ['/ar/process', 'ar', 'كيف نعمل | أمانة الكلمة'],
     ['/insights', 'en', 'Insights | AALKC'],
-    ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: how ferrous and non-ferrous scrap is classified | AALKC'],
-    ['/ar/insights/saudi-arabia-scrap-metal-industry', 'ar', 'صناعة الخردة المعدنية في المملكة العربية السعودية: التاريخ والجغرافيا والسوق اليوم | أمانة الكلمة'],
+    ['/insights/scrap-metal-grades-explained', 'en', 'Scrap metal grades explained: ferrous vs non-ferrous | AALKC'],
+    ['/ar/insights/saudi-arabia-scrap-metal-industry', 'ar', 'صناعة الخردة المعدنية في السعودية وسوقها | أمانة الكلمة'],
   ]) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(200);
