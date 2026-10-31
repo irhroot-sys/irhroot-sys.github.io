@@ -31,11 +31,22 @@ The edge Worker sets browser cache lifetimes itself:
 
 Cloudflare's managed robots.txt is enabled and prepends its own rules, including a `User-agent: *` group. `public/robots.txt` therefore only adds the sitemap line. If the managed robots.txt is ever switched off, the file still allows all crawling.
 
+## Mail, DNS and the quote API (as of November 2026)
+
+- **Mail** is hosted by Hostinger: MX `mx1`/`mx2.hostinger.com`, SPF `include:_spf.mail.hostinger.com`, DKIM `hostingermail-a/b/c._domainkey`. `contact@`, `himel@`, `purchase@`, `sale@` and `shahid@` are aliases of the `info@aalkc.com` mailbox. The bare TXT at the apex added on 6 October 2026 is Hostinger's domain-ownership check; keep it.
+- **DMARC** is one TXT record at `_dmarc`: `p=quarantine; rua=mailto:info@aalkc.com`. Never add a CNAME at that name.
+- **BIMI** `default._bimi` points to `/bimi/aalkc-logo.svg`. Gmail also requires a VMC or CMC certificate before it shows the logo.
+- **Resend** sends quote notifications from `quotes@aalkc.com` (DKIM `resend._domainkey`, return path `send.aalkc.com`). The API Worker uses it when the `RESEND_API_KEY` secret is set on `aalkc-api`; without it, notifications fall back to the `send_email` binding, which can only reach verified Email Routing destinations and therefore fails. Failed notifications are re-queued by the daily job once a key exists.
+- **Purelymail** is no longer the mail host, but the `aalkc-webmail` Worker is still configured for Purelymail and its ownership TXT is kept until the webmail is moved.
+- **`/api/*`** must stay public: never put a Cloudflare Access application on the `aalkc-api` Worker (it turns every quote submission into a login redirect). Turnstile protects the form.
+- **TLS:** Always Use HTTPS on, minimum TLS 1.2, SSL mode **Full**. Full (strict) returns error 526, because GitHub Pages does not serve a certificate for aalkc.com behind the Cloudflare proxy; do not switch it until GitHub shows a valid certificate for the custom domain.
+- **www** redirects to the apex with a 301 (a Single Redirect rule); its CNAME points to `irhroot-sys.github.io`.
+- **To do in the dashboard:** enable DNSSEC (the domain is registered at Cloudflare, so the DS record is added automatically) and add CAA records (`0 issue "letsencrypt.org"`, `0 iodef "mailto:info@aalkc.com"`; Cloudflare adds its own CAs once a CAA record exists).
+- The **Workers Builds** check on GitHub fails on every commit: a dashboard build is connected to the repository root, where there is no Worker configuration. Deploy the API Worker with `worker/` configuration instead, and disconnect that build if the failing check is unwanted.
+
 ## Operational checks
 
 - Enable Worker exception, D1 error, queue retry/dead-letter, and email-delivery alerts.
 - Alert when the market snapshot is older than 15 minutes; reject it at six hours.
-- Configure the quote rate-limit binding before enabling production submission.
-- Audit current MX, SPF, DKIM, and DMARC records before changing mail DNS.
-
-The 2026-07-16 read-only audit found PurelyMail MX, `include:_spf.purelymail.com`, and reject-mode DMARC delegated to PurelyMail. Preserve those records unless the mail owner approves a coordinated migration.
+- Confirm the quote rate-limit binding stays configured.
+- Audit MX, SPF, DKIM and DMARC before changing mail DNS, and keep this page in step with the zone.

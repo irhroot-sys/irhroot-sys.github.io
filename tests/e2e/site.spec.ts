@@ -17,7 +17,7 @@ test('renders critical content in the new industrial design', async ({ page }) =
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1, name: /Integrity, weighed in every tonne/i })).toBeVisible();
   await expect(page.locator('nav[aria-label="Primary navigation"]')).toHaveCount(1);
-  await expect(page.getByText(/Premium, transparent, and efficient metal recycling services/i)).toBeVisible();
+  await expect(page.getByText(/licensed scrap metal buyer in Dammam since 2017/i)).toBeVisible();
   expect(failedAssets).toEqual([]);
   expect(runtimeErrors).toEqual([]);
 });

@@ -16,7 +16,7 @@ export const arabicTranslations = {
   "Amanat Al-Kalima Company": "شركة أمانة الكلمة",
   "Building Value,": "نبني القيمة،",
   "Recycling the Future.": "ونعيد تدوير المستقبل.",
-  "Premium, transparent, and efficient metal recycling services for industrial, commercial, and construction businesses across Saudi Arabia.": "خدمات متميزة وشفافة وفعّالة لإعادة تدوير المعادن للمنشآت الصناعية والتجارية وقطاع الإنشاءات في أنحاء المملكة.",
+  "A licensed scrap metal buyer in Dammam since 2017. We collect, weigh and grade ferrous and non-ferrous scrap at source, with every load documented from enquiry to payment.": "تاجر خردة معادن مرخّص في الدمام منذ 2017. نجمع الخردة الحديدية وغير الحديدية ونزنها ونصنّفها من المصدر، مع توثيق كل حمولة من الاستفسار حتى الدفع.",
   "Our Services": "خدماتنا",
   "Contact Us": "تواصل معنا",
   "Certifications and registrations": "الشهادات والتسجيلات",
