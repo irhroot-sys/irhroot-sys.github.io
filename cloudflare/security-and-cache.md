@@ -37,7 +37,7 @@ Cloudflare's managed robots.txt is enabled and prepends its own rules, including
 - **DMARC** is one TXT record at `_dmarc`: `p=quarantine; rua=mailto:info@aalkc.com`. Never add a CNAME at that name.
 - **BIMI** `default._bimi` points to `/bimi/aalkc-logo.svg`. Gmail also requires a VMC or CMC certificate before it shows the logo.
 - **Resend** sends quote notifications from `quotes@aalkc.com` (DKIM `resend._domainkey`, return path `send.aalkc.com`). The API Worker uses it when the `RESEND_API_KEY` secret is set on `aalkc-api`; without it, notifications fall back to the `send_email` binding, which can only reach verified Email Routing destinations and therefore fails. Failed notifications are re-queued by the daily job once a key exists.
-- **Purelymail** is no longer the mail host, but the `aalkc-webmail` Worker is still configured for Purelymail and its ownership TXT is kept until the webmail is moved.
+- **Purelymail** is not used. Its redirect rule and ownership TXT are to be removed; the `aalkc-webmail` Worker and the `aalkc-webmail`/`aalkc-mail` repositories still reference Purelymail and need moving to Hostinger IMAP/SMTP.
 - **`/api/*`** must stay public: never put a Cloudflare Access application on the `aalkc-api` Worker (it turns every quote submission into a login redirect). Turnstile protects the form.
 - **TLS:** Always Use HTTPS on, minimum TLS 1.2, SSL mode **Full**. Full (strict) returns error 526, because GitHub Pages does not serve a certificate for aalkc.com behind the Cloudflare proxy; do not switch it until GitHub shows a valid certificate for the custom domain.
 - **www** redirects to the apex with a 301 (a Single Redirect rule); its CNAME points to `irhroot-sys.github.io`.
